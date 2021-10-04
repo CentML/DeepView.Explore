@@ -24,6 +24,11 @@ export function activate(context: vscode.ExtensionContext) {
 					return;
 				};
 
+				// TODO: Unhardcode this later.
+				vscode.workspace.openTextDocument(vscode.Uri.file(uri[0].fsPath + "/entry_point.py")).then(doc => {
+					vscode.window.showTextDocument(doc);
+				});
+
 				const panel = vscode.window.createWebviewPanel(
 					'skyline',
 					"Skyline",

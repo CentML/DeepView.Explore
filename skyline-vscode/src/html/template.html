@@ -1,13 +1,59 @@
 <html>
 <body>
     <h1>Analysis Output</h1>
+    <h2>Project Information</h2>
     <table>
         <tr>
-            <td>Project Root</td> <td>${PROJECT_ROOT}</td>
+            <td>Project Root</td> <td><tt>{{ project_root }}</tt></td>
         </tr>
         <tr>
-            <td>Entry Point</td> <td>${ENTRY_POINT}</td>
+            <td>Entry Point</td> <td><tt>{{ project_entry_point }}</tt></td>
         </tr>
     </table>
+
+    <h2>Throughput Predictions</h2>
+    {% if throughput | length > 0 %}
+    <table>
+    <tr> <td>Samples/sec</td> <td>{{ throughput['samples_per_second'] }}</td> </tr>
+    <tr> <td>Predicted Max Samples/sec</td> <td>{{ throughput['predicted_max_samples_per_second'] }}</td> </tr>
+    <tr> <td>Run Time Model</td> <td>m={{ throughput['run_time_ms'][0] }}, m={{ throughput['run_time_ms'][1] }}</td> </tr>
+    <tr> <td>Peak Usage Bytes Model</td> <td>m={{ throughput['peak_usage_bytes'][0] }}, m={{ throughput['peak_usage_bytes'][1] }}</td> </tr>
+    <tr> <td>Batch Size Context</td> <td>{{ throughput['batch_size_context'] }}</td> </tr>
+    <tr> <td>Can Manipulate Batch Size</td> <td>{{ throughput['can_manipulate_batch_size'] }}</td> </tr>
+    </table>
+    {% else %}
+    Throughput predictions not yet available.
+    {% endif %}
+
+    <h2>Breakdown Predictions</h2>
+    {% if breakdown | length > 0 %}
+    <table>
+    <tr> <td>Peak Usage Bytes</td> <td>{{ breakdown['peak_usage_bytes'] }}</td> </tr>
+    <tr> <td>Memory Capacity Bytes</td> <td>{{ breakdown['memory_capacity_bytes'] }}</td> </tr>
+    <tr> <td>Iteration Runtime Ms</td> <td>{{ breakdown['iteration_run_time_ms'] }}</td> </tr>
+    <tr> <td>Batch Size</td> <td>{{ breakdown['batch_size'] }}</td> </tr>
+    <tr> <td>Operation Tree</td> <td>{{ breakdown['num_nodes_operation_tree'] }} nodes</td> </tr>
+    <tr> <td>Weight Tree</td> <td>{{ breakdown['num_nodes_weight_tree'] }} nodes</td> </tr>
+    </table>
+    {% else %}
+    Breakdown predictions not yet available.
+    {% endif %}
+
+
+    <h2>Habitat Predictions</h2>
+    {% if habitat | length > 0 %}
+    <table>
+        <tr>
+        <th>Device Name</th> <th>Predicted Latency</th>
+        </tr>
+        {% for device_name, latency in habitat %}
+        <tr>
+        <td> {{ device_name }} </td> <td> {{ latency }} </td>
+        </tr>
+        {% endfor%}
+    </table>
+    {% else %}
+    Habitat predictions not yet available.
+    {% endif %}
 </body>
 </html>

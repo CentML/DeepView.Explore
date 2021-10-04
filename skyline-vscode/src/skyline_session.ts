@@ -4,7 +4,9 @@ import {Socket} from 'net';
 
 import * as pb from './protobuf/innpv_pb';
 import * as path from 'path';
-import * as fs from 'fs/promises';
+import { timeStamp } from 'console';
+
+const nunjucks = require('nunjucks');
 
 export interface SkylineSessionOptions {
     context: vscode.ExtensionContext;
@@ -21,6 +23,9 @@ export class SkylineSession {
     webviewPanel: vscode.WebviewPanel;
 
     msg_initialize?: pb.InitializeResponse;
+    msg_throughput?: pb.ThroughputResponse;
+    msg_breakdown?: pb.BreakdownResponse;
+    msg_habitat?: pb.HabitatResponse;
 
     constructor(options: SkylineSessionOptions) {
         this.connection = new Socket();
@@ -66,25 +71,25 @@ export class SkylineSession {
     }
 
     async on_data(message: Uint8Array) {
+        console.log("received data.");
         let msg = pb.FromServer.deserializeBinary(message);
         console.log(msg.getPayloadCase());
         switch(msg.getPayloadCase()) {
             case pb.FromServer.PayloadCase.ERROR:
                 break;
             case pb.FromServer.PayloadCase.INITIALIZE:
-                console.log("Initialize");
-                console.log(msg.getInitialize()?.getEntryPoint()?.toString());
-                console.log(msg.getInitialize()?.getServerProjectRoot()?.toString());
-
                 this.msg_initialize = msg.getInitialize();
                 break;
             case pb.FromServer.PayloadCase.ANALYSIS_ERROR:
                 break;
             case pb.FromServer.PayloadCase.THROUGHPUT:
+                this.msg_throughput = msg.getThroughput();
                 break;
             case pb.FromServer.PayloadCase.BREAKDOWN:
+                this.msg_breakdown = msg.getBreakdown();
                 break;
             case pb.FromServer.PayloadCase.HABITAT:
+                this.msg_habitat = msg.getHabitat();
                 break;
         };
 
@@ -100,16 +105,51 @@ export class SkylineSession {
         let htmlBytes = await vscode.workspace.fs.readFile(vscode.Uri.file(filePath.fsPath));
         let html = Buffer.from(htmlBytes).toString('utf-8');
 
-        // TODO: Do properly
-        let lookup = {
-            "${PROJECT_ROOT}": this.msg_initialize?.getServerProjectRoot()?.toString(),
-            "${ENTRY_POINT}": this.msg_initialize?.getEntryPoint()?.toString(),
+        let fields = {
+            "project_root": this.msg_initialize?.getServerProjectRoot()?.toString(),
+            "project_entry_point": this.msg_initialize?.getEntryPoint()?.toString(),
+
+            "throughput": {},
+            "breakdown": {},
+
+            "habitat": [] as Array<[string, number]>
         };
 
-        for (const [key, value] of Object.entries(lookup)) {
-            html = html.replace(key, value as string);
+        if (this.msg_throughput) {
+            fields['throughput'] = {
+                "samples_per_second": this.msg_throughput?.getSamplesPerSecond(),
+                "predicted_max_samples_per_second": this.msg_throughput?.getPredictedMaxSamplesPerSecond(),
+                "run_time_ms": [ 
+                    this.msg_throughput?.getRunTimeMs()?.getSlope(),
+                    this.msg_throughput?.getRunTimeMs()?.getBias()
+                ],
+                "peak_usage_bytes": [ 
+                    this.msg_throughput?.getPeakUsageBytes()?.getSlope(),
+                    this.msg_throughput?.getPeakUsageBytes()?.getBias()
+                ],
+                "batch_size_context": this.msg_throughput?.getBatchSizeContext()?.toString(),
+                "can_manipulate_batch_size": this.msg_throughput?.getCanManipulateBatchSize()
+            };
         }
 
-        return html;
+        if (this.msg_breakdown) {
+            fields['breakdown'] = {
+                "peak_usage_bytes": this.msg_breakdown.getPeakUsageBytes(),
+                "memory_capacity_bytes": this.msg_breakdown.getMemoryCapacityBytes(),
+                "iteration_run_time_ms": this.msg_breakdown.getIterationRunTimeMs(),
+                "batch_size": this.msg_breakdown.getBatchSize(),
+                "num_nodes_operation_tree": this.msg_breakdown.getOperationTreeList().length,
+                "num_nodes_weight_tree": this.msg_breakdown.getWeightTreeList().length
+            };
+        }
+
+        if (this.msg_habitat) {
+            for (let prediction of this.msg_habitat.getPredictionsList()) {
+                fields['habitat'].push([ prediction.getDeviceName(), prediction.getRuntimeMs() ]);
+            }
+        }
+
+        nunjucks.configure({ autoescape: true });
+        return nunjucks.renderString(html, fields);
     }
 }
