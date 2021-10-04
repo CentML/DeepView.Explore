@@ -1,0 +1,225 @@
+// Messages used in the INNPV protocol are defined in this file.
+//
+// INNPV operates on individual "projects", which are treated as collections of
+// conceptually related files under one common directory (the project root
+// directory).
+//
+// All file paths exchanged by the protocol are *relative* to the project root.
+// Paths are passed in component form (i.e. without separators) to account for
+// different operating systems (e.g., the server could be running on a Linux
+// machine whereas the client is running on a Windows machine).
+//
+// The client and server must individually determine the project root during
+// connection establishment. The server implicitly determines the project root
+// based on the directory from which the user launches it. The client can
+// ask the server for this project root during initialization or can request it
+// from the user. Requesting the project root from the user is useful for
+// situations where the client is remote (e.g., operating on a mounted network
+// file system).
+
+syntax = 'proto3';
+package innpv.protocol;
+
+
+// ========== Client Messages ==========
+
+message FromClient {
+  uint32 sequence_number = 1;
+
+  oneof payload {
+    InitializeRequest initialize = 2;
+    AnalysisRequest analysis = 3;
+  }
+}
+
+message InitializeRequest {
+  // The protocol version is increased monotonically each time a breaking
+  // change is made to the protocol.
+  //
+  // Protobuf messages are always backward-compatible (if used properly).
+  // However future versions of the server/client may use entirely new
+  // messages. These changes are considered "breaking changes" and will warrant
+  // an increase in the protocol version.
+  //
+  // On initialization, the client will inform the server of the protocol
+  // version it supports so that we have the option of providing backward
+  // compatability. If the protocol version is unsupported by the server, it
+  // will respond with a ProtocolError.
+  uint32 protocol_version = 1;
+}
+
+message AnalysisRequest {
+  // Set this to receive a mock response from the server.
+  // This is useful when developing the UI to avoid waiting for the analysis.
+  bool mock_response = 1;
+}
+
+
+// ========== Server Messages ==========
+
+message FromServer {
+  uint32 sequence_number = 1;
+
+  oneof payload {
+    ProtocolError error = 2;
+    InitializeResponse initialize = 3;
+    AnalysisError analysis_error = 5;
+    ThroughputResponse throughput = 6;
+    BreakdownResponse breakdown = 8;
+
+    HabitatResponse habitat = 9;
+  }
+
+  // Deprecated messages
+  reserved 4, 7;
+  reserved "memory_usage", "run_time";
+}
+
+
+// Habitat messages
+// =======================================
+
+message HabitatDevicePrediction {
+  string device_name = 1;
+  float runtime_ms = 2;
+}
+
+message HabitatResponse {
+  repeated HabitatDevicePrediction predictions = 1;
+}
+
+// =======================================
+
+message InitializeResponse {
+  string server_project_root = 1;
+  Path entry_point = 2;
+}
+
+message AnalysisError {
+  string error_message = 1;
+  FileReference file_context = 2;
+}
+
+message ThroughputResponse {
+  float samples_per_second = 1;
+  // This will be NaN if we cannot make a prediction.
+  float predicted_max_samples_per_second = 2;
+
+  // These models will not be set if we cannot take
+  // a sufficient number of samples.
+  //
+  // Additionally, the run time model will not be set
+  // if the predicted maximum samples per second
+  // (above) is NaN.
+  LinearModel run_time_ms = 3;
+  LinearModel peak_usage_bytes = 4;
+
+  // The location where the batch size is set
+  FileReference batch_size_context = 5;
+  // Whether or not we can manipulate the batch size code
+  // using our heuristics.
+  bool can_manipulate_batch_size = 6;
+}
+
+message BreakdownResponse {
+  uint64 peak_usage_bytes = 1;
+  uint64 memory_capacity_bytes = 2;
+  float iteration_run_time_ms = 3;
+  uint32 batch_size = 6;
+  // The nodes are ordered based on a preorder traversal of each tree
+  repeated BreakdownNode operation_tree = 4;
+  repeated BreakdownNode weight_tree = 5;
+}
+
+message ProtocolError {
+  enum ErrorCode {
+    // A catch-all error code that should only be used as a last resort.
+    UNKNOWN = 0;
+
+    // The protocol version requested by the client is not supported
+    // by the server.
+    UNSUPPORTED_PROTOCOL_VERSION = 1;
+
+    // The client has not yet initialized the connection. This error code is
+    // used if the client sends a normal request (e.g., analysis) before
+    // sending an initialization request.
+    UNINITIALIZED_CONNECTION = 2;
+
+    // The client sent an initialization request, but the connection is
+    // already initialized.
+    ALREADY_INITIALIZED_CONNECTION = 3;
+  }
+  ErrorCode error_code = 1;
+}
+
+
+// ========== Generic Models ==========
+
+message Path {
+  repeated string components = 1;
+}
+
+message FileReference {
+  Path file_path = 1;
+  uint32 line_number = 2;
+}
+
+message BreakdownNode {
+  string name = 1;
+  uint32 num_children = 2;
+  repeated FileReference contexts = 3;
+  oneof data {
+    OperationData operation = 4;
+    WeightData weight = 5;
+  }
+}
+
+message ContextInfo {
+  FileReference context = 1;
+  float run_time_ms = 2;
+  uint64 size_bytes = 3;
+  uint32 invocations = 4;
+}
+
+message OperationData {
+  float forward_ms = 1;
+  // This will be NaN if this operation is not used in the backward pass
+  float backward_ms = 2;
+  uint64 size_bytes = 3;
+  // TODO: This contains many repeated FileReferences. We should store them
+  //       more efficiently.
+  repeated ContextInfo context_info_map = 4;
+}
+
+message WeightData {
+  uint64 size_bytes = 1;
+  uint64 grad_size_bytes = 2;
+}
+
+message LinearModel {
+  // y = slope * x + bias
+  double slope = 1;
+  double bias = 2;
+}
+
+// ========== Deprecated messages ==========
+
+message MemoryUsageResponse {
+  reserved 1 to 100;
+}
+
+message RunTimeResponse {
+  reserved 1 to 100;
+}
+
+message ActivationEntry {
+  reserved 1 to 100;
+}
+
+message WeightEntry {
+  reserved 1 to 100;
+}
+
+message RunTimeEntry {
+  reserved 1 to 100;
+}

@@ -1,26 +1,41 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
+import { url } from 'inspector';
 import * as vscode from 'vscode';
+import {SkylineSession, SkylineSessionOptions} from './skyline_session';
 
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
-	
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
 	console.log('Congratulations, your extension "skyline-vscode" is now active!');
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('skyline-vscode.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from skyline-vscode!');
+	let sess: SkylineSession;
+
+	let disposable = vscode.commands.registerCommand('skyline-vscode.cmd_begin_analyze', () => {
+		if (sess != undefined) {
+			vscode.window.showInformationMessage("Sending analysis request.");
+			sess.send_analysis_request();
+		} else {
+			let options: vscode.OpenDialogOptions = {
+				canSelectFiles: false,
+				canSelectFolders: true,
+				canSelectMany: false
+			};
+
+			vscode.window.showOpenDialog(options).then(uri => {
+				if (!uri) {
+					vscode.window.showErrorMessage("You must select a valid project root!");
+					return;
+				};
+
+				let sess_options: SkylineSessionOptions = {
+					projectRoot: uri[0].fsPath,
+					addr: "localhost",
+					port: 60120
+				};
+
+				sess = new SkylineSession(sess_options);
+			});
+		}
 	});
 
 	context.subscriptions.push(disposable);
 }
 
-// this method is called when your extension is deactivated
 export function deactivate() {}
