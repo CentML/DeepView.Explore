@@ -24,10 +24,19 @@ export function activate(context: vscode.ExtensionContext) {
 					return;
 				};
 
+				const panel = vscode.window.createWebviewPanel(
+					'skyline',
+					"Skyline",
+					vscode.ViewColumn.Beside,
+					{}
+				);
+
 				let sess_options: SkylineSessionOptions = {
-					projectRoot: uri[0].fsPath,
-					addr: "localhost",
-					port: 60120
+					context: 		context,
+					projectRoot: 	uri[0].fsPath,
+					addr: 			"localhost",
+					port: 			60120,
+					webviewPanel: 	panel
 				};
 
 				sess = new SkylineSession(sess_options);

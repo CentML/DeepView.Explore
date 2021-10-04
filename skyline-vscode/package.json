@@ -46,6 +46,7 @@
   "dependencies": {
     "@types/ws": "^8.2.0",
     "google-protobuf": "^3.18.0",
+    "nunjucks": "^3.2.3",
     "ts-protoc-gen": "^0.15.0",
     "ws": "^8.2.3"
   }
