@@ -150,6 +150,8 @@ export class SkylineSession {
         }
 
         nunjucks.configure({ autoescape: true });
-        return nunjucks.renderString(html, fields);
+
+        var rendered = nunjucks.renderString(html, fields);
+        return rendered;
     }
 }

@@ -49,19 +49,23 @@ export function activate(context: vscode.ExtensionContext) {
 					webviewPanel: 	panel
 				};
 
-				sess = new SkylineSession(sess_options);
-
 				skylineProcess = cp.spawn(
-					"/home/jim/research/skyline/skyline/cli/venv/bin/python",
+					"/home/jim/git/skyline/cli/venv/bin/python",
 					["-m", "skyline", "interactive", "--skip-atom", "--debug", "entry_point.py" ],
 					{ cwd: uri[0].fsPath }
 				);
+
 				skylineProcess.stdout?.on('data', function(data) {
 					console.log("stdout:", data.toString());
 				});
 
 				skylineProcess.stderr?.on('data', function(data) {
-					console.log("stderr:", data.toString());
+					let stderr = data.toString();
+					console.log("stderr", stderr);
+					if (stderr.includes("listening for connections")) {
+						console.log("Backend ready.");
+						sess = new SkylineSession(sess_options);
+					}
 				});
 
 				skylineProcess.on("close", function() {
