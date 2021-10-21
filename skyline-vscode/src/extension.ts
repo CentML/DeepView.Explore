@@ -2,14 +2,19 @@ import { url } from 'inspector';
 import * as vscode from 'vscode';
 import {SkylineSession, SkylineSessionOptions} from './skyline_session';
 
+import * as cp from 'child_process';
+
 export function activate(context: vscode.ExtensionContext) {
 	console.log('Congratulations, your extension "skyline-vscode" is now active!');
 
 	let sess: SkylineSession;
+	let skylineProcess: cp.ChildProcess;
 
 	let disposable = vscode.commands.registerCommand('skyline-vscode.cmd_begin_analyze', () => {
 		if (sess != undefined) {
 			vscode.window.showInformationMessage("Sending analysis request.");
+			console.log("sess", sess);
+			console.log("skylineProcess", skylineProcess);
 			sess.send_analysis_request();
 		} else {
 			let options: vscode.OpenDialogOptions = {
@@ -45,6 +50,23 @@ export function activate(context: vscode.ExtensionContext) {
 				};
 
 				sess = new SkylineSession(sess_options);
+
+				skylineProcess = cp.spawn(
+					"/home/jim/research/skyline/skyline/cli/venv/bin/python",
+					["-m", "skyline", "interactive", "--skip-atom", "--debug", "entry_point.py" ],
+					{ cwd: uri[0].fsPath }
+				);
+				skylineProcess.stdout?.on('data', function(data) {
+					console.log("stdout:", data.toString());
+				});
+
+				skylineProcess.stderr?.on('data', function(data) {
+					console.log("stderr:", data.toString());
+				});
+
+				skylineProcess.on("close", function() {
+					console.log("Process closed");
+				});
 			});
 		}
 	});
