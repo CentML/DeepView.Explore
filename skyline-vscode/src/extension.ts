@@ -50,7 +50,8 @@ export function activate(context: vscode.ExtensionContext) {
 				};
 
 				skylineProcess = cp.spawn(
-					"/home/jim/git/skyline/cli/venv/bin/python",
+					// "/home/jim/git/skyline/cli/venv/bin/python",
+					"/home/jim/research/skyline/skyline/cli/venv/bin/python",
 					["-m", "skyline", "interactive", "--skip-atom", "--debug", "entry_point.py" ],
 					{ cwd: uri[0].fsPath }
 				);

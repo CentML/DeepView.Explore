@@ -71,33 +71,39 @@ export class SkylineSession {
     }
 
     async on_data(message: Uint8Array) {
-        console.log("received data.");
-        let msg = pb.FromServer.deserializeBinary(message);
-        console.log(msg.getPayloadCase());
-        switch(msg.getPayloadCase()) {
-            case pb.FromServer.PayloadCase.ERROR:
-                break;
-            case pb.FromServer.PayloadCase.INITIALIZE:
-                this.msg_initialize = msg.getInitialize();
-                break;
-            case pb.FromServer.PayloadCase.ANALYSIS_ERROR:
-                break;
-            case pb.FromServer.PayloadCase.THROUGHPUT:
-                this.msg_throughput = msg.getThroughput();
-                break;
-            case pb.FromServer.PayloadCase.BREAKDOWN:
-                this.msg_breakdown = msg.getBreakdown();
-                break;
-            case pb.FromServer.PayloadCase.HABITAT:
-                this.msg_habitat = msg.getHabitat();
-                break;
-        };
+        console.log("received data. length ", message.byteLength);
+        try {
+            let msg = pb.FromServer.deserializeBinary(message);
+            console.log(msg.getPayloadCase());
+            switch(msg.getPayloadCase()) {
+                case pb.FromServer.PayloadCase.ERROR:
+                    break;
+                case pb.FromServer.PayloadCase.INITIALIZE:
+                    this.msg_initialize = msg.getInitialize();
+                    break;
+                case pb.FromServer.PayloadCase.ANALYSIS_ERROR:
+                    break;
+                case pb.FromServer.PayloadCase.THROUGHPUT:
+                    this.msg_throughput = msg.getThroughput();
+                    break;
+                case pb.FromServer.PayloadCase.BREAKDOWN:
+                    this.msg_breakdown = msg.getBreakdown();
+                    break;
+                case pb.FromServer.PayloadCase.HABITAT:
+                    this.msg_habitat = msg.getHabitat();
+                    break;
+            };
 
-        this.webviewPanel.webview.html = await this.rEaCt();
+            this.webviewPanel.webview.html = await this.rEaCt();
+        } catch (e) {
+            console.log("exception!");
+            console.log(message);
+            console.log(e);
+        }
     }
 
     on_close() {
-
+        console.log("Socket Closed!");
     }
 
     async rEaCt() {
