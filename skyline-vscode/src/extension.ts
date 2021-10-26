@@ -49,6 +49,8 @@ export function activate(context: vscode.ExtensionContext) {
 					webviewPanel: 	panel
 				};
 
+				// sess = new SkylineSession(sess_options);
+
 				skylineProcess = cp.spawn(
 					// "/home/jim/git/skyline/cli/venv/bin/python",
 					"/home/jim/research/skyline/skyline/cli/venv/bin/python",

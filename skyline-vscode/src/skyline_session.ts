@@ -4,7 +4,7 @@ import {Socket} from 'net';
 
 import * as pb from './protobuf/innpv_pb';
 import * as path from 'path';
-import { timeStamp } from 'console';
+import { assert, timeStamp } from 'console';
 
 const nunjucks = require('nunjucks');
 
@@ -19,6 +19,8 @@ export interface SkylineSessionOptions {
 export class SkylineSession {
     connection: Socket;
     seq_num: number;
+    last_length: number;
+    message_buffer: Uint8Array;
     context: vscode.ExtensionContext;
     webviewPanel: vscode.WebviewPanel;
 
@@ -34,6 +36,8 @@ export class SkylineSession {
         this.connection.connect(options.port, options.addr, this.on_open.bind(this));
 
         this.seq_num = 0;
+        this.last_length = -1;
+        this.message_buffer = new Uint8Array();
         this.context = options.context;
         this.webviewPanel = options.webviewPanel;
     }
@@ -72,6 +76,37 @@ export class SkylineSession {
 
     async on_data(message: Uint8Array) {
         console.log("received data. length ", message.byteLength);
+
+        // Append new message
+        // TODO: Make this less inefficient
+        let newBuffer = new Uint8Array(this.message_buffer.byteLength + message.byteLength);
+        newBuffer.set(this.message_buffer);
+        newBuffer.set(message, this.message_buffer.byteLength);
+        this.message_buffer = newBuffer;
+
+        while (this.message_buffer.byteLength >= 4) {
+            // Read new message length
+            if (this.last_length == -1) {
+                this.last_length = (this.message_buffer[0] << 24) | 
+                                   (this.message_buffer[1] << 16) |
+                                   (this.message_buffer[2] << 8) | 
+                                   this.message_buffer[3];
+                this.message_buffer = this.message_buffer.slice(4);
+            }
+
+            // Digest message or quit if buffer not large enough
+            if (this.message_buffer.byteLength >= this.last_length) {
+                console.log("Handling message of length", this.last_length);
+                let body = this.message_buffer.slice(0, this.last_length);
+                this.handle_message(body);
+
+                this.message_buffer = this.message_buffer.slice(this.last_length);
+                this.last_length = -1;
+            }
+        }
+    }
+
+    async handle_message(message: Uint8Array) {
         try {
             let msg = pb.FromServer.deserializeBinary(message);
             console.log(msg.getPayloadCase());
@@ -100,6 +135,7 @@ export class SkylineSession {
             console.log(message);
             console.log(e);
         }
+
     }
 
     on_close() {
