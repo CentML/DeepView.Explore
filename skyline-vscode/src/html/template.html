@@ -16,8 +16,8 @@
     <table>
     <tr> <td>Samples/sec</td> <td>{{ throughput['samples_per_second'] }}</td> </tr>
     <tr> <td>Predicted Max Samples/sec</td> <td>{{ throughput['predicted_max_samples_per_second'] }}</td> </tr>
-    <tr> <td>Run Time Model</td> <td>m={{ throughput['run_time_ms'][0] }}, m={{ throughput['run_time_ms'][1] }}</td> </tr>
-    <tr> <td>Peak Usage Bytes Model</td> <td>m={{ throughput['peak_usage_bytes'][0] }}, m={{ throughput['peak_usage_bytes'][1] }}</td> </tr>
+    <tr> <td>Run Time Model</td> <td>m={{ throughput['run_time_ms'][0] }}, b={{ throughput['run_time_ms'][1] }}</td> </tr>
+    <tr> <td>Peak Usage Bytes Model</td> <td>m={{ throughput['peak_usage_bytes'][0] }}, b={{ throughput['peak_usage_bytes'][1] }}</td> </tr>
     <tr> <td>Batch Size Context</td> <td>{{ throughput['batch_size_context'] }}</td> </tr>
     <tr> <td>Can Manipulate Batch Size</td> <td>{{ throughput['can_manipulate_batch_size'] }}</td> </tr>
     </table>

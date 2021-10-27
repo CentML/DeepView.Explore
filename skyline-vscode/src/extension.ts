@@ -30,9 +30,11 @@ export function activate(context: vscode.ExtensionContext) {
 				};
 
 				// TODO: Unhardcode this later.
+				/* 
 				vscode.workspace.openTextDocument(vscode.Uri.file(uri[0].fsPath + "/entry_point.py")).then(doc => {
 					vscode.window.showTextDocument(doc);
 				});
+				*/
 
 				const panel = vscode.window.createWebviewPanel(
 					'skyline',
@@ -49,10 +51,7 @@ export function activate(context: vscode.ExtensionContext) {
 					webviewPanel: 	panel
 				};
 
-				// sess = new SkylineSession(sess_options);
-
 				skylineProcess = cp.spawn(
-					// "/home/jim/git/skyline/cli/venv/bin/python",
 					"/home/jim/research/skyline/skyline/cli/venv/bin/python",
 					["-m", "skyline", "interactive", "--skip-atom", "--debug", "entry_point.py" ],
 					{ cwd: uri[0].fsPath }
@@ -81,4 +80,6 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(disposable);
 }
 
-export function deactivate() {}
+export function deactivate() {
+
+}

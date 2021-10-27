@@ -6,6 +6,9 @@ import * as pb from './protobuf/innpv_pb';
 import * as path from 'path';
 import { assert, timeStamp } from 'console';
 
+import { simpleDecoration } from './decorations';
+import { settings } from 'cluster';
+
 const nunjucks = require('nunjucks');
 
 export interface SkylineSessionOptions {
@@ -17,17 +20,24 @@ export interface SkylineSessionOptions {
 }
 
 export class SkylineSession {
+    // Backend socket connection
     connection: Socket;
     seq_num: number;
     last_length: number;
     message_buffer: Uint8Array;
+
+    // VSCode extension and views
     context: vscode.ExtensionContext;
     webviewPanel: vscode.WebviewPanel;
+    openedEditors: Map<string, vscode.TextEditor>
 
+    // Received messages
     msg_initialize?: pb.InitializeResponse;
     msg_throughput?: pb.ThroughputResponse;
     msg_breakdown?: pb.BreakdownResponse;
     msg_habitat?: pb.HabitatResponse;
+
+    root_dir: string;
 
     constructor(options: SkylineSessionOptions) {
         this.connection = new Socket();
@@ -38,8 +48,12 @@ export class SkylineSession {
         this.seq_num = 0;
         this.last_length = -1;
         this.message_buffer = new Uint8Array();
+
         this.context = options.context;
         this.webviewPanel = options.webviewPanel;
+        this.openedEditors = new Map<string, vscode.TextEditor>();
+
+        this.root_dir = options.projectRoot;
     }
 
     send_message(message: any, payloadName: string) {
@@ -123,6 +137,7 @@ export class SkylineSession {
                     break;
                 case pb.FromServer.PayloadCase.BREAKDOWN:
                     this.msg_breakdown = msg.getBreakdown();
+                    this.highlight_breakdown();
                     break;
                 case pb.FromServer.PayloadCase.HABITAT:
                     this.msg_habitat = msg.getHabitat();
@@ -135,7 +150,56 @@ export class SkylineSession {
             console.log(message);
             console.log(e);
         }
+    }
 
+    highlight_breakdown() {
+        if (this.msg_breakdown) {
+            let highlights = new Map<string, Array<[number, vscode.MarkdownString]>>();
+            for (let node of this.msg_breakdown.getOperationTreeList()) {
+                for (let ctx of node.getContextsList()) {
+                    let path = ctx.getFilePath()?.getComponentsList().join("/");
+                    let lineno = ctx.getLineNumber();
+                    let opdata = node.getOperation();
+
+                    if (path) {
+                        let lst = highlights.get(path);
+                        if (!lst) {
+                            lst = new Array<[number, vscode.MarkdownString]>();
+                            highlights.set(path, lst);
+                        }
+
+                        let label = new vscode.MarkdownString();
+                        label.appendMarkdown(`**Forward**: ${opdata!.getForwardMs().toFixed(3)} ms\n\n`);
+                        label.appendMarkdown(`**Backward**: ${opdata!.getBackwardMs().toFixed(3)} ms\n\n`);
+                        label.appendMarkdown(`**Size**: ${opdata!.getSizeBytes()} bytes\n\n`);
+                        lst.push([lineno, label]);
+                    }
+
+                }
+            }
+
+            for (let path of highlights.keys()) {
+                let uri = vscode.Uri.parse(this.root_dir + "/" + path);
+                console.log("opening file", uri.toString());
+                vscode.workspace.openTextDocument(uri).then(document => {
+                    vscode.window.showTextDocument(document, vscode.ViewColumn.Beside).then(editor => {
+                        let decorations = [];
+                        for (let marker of highlights.get(path)!) {
+                            let range = new vscode.Range(
+                                new vscode.Position(marker[0]-1, 0),
+                                new vscode.Position(marker[0]-1, 
+                                    document.lineAt(marker[0]-1).text.length)
+                            );
+                            decorations.push({
+                                range: range,
+                                hoverMessage: marker[1]
+                            });
+                        }
+                        editor.setDecorations(simpleDecoration, decorations);
+                    });
+                });
+            }
+        }
     }
 
     on_close() {
