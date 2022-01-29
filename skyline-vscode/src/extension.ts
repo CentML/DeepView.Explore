@@ -40,7 +40,12 @@ export function activate(context: vscode.ExtensionContext) {
 					'skyline',
 					"Skyline",
 					vscode.ViewColumn.Beside,
-					{}
+					{
+						enableScripts: true,
+						localResourceRoots: [
+							vscode.Uri.file("/home/jim/tmp/react-test/build")
+						]
+					}
 				);
 
 				let sess_options: SkylineSessionOptions = {
@@ -52,7 +57,8 @@ export function activate(context: vscode.ExtensionContext) {
 				};
 
 				skylineProcess = cp.spawn(
-					"/home/jim/research/skyline/skyline/cli/venv/bin/python",
+					"/home/jim/tmp/skyline/venv/bin/python",
+					// "/home/jim/research/skyline/skyline/cli/venv/bin/python",
 					["-m", "skyline", "interactive", "--skip-atom", "--debug", "entry_point.py" ],
 					{ cwd: uri[0].fsPath }
 				);

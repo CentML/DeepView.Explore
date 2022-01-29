@@ -144,7 +144,8 @@ export class SkylineSession {
                     break;
             };
 
-            this.webviewPanel.webview.html = await this.rEaCt();
+            // this.webviewPanel.webview.html = await this.rEaCt();
+            this.webviewPanel.webview.html = await this._getHtmlForWebview();
         } catch (e) {
             console.log("exception!");
             console.log(message);
@@ -205,6 +206,49 @@ export class SkylineSession {
     on_close() {
         console.log("Socket Closed!");
     }
+
+    async loadTemplate() {
+        console.log("loadTemplate");
+        const filePath: vscode.Uri = vscode.Uri.file("/home/jim/tmp/react-test/build/index.html");
+        let htmlBytes = await vscode.workspace.fs.readFile(vscode.Uri.file(filePath.fsPath));
+        let html = Buffer.from(htmlBytes).toString('utf-8');
+        return html;
+    }
+
+    private _getHtmlForWebview() {
+        const buildPath = "/home/jim/tmp/react-test";
+
+		const manifest = require(path.join(buildPath, 'build', 'asset-manifest.json'));
+		const mainScript = manifest['files']['main.js'];
+		const mainStyle = manifest['files']['main.css'];
+
+		const scriptPathOnDisk = vscode.Uri.file(path.join(buildPath, 'build', mainScript));
+		const scriptUri = scriptPathOnDisk.with({ scheme: 'vscode-resource' });
+		const stylePathOnDisk = vscode.Uri.file(path.join(buildPath, 'build', mainStyle));
+		const styleUri = stylePathOnDisk.with({ scheme: 'vscode-resource' });
+
+		// Use a nonce to whitelist which scripts can be run
+		const nonce = 'nonce';
+
+		return `<!DOCTYPE html>
+			<html lang="en">
+			<head>
+				<meta charset="utf-8">
+				<meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+				<meta name="theme-color" content="#000000">
+				<title>React App</title>
+				<link rel="stylesheet" type="text/css" href="${styleUri}">
+				<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src vscode-resource: https:; script-src 'nonce-${nonce}';style-src vscode-resource: 'unsafe-inline' http: https: data:;">
+				<base href="${vscode.Uri.file(path.join(buildPath, 'build')).with({ scheme: 'vscode-resource' })}/">
+			</head>
+			<body>
+				<noscript>You need to enable JavaScript to run this app.</noscript>
+				<div id="root"></div>
+				
+				<script nonce="${nonce}" src="${scriptUri}"></script>
+			</body>
+			</html>`;
+	}
 
     async rEaCt() {
         const filePath: vscode.Uri = vscode.Uri.file(path.join(this.context.extensionPath, 'src', 'html', 'template.html'));
