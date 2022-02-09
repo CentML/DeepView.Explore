@@ -10,7 +10,7 @@
   height: 100%;
   width: 35px;
   margin: 0 auto;
-  background-color: #fff;
+  background-color: #dcdcdc;
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
@@ -520,7 +520,7 @@ atom-overlay.innpv-contexthighlight-overlay {
 .innpv-subheader {
   height: 2.5em;
   line-height: 2.5em;
-  color: #777;
+  color: #333;
   font-weight: bold;
   border-bottom: 1px solid #eee;
   padding: 0 10px;
