@@ -2,7 +2,7 @@ import './App.css';
 import './styles.css';
 
 import React, { useState, useEffect } from 'react';
-import { Alert, Button, Card, Col, Tab, Tabs, Row, Container } from 'react-bootstrap';
+import { Alert, Badge, Button, Card, Col, Tab, Tabs, Row, Container } from 'react-bootstrap';
 
 import BarSlider from './BarSlider'
 import Subheader from './Subheader'
@@ -73,12 +73,12 @@ function App() {
         updateSliders(analysisState, null, newHeight, setSliderMemory, setSliderThroughput);
     }
 
-
     useEffect(function () {
         window.addEventListener('message', event => {
             setAnalysisState(event.data);
             console.log("Message:", JSON.stringify(event.data));
-            updateSliders(event.data, 0.5, null, setSliderMemory, setSliderThroughput);
+            // updateSliders(event.data, 0.5, null, setSliderMemory, setSliderThroughput);
+            updateSliders(event.data, null, 0.5, setSliderMemory, setSliderThroughput);
         });
 
         const sendMock = false;
@@ -113,6 +113,12 @@ function App() {
                     <Tab eventKey="profiling" title="Profiling">
                     <div className="innpv-memory innpv-subpanel">
                         <Subheader icon="database">Peak Memory Usage</Subheader>
+                            <Row>
+                                <Col>
+                                <Badge className="float-end" bg="secondary">RTX2070</Badge>
+                                <Badge className="float-end" bg="success">Local</Badge>
+                                </Col>
+                            </Row>
                         <div className="innpv-subpanel-content">
                             <BarSlider
                                 percentage={sliderMemory[0]}

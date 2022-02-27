@@ -28,6 +28,11 @@
   color: #61dafb;
 }
 
+.rv-xy-plot__axis__title text {
+  fill: #2C3333;
+  font-size: 20px;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

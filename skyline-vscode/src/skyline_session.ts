@@ -129,6 +129,8 @@ export class SkylineSession {
                     break;
                 case pb.FromServer.PayloadCase.INITIALIZE:
                     this.msg_initialize = msg.getInitialize();
+                    // TODO: Move this to other file.
+                    this.webviewPanel.webview.html = await this._getHtmlForWebview();
                     break;
                 case pb.FromServer.PayloadCase.ANALYSIS_ERROR:
                     break;
@@ -145,7 +147,7 @@ export class SkylineSession {
             };
 
             // this.webviewPanel.webview.html = await this.rEaCt();
-            this.webviewPanel.webview.html = await this._getHtmlForWebview();
+            this.webviewPanel.webview.postMessage(await this.generateStateJson());
         } catch (e) {
             console.log("exception!");
             console.log(message);
@@ -175,7 +177,6 @@ export class SkylineSession {
                         label.appendMarkdown(`**Size**: ${opdata!.getSizeBytes()} bytes\n\n`);
                         lst.push([lineno, label]);
                     }
-
                 }
             }
 
@@ -184,6 +185,7 @@ export class SkylineSession {
                 console.log("opening file", uri.toString());
                 vscode.workspace.openTextDocument(uri).then(document => {
                     vscode.window.showTextDocument(document, vscode.ViewColumn.Beside).then(editor => {
+                    // vscode.window.showTextDocument(document, vscode.ViewColumn.One).then(editor => {
                         let decorations = [];
                         for (let marker of highlights.get(path)!) {
                             let range = new vscode.Range(
@@ -207,16 +209,8 @@ export class SkylineSession {
         console.log("Socket Closed!");
     }
 
-    async loadTemplate() {
-        console.log("loadTemplate");
-        const filePath: vscode.Uri = vscode.Uri.file("/home/jim/tmp/react-test/build/index.html");
-        let htmlBytes = await vscode.workspace.fs.readFile(vscode.Uri.file(filePath.fsPath));
-        let html = Buffer.from(htmlBytes).toString('utf-8');
-        return html;
-    }
-
     private _getHtmlForWebview() {
-        const buildPath = "/home/jim/tmp/react-test";
+        const buildPath = "/home/jim/research/skyline-vscode/react-test";
 
 		const manifest = require(path.join(buildPath, 'build', 'asset-manifest.json'));
 		const mainScript = manifest['files']['main.js'];
@@ -236,7 +230,7 @@ export class SkylineSession {
 				<meta charset="utf-8">
 				<meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
 				<meta name="theme-color" content="#000000">
-				<title>React App</title>
+				<title>Skyline</title>
 				<link rel="stylesheet" type="text/css" href="${styleUri}">
 				<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src vscode-resource: https:; script-src 'nonce-${nonce}';style-src vscode-resource: 'unsafe-inline' http: https: data:;">
 				<base href="${vscode.Uri.file(path.join(buildPath, 'build')).with({ scheme: 'vscode-resource' })}/">
@@ -249,6 +243,54 @@ export class SkylineSession {
 			</body>
 			</html>`;
 	}
+
+    async generateStateJson() {
+        let fields = {
+            "project_root": this.msg_initialize?.getServerProjectRoot()?.toString(),
+            "project_entry_point": this.msg_initialize?.getEntryPoint()?.toString(),
+
+            "throughput": {},
+            "breakdown": {},
+
+            "habitat": [] as Array<[string, number]>
+        };
+
+        if (this.msg_throughput) {
+            fields['throughput'] = {
+                "samples_per_second": this.msg_throughput?.getSamplesPerSecond(),
+                "predicted_max_samples_per_second": this.msg_throughput?.getPredictedMaxSamplesPerSecond(),
+                "run_time_ms": [ 
+                    this.msg_throughput?.getRunTimeMs()?.getSlope(),
+                    this.msg_throughput?.getRunTimeMs()?.getBias()
+                ],
+                "peak_usage_bytes": [ 
+                    this.msg_throughput?.getPeakUsageBytes()?.getSlope(),
+                    this.msg_throughput?.getPeakUsageBytes()?.getBias()
+                ],
+                "batch_size_context": this.msg_throughput?.getBatchSizeContext()?.toString(),
+                "can_manipulate_batch_size": this.msg_throughput?.getCanManipulateBatchSize()
+            };
+        }
+
+        if (this.msg_breakdown) {
+            fields['breakdown'] = {
+                "peak_usage_bytes": this.msg_breakdown.getPeakUsageBytes(),
+                "memory_capacity_bytes": this.msg_breakdown.getMemoryCapacityBytes(),
+                "iteration_run_time_ms": this.msg_breakdown.getIterationRunTimeMs(),
+                "batch_size": this.msg_breakdown.getBatchSize(),
+                "num_nodes_operation_tree": this.msg_breakdown.getOperationTreeList().length,
+                "num_nodes_weight_tree": this.msg_breakdown.getWeightTreeList().length
+            };
+        }
+
+        if (this.msg_habitat) {
+            for (let prediction of this.msg_habitat.getPredictionsList()) {
+                fields['habitat'].push([ prediction.getDeviceName(), prediction.getRuntimeMs() ]);
+            }
+        }
+
+        return fields;
+    }
 
     async rEaCt() {
         const filePath: vscode.Uri = vscode.Uri.file(path.join(this.context.extensionPath, 'src', 'html', 'template.html'));
