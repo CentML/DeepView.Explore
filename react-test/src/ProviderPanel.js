@@ -1,7 +1,7 @@
 
 import Subheader from './Subheader';
 import { XYPlot, VerticalGridLines, HorizontalGridLines, XAxis, YAxis, MarkSeries } from 'react-vis';
-import { Badge, Card, CardGroup, Container, Form, Row, Col, Image, Table } from 'react-bootstrap';
+import { Badge, Button, ButtonGroup, Card, CardGroup, Container, Form, Row, ToggleButton, Col, Image, Table } from 'react-bootstrap';
 import React from 'react';
 
 export default class ProviderPanel extends React.Component {
@@ -9,13 +9,14 @@ export default class ProviderPanel extends React.Component {
         super(props);
         this.onClickConfig = this.onClickConfig.bind(this);
         this.recalculateCost = this.recalculateCost.bind(this);
+        this.populateProviderGraph = this.populateProviderGraph.bind(this);
         
         this.setParentState = props.setParentState;
 
         this.normalColor = '#8DD0FF';
         this.highlightColor = '#44C96D';
-        this.normalSize = 10;
-        this.enlargedSize = 15;
+        this.normalSize = 8;
+        this.enlargedSize = 12;
 
         this.state = {
             plotData: [],
@@ -23,6 +24,7 @@ export default class ProviderPanel extends React.Component {
             clicked: null,
             numEpochs: 50,
             numIters: 1000,
+            maxNumGpu: 4
         };
 
         this.providers = {
@@ -63,18 +65,57 @@ export default class ProviderPanel extends React.Component {
             {id: 12, provider: "azure", ngpus: 1, instance: "NC4as T4 v3", gpu: "t4", cost: 0.526},
 
             {id: 13, provider: "centml", ngpus: 1, instance: "CentML", gpu: "rtx2080ti", cost: 0.20},
+
+            // 2/4 GPU instances
+
+            {id: 14, provider: "google", ngpus: 2, instance: "a2-highgpu-2g", gpu: "a100", cost: 2*2.939},
+            {id: 15, provider: "google", ngpus: 2, instance: "nvidia-tesla-t4", gpu: "t4", cost: 2*0.35},
+            {id: 16, provider: "google", ngpus: 2, instance: "nvidia-tesla-p4", gpu: "p4", cost: 2*0.60},
+            {id: 17, provider: "google", ngpus: 2, instance: "nvidia-tesla-v100", gpu: "v100", cost: 2*2.48},
+            {id: 18, provider: "google", ngpus: 2, instance: "nvidia-tesla-p100", gpu: "p100", cost: 2*1.46},
+            {id: 19, provider: "google", ngpus: 2, instance: "nvidia-tesla-k80", gpu: "k80", cost: 2*0.45},
+
+            {id: 20, provider: "aws", ngpus: 2, instance: "g4ad.8xlarge", gpu: "t4", cost: 1.734},
+
+            {id: 21, provider: "google", ngpus: 4, instance: "a2-highgpu-2g", gpu: "a100", cost: 4*2.939},
+            {id: 22, provider: "google", ngpus: 4, instance: "nvidia-tesla-t4", gpu: "t4", cost: 4*0.35},
+            {id: 23, provider: "google", ngpus: 4, instance: "nvidia-tesla-p4", gpu: "p4", cost: 4*0.60},
+            {id: 24, provider: "google", ngpus: 4, instance: "nvidia-tesla-v100", gpu: "v100", cost: 4*2.48},
+            {id: 25, provider: "google", ngpus: 4, instance: "nvidia-tesla-p100", gpu: "p100", cost: 4*1.46},
+            {id: 26, provider: "google", ngpus: 4, instance: "nvidia-tesla-k80", gpu: "k80", cost: 4*0.45},
+
+            {id: 27, provider: "aws", ngpus: 4, instance: "p3.8xlarge", gpu: "v100", cost: 12.24},
+            {id: 28, provider: "aws", ngpus: 4, instance: "g4dn.12xlarge", gpu: "t4", cost: 3.912},
         ];
 
+        // populate graph
+        this.populateProviderGraph(4);
+    }
+
+    populateProviderGraph(maxGpus) {
         // Generate randomized data
+        // for (let i = 0; i < this.instances.length; i++) {
+
+        console.log("maxGpus", maxGpus);
+        this.setState({
+            maxNumGpu: maxGpus
+        });
+
+        this.state.plotData = [];
         for (let i = 0; i < this.instances.length; i++) {
-            this.state.plotData.push({
-                id: i,
-                x: 1.0 / this.gpus[this.instances[i].gpu].perf,
-                y: this.instances[i].cost / this.gpus[this.instances[i].gpu].perf,
-                size: this.normalSize,
-                color: this.normalColor,
-                info: this.instances[i]
-            });
+            let perf = this.gpus[this.instances[i].gpu].perf * this.instances[i].ngpus * (1114.12/341.6241/4);
+            if (this.instances[i].ngpus <= maxGpus) {
+                this.state.plotData.push({
+                    id: this.instances[i].id,
+                    // x: 1.0 / this.gpus[this.instances[i].gpu].perf,
+                    // y: this.instances[i].cost / this.gpus[this.instances[i].gpu].perf,
+                    x: 1.0 / perf,
+                    y: this.instances[i].cost / perf,
+                    size: this.normalSize,
+                    color: this.normalColor,
+                    info: this.instances[i]
+                });
+            }
         }
     }
 
@@ -84,7 +125,8 @@ export default class ProviderPanel extends React.Component {
         // V100: 40ms
         // Relative per-iteration time is 40 * perf(v100) / perf(current)
         let iters = this.state.numEpochs * this.state.numIters;
-        let perIterMs = 40 * (1/0.1472) / this.gpus[thisGpu.info.gpu].perf;
+        let perf = this.gpus[thisGpu.info.gpu].perf * thisGpu.ngpus * (1114.12/341.6241/4);
+        let perIterMs = 40 * (1/0.1472) / perf;
         let totalHr = iters * perIterMs / (3.6e+6);
         let totalCost = thisGpu.info.cost * totalHr;
 
@@ -92,7 +134,6 @@ export default class ProviderPanel extends React.Component {
             estimated_cost: totalCost,
             estimated_time: totalHr
         });
-
     }
 
     onClickConfig(value) {
@@ -110,7 +151,9 @@ export default class ProviderPanel extends React.Component {
         // V100: 40ms
         // Relative per-iteration time is 40 * perf(v100) / perf(current)
         let iters = this.state.numEpochs * this.state.numIters;
-        let perIterMs = 40 * (1/0.1472) / this.gpus[value.info.gpu].perf;
+        let perf = this.gpus[value.info.gpu].perf * value.info.ngpus * (1114.12/341.6241/4);
+        // let perIterMs = 40 * (1/0.1472) / this.gpus[value.info.gpu].perf;
+        let perIterMs = 40 * (1/0.1472) / perf;
         let totalHr = iters * perIterMs / (3.6e+6);
         let totalCost = value.info.cost * totalHr;
 
@@ -125,6 +168,29 @@ export default class ProviderPanel extends React.Component {
             <>
                 <div className="innpv-memory innpv-subpanel">
                     <Subheader icon="database">Providers</Subheader>
+                    <Container>
+                    <Row>
+                        <Col>Filter Num GPUs:</Col>
+                        <Col>
+                        <ButtonGroup className="me-2" aria-label="">
+                            { [1, 2, 4].map(idx => (
+                            <ToggleButton
+                                key={idx}
+                                id={`radio-${idx}`}
+                                type="radio"
+                                variant={idx == this.state.maxNumGpu ? "primary" : "light"}
+                                name="radio"
+                                size="sm"
+                                value={idx}
+                                checked={idx == this.state.maxNumGpu}
+                                onChange={(e) => this.populateProviderGraph(e.currentTarget.value)}
+                            >{idx}</ToggleButton>
+                            )) }
+                        </ButtonGroup>
+                        </Col>
+                        <Col></Col>
+                    </Row>
+                    </Container>
                     <XYPlot width={500} height={300}>
                         <VerticalGridLines />
                         <HorizontalGridLines />
