@@ -43,7 +43,7 @@ export function activate(context: vscode.ExtensionContext) {
 					{
 						enableScripts: true,
 						localResourceRoots: [
-							vscode.Uri.file("/home/jim/research/skyline-vscode/react-test/build")
+							vscode.Uri.file("/home/ybgao/home/habitat_demo/skyline-vscode/react-test/build")
 						]
 					}
 				);
@@ -57,8 +57,8 @@ export function activate(context: vscode.ExtensionContext) {
 				};
 
 				skylineProcess = cp.spawn(
-					// "/home/jim/tmp/skyline/venv/bin/python",
-					"/home/jim/research/skyline/skyline/cli/venv39/bin/python",
+					// "/home/ybgao/home/habitat_demo/venv/bin/python",
+					"/home/ybgao/home/habitat_repo/skyline/cli/venv2/bin/python",
 					["-m", "skyline", "interactive", "--skip-atom", "--debug", "entry_point.py" ],
 					{ cwd: uri[0].fsPath }
 				);

@@ -167,7 +167,7 @@ function App() {
                             </div>
                         </div>
                     </div>
-                    <Habitat />
+                    <Habitat habitatData={analysisState['habitat']}/>
                     </Tab>
                     <Tab eventKey="deploy" title="Deployment">
                         <DeploymentTab></DeploymentTab>

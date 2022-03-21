@@ -210,7 +210,7 @@ export class SkylineSession {
     }
 
     private _getHtmlForWebview() {
-        const buildPath = "/home/jim/research/skyline-vscode/react-test";
+        const buildPath = "/home/ybgao/home/habitat_demo/skyline-vscode/react-test";
 
 		const manifest = require(path.join(buildPath, 'build', 'asset-manifest.json'));
 		const mainScript = manifest['files']['main.js'];

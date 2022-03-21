@@ -8,7 +8,7 @@ import {
     XYPlot
   } from 'react-vis';
 
-export default function Habitat() {
+export default function Habitat({habitatData}) {
 
     const colors = [
         '#7986cb',
@@ -36,7 +36,7 @@ export default function Habitat() {
     ];
 
     // Resnet
-    const sampleData = [
+    const sampleDataResnet = [
         {y: "V100", x: 47.40975887490825, color: 0},
         {y: "P100", x: 81.04154092289134, color: 1},
         {y: "T4", x: 124.23241486678548, color: 2},
@@ -44,10 +44,21 @@ export default function Habitat() {
         {y: "RTX2070", x: 90.15023999989465, color: 4}
     ];
 
+    let sampleData = [];
+
+    for (var i = 0; i < habitatData.length; i++) {
+        sampleData.push({
+            y: habitatData[i][0],
+            x: habitatData[i][1],
+            color: i
+        });
+    }
+
     return (
         <div className="innpv-memory innpv-subpanel">
             <Subheader icon="database">Habitat</Subheader>
             <div className="innpv-subpanel-content">
+                { habitatData != [] && 
                 <XYPlot 
                     height={200} width={500} 
                     yType='ordinal'
@@ -58,6 +69,10 @@ export default function Habitat() {
                     <YAxis style={{fontSize: 10}}/>
                     <HorizontalBarSeries data={sampleData} />
                 </XYPlot>
+                }
+                { habitatData.length == 0 && 
+                <p>Habitat analysis pending</p>
+                }
             </div>
         </div>
     );
