@@ -8,6 +8,10 @@ export default class WelcomeScreen extends React.Component {
     constructor(props) {
         super(props);
         
+        let {analysisState, vscodeApi} = props;
+        this.vscodeApi = vscodeApi;
+        console.log("WelcomeScreen got api", this.vscodeApi);
+
         this.acquireApi = this.acquireApi.bind(this);
         this.onClickBeginAnalysis = this.onClickBeginAnalysis.bind(this);
 
@@ -42,14 +46,15 @@ export default class WelcomeScreen extends React.Component {
 
     onClickBeginAnalysis() {
         this.setState({btn_clicked: true});
-        let vscode = this.acquireApi();
+        // let vscode = this.acquireApi();
+        let vscode = this.vscodeApi;
         vscode.postMessage({
             command: "begin_analysis_clicked"
         });
     }
 
     render() {
-        let {analysisState} = this.props;
+        let {analysisState, vscodeApi} = this.props;
         let clicked = false;
         if (this.state != null) {
             clicked = this.state.btn_clicked;

@@ -50,10 +50,47 @@ function updateSliders(analysisState, memoryPerc, throughputPerc, setSliderMemor
     setSliderThroughput([100.0 * throughput / maxThroughput, throughput, maxThroughput]);
 }
 
+// https://stackoverflow.com/questions/54135313/webview-extension-in-typescript
+/**
+ * Returns the vscode API handle. the acquireVsCodeApi function would not be available when compiling
+ * the react project, so we need to dynamically look it up. This function also caches the handle and
+ * returns it if previously acquired.
+ * @returns The VSCode API handle
+ */
+function acquireApi() {
+    // if (typeof this.acquireApi.api == 'undefined') {
+    if (typeof acquireApi.api == 'undefined') {
+        console.log("Calling acquire function");
+        if (typeof acquireVsCodeApi == "function") {
+            let f = window['acquireVsCodeApi'];
+            let a = f();
+            acquireApi.api = a;
+        } else {
+            acquireApi.api = null;
+        }
+    } else {
+        console.log("Api previously acquired. returning.");
+    }
+
+    return acquireApi.api;
+}
+
+function restartProfiling() {
+    console.log("restartProfiling");
+    let vscode = App.vscodeApi;
+    vscode.postMessage({
+        command: "restart_profiling_clicked"
+    });
+}
+
 function App() {
     const [sliderMemory, setSliderMemory] = useState([50, 69, 420]);
     const [sliderThroughput, setSliderThroughput] = useState([50, 69, 420]);
     const [analysisState, setAnalysisState] = useState();
+    const [textChanged, setTextChanged] = useState(false);
+
+    const [vscodeApi, setVscodeApi] = useState(acquireApi());
+    App.vscodeApi = vscodeApi;
 
     const onMemoryResize = function (change) {
         let newHeight = sliderMemory[0] * (1 + change / 100);
@@ -72,10 +109,15 @@ function App() {
 
     useEffect(function () {
         window.addEventListener('message', event => {
-            setAnalysisState(event.data);
             console.log("Message:", JSON.stringify(event.data));
-            // updateSliders(event.data, 0.5, null, setSliderMemory, setSliderThroughput);
-            updateSliders(event.data, null, 0.5, setSliderMemory, setSliderThroughput);
+            if (event.data['message_type'] == "analysis") {
+                setAnalysisState(event.data);
+                // updateSliders(event.data, 0.5, null, setSliderMemory, setSliderThroughput);
+                updateSliders(event.data, null, 0.5, setSliderMemory, setSliderThroughput);
+            } else if (event.data['message_type'] == "text_change") {
+                console.log("Text change!");
+                setTextChanged(true);
+            }
         });
 
         const sendMock = false;
@@ -103,6 +145,11 @@ function App() {
                                 entryPoint={analysisState['project_entry_point']}
                             />
                         </Card.Text>
+                        { textChanged && 
+                        <Alert key='info' variant='info'>
+                            Change is detected in the project. <Button size='sm' onClick={restartProfiling}>Restart Profiling</Button>
+                        </Alert>
+                        }
                     </Card.Body>
                 </Card>
                 <br></br>
@@ -176,7 +223,7 @@ function App() {
 
     return (
         <>
-            <WelcomeScreen analysisState={analysisState}></WelcomeScreen>
+            <WelcomeScreen analysisState={analysisState} vscodeApi={vscodeApi}></WelcomeScreen>
         </>
     );
 }
