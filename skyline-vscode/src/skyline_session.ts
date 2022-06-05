@@ -1,15 +1,14 @@
 
 import * as vscode from 'vscode';
-import {Socket} from 'net';
-
 import * as pb from './protobuf/innpv_pb';
 import * as path from 'path';
-import { assert, timeStamp } from 'console';
+import * as cp from 'child_process';
 
+import {Socket} from 'net';
 import { simpleDecoration } from './decorations';
-import { settings } from 'cluster';
 
-const nunjucks = require('nunjucks');
+const crypto = require('crypto');
+const resolve = require('path').resolve
 
 export interface SkylineSessionOptions {
     context: vscode.ExtensionContext;
@@ -19,12 +18,21 @@ export interface SkylineSessionOptions {
     webviewPanel: vscode.WebviewPanel
 }
 
+export interface SkylineEnvironment {
+    binaryPath: string;
+    reactProjectRoot: string;
+}
+
 export class SkylineSession {
     // Backend socket connection
+    skylineProcess?: cp.ChildProcess;
     connection: Socket;
     seq_num: number;
     last_length: number;
     message_buffer: Uint8Array;
+
+    // Set to true if the backend should be restarted
+    backendShouldRestart: boolean;
 
     // VSCode extension and views
     context: vscode.ExtensionContext;
@@ -37,9 +45,16 @@ export class SkylineSession {
     msg_breakdown?: pb.BreakdownResponse;
     msg_habitat?: pb.HabitatResponse;
 
+    // Project information
     root_dir: string;
 
-    constructor(options: SkylineSessionOptions) {
+    // Environment
+    reactProjectRoot: string;
+
+    constructor(options: SkylineSessionOptions, environ: SkylineEnvironment) {
+        console.log("SkylineSession instantiated");
+
+        this.backendShouldRestart = false;
         this.connection = new Socket();
         this.connection.on('data', this.on_data.bind(this));
         this.connection.on('close', this.on_close.bind(this));
@@ -54,6 +69,12 @@ export class SkylineSession {
         this.openedEditors = new Map<string, vscode.TextEditor>();
 
         this.root_dir = options.projectRoot;
+        this.reactProjectRoot = environ.reactProjectRoot;
+
+        this.webviewPanel.webview.onDidReceiveMessage(this.webview_handle_message.bind(this));
+        this.webviewPanel.onDidDispose(this.kill_backend.bind(this));
+
+        vscode.workspace.onDidChangeTextDocument(this.on_text_change.bind(this));
     }
 
     send_message(message: any, payloadName: string) {
@@ -61,8 +82,10 @@ export class SkylineSession {
         msg.setSequenceNumber(this.seq_num ++);
         if (payloadName == "Initialize") {
             msg.setInitialize(message);
-        } else {
+        } else if (payloadName == "Analysis") {
             msg.setAnalysis(message);
+        } else {
+            msg.setGeneric(message);
         }
 
         let buf = msg.serializeBinary();
@@ -86,6 +109,36 @@ export class SkylineSession {
         const message = new pb.AnalysisRequest();
         message.setMockResponse(false);
         this.send_message(message, "Analysis");
+    }
+
+    kill_backend() {
+        this.skylineProcess?.kill('SIGKILL');
+    }
+
+    restart_profiling() {
+        this.backendShouldRestart = true;
+        this.skylineProcess?.kill('SIGKILL');
+    }
+
+    on_text_change() {
+        console.log("Text change");
+        let changeEvent = {
+            "message_type": "text_change"
+        };
+        this.webviewPanel.webview.postMessage(changeEvent);
+    }
+
+    webview_handle_message(msg: any) {
+        console.log("webview_handle_message");
+        console.log(msg);
+
+        if (msg['command'] == 'begin_analysis_clicked') {
+			vscode.window.showInformationMessage("Sending analysis request.");
+			this.send_analysis_request();
+        } else if (msg['command'] == 'restart_profiling_clicked') {
+			vscode.window.showInformationMessage("Restarting profiling.");
+            this.restart_profiling();
+        }
     }
 
     async on_data(message: Uint8Array) {
@@ -147,7 +200,9 @@ export class SkylineSession {
             };
 
             // this.webviewPanel.webview.html = await this.rEaCt();
-            this.webviewPanel.webview.postMessage(await this.generateStateJson());
+            let json_msg = await this.generateStateJson();
+            json_msg['message_type'] = 'analysis';
+            this.webviewPanel.webview.postMessage(json_msg);
         } catch (e) {
             console.log("exception!");
             console.log(message);
@@ -210,7 +265,8 @@ export class SkylineSession {
     }
 
     private _getHtmlForWebview() {
-        const buildPath = "/home/ybgao/home/habitat_demo/skyline-vscode/react-test";
+        const buildPath = resolve(this.reactProjectRoot);
+        console.log("resolved buildPath", buildPath);
 
 		const manifest = require(path.join(buildPath, 'build', 'asset-manifest.json'));
 		const mainScript = manifest['files']['main.js'];
@@ -222,7 +278,7 @@ export class SkylineSession {
 		const styleUri = stylePathOnDisk.with({ scheme: 'vscode-resource' });
 
 		// Use a nonce to whitelist which scripts can be run
-		const nonce = 'nonce';
+		const nonce = crypto.randomBytes(16).toString('base64');
 
 		return `<!DOCTYPE html>
 			<html lang="en">
@@ -246,6 +302,8 @@ export class SkylineSession {
 
     async generateStateJson() {
         let fields = {
+            "message_type": "analysis",
+
             "project_root": this.msg_initialize?.getServerProjectRoot()?.toString(),
             "project_entry_point": this.msg_initialize?.getEntryPoint()?.toString(),
 
@@ -290,60 +348,5 @@ export class SkylineSession {
         }
 
         return fields;
-    }
-
-    async rEaCt() {
-        const filePath: vscode.Uri = vscode.Uri.file(path.join(this.context.extensionPath, 'src', 'html', 'template.html'));
-        let htmlBytes = await vscode.workspace.fs.readFile(vscode.Uri.file(filePath.fsPath));
-        let html = Buffer.from(htmlBytes).toString('utf-8');
-
-        let fields = {
-            "project_root": this.msg_initialize?.getServerProjectRoot()?.toString(),
-            "project_entry_point": this.msg_initialize?.getEntryPoint()?.toString(),
-
-            "throughput": {},
-            "breakdown": {},
-
-            "habitat": [] as Array<[string, number]>
-        };
-
-        if (this.msg_throughput) {
-            fields['throughput'] = {
-                "samples_per_second": this.msg_throughput?.getSamplesPerSecond(),
-                "predicted_max_samples_per_second": this.msg_throughput?.getPredictedMaxSamplesPerSecond(),
-                "run_time_ms": [ 
-                    this.msg_throughput?.getRunTimeMs()?.getSlope(),
-                    this.msg_throughput?.getRunTimeMs()?.getBias()
-                ],
-                "peak_usage_bytes": [ 
-                    this.msg_throughput?.getPeakUsageBytes()?.getSlope(),
-                    this.msg_throughput?.getPeakUsageBytes()?.getBias()
-                ],
-                "batch_size_context": this.msg_throughput?.getBatchSizeContext()?.toString(),
-                "can_manipulate_batch_size": this.msg_throughput?.getCanManipulateBatchSize()
-            };
-        }
-
-        if (this.msg_breakdown) {
-            fields['breakdown'] = {
-                "peak_usage_bytes": this.msg_breakdown.getPeakUsageBytes(),
-                "memory_capacity_bytes": this.msg_breakdown.getMemoryCapacityBytes(),
-                "iteration_run_time_ms": this.msg_breakdown.getIterationRunTimeMs(),
-                "batch_size": this.msg_breakdown.getBatchSize(),
-                "num_nodes_operation_tree": this.msg_breakdown.getOperationTreeList().length,
-                "num_nodes_weight_tree": this.msg_breakdown.getWeightTreeList().length
-            };
-        }
-
-        if (this.msg_habitat) {
-            for (let prediction of this.msg_habitat.getPredictionsList()) {
-                fields['habitat'].push([ prediction.getDeviceName(), prediction.getRuntimeMs() ]);
-            }
-        }
-
-        nunjucks.configure({ autoescape: true });
-
-        var rendered = nunjucks.renderString(html, fields);
-        return rendered;
     }
 }

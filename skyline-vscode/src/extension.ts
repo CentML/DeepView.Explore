@@ -1,14 +1,18 @@
-import { url } from 'inspector';
 import * as vscode from 'vscode';
-import {SkylineSession, SkylineSessionOptions} from './skyline_session';
+import {SkylineEnvironment, SkylineSession, SkylineSessionOptions} from './skyline_session';
 
 import * as cp from 'child_process';
+import * as path from 'path';
+import * as fs from 'fs';
 
 export function activate(context: vscode.ExtensionContext) {
-	console.log('Congratulations, your extension "skyline-vscode" is now active!');
-
 	let sess: SkylineSession;
 	let skylineProcess: cp.ChildProcess;
+
+	let environ_options: SkylineEnvironment = {
+		binaryPath: "/home/jim/research/port-habitat/venv/bin/skyline",
+		reactProjectRoot: path.join(context.extensionPath, "react-ui")
+	};
 
 	let disposable = vscode.commands.registerCommand('skyline-vscode.cmd_begin_analyze', () => {
 		if (sess != undefined) {
@@ -17,6 +21,11 @@ export function activate(context: vscode.ExtensionContext) {
 			console.log("skylineProcess", skylineProcess);
 			sess.send_analysis_request();
 		} else {
+			let vsconfig = vscode.workspace.getConfiguration('skyline');
+			if (vsconfig['skyline_bin_location'] != null) {
+				environ_options.binaryPath = vsconfig['skyline_bin_location'];
+			}
+
 			let options: vscode.OpenDialogOptions = {
 				canSelectFiles: false,
 				canSelectFolders: true,
@@ -29,13 +38,6 @@ export function activate(context: vscode.ExtensionContext) {
 					return;
 				};
 
-				// TODO: Unhardcode this later.
-				/* 
-				vscode.workspace.openTextDocument(vscode.Uri.file(uri[0].fsPath + "/entry_point.py")).then(doc => {
-					vscode.window.showTextDocument(doc);
-				});
-				*/
-
 				const panel = vscode.window.createWebviewPanel(
 					'skyline',
 					"Skyline",
@@ -43,8 +45,9 @@ export function activate(context: vscode.ExtensionContext) {
 					{
 						enableScripts: true,
 						localResourceRoots: [
-							vscode.Uri.file("/home/ybgao/home/habitat_demo/skyline-vscode/react-test/build")
-						]
+							vscode.Uri.file(path.join(environ_options.reactProjectRoot, 'build'))
+						],
+						retainContextWhenHidden: true
 					}
 				);
 
@@ -56,28 +59,42 @@ export function activate(context: vscode.ExtensionContext) {
 					webviewPanel: 	panel
 				};
 
-				skylineProcess = cp.spawn(
-					// "/home/ybgao/home/habitat_demo/venv/bin/python",
-					"/home/ybgao/home/habitat_repo/skyline/cli/venv2/bin/python",
-					["-m", "skyline", "interactive", "--skip-atom", "--debug", "entry_point.py" ],
-					{ cwd: uri[0].fsPath }
-				);
+				let startSkyline = function() {
+					skylineProcess = cp.spawn(
+						environ_options.binaryPath,
+						["interactive", "--skip-atom", "--debug", "entry_point.py"],
+						{ cwd: uri[0].fsPath }
+					);
 
-				skylineProcess.stdout?.on('data', function(data) {
-					console.log("stdout:", data.toString());
-				});
-
-				skylineProcess.stderr?.on('data', function(data) {
-					let stderr = data.toString();
-					console.log("stderr", stderr);
-					if (stderr.includes("listening for connections")) {
-						console.log("Backend ready.");
-						sess = new SkylineSession(sess_options);
+					if (vsconfig['write_logs']) {
+						var errfile = fs.createWriteStream('/tmp/skyline.log', {flags: 'a'});
+						skylineProcess.stderr?.pipe(errfile);
 					}
-				});
+
+					skylineProcess.stdout?.on('data', function(data) {
+						console.log("stdout:", data.toString());
+					});
+
+					skylineProcess.stderr?.on('data', function(data) {
+						let stderr = data.toString();
+						console.log("stderr", stderr);
+						if (stderr.includes("listening for connections")) {
+							console.log("Backend ready.");
+							sess = new SkylineSession(sess_options, environ_options);
+							sess.skylineProcess = skylineProcess;
+						}
+					});
+				}
+
+				startSkyline();
 
 				skylineProcess.on("close", function() {
-					console.log("Process closed");
+					if (sess.backendShouldRestart) {
+						console.log("Process closed, restarting.");
+						startSkyline();
+					} else {
+						console.log("Process closed, not restarting.");
+					}
 				});
 			});
 		}

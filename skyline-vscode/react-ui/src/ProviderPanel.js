@@ -29,9 +29,9 @@ export default class ProviderPanel extends React.Component {
 
         this.providers = {
             google: { name: "Google Cloud Platform", logo: "https://logos-world.net/wp-content/uploads/2021/02/Google-Cloud-Emblem.png" },
-            azure: { name: "Microsoft Azure", logo: "https://sonraisecurity.com/wp-content/uploads/2021/04/azure-logo-e1619210112399.png" },
+            azure: { name: "Microsoft Azure", logo: "https://designlogovector.com/wp-content/uploads/2022/01/azure-svg-logo-.jpg" },
             aws: { name: "Amazon Web Services", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Amazon_Web_Services_Logo.svg/1200px-Amazon_Web_Services_Logo.svg.png" },
-            centml: { name: "CentML", logo: "https://www.cs.toronto.edu/~ybgao/habitat/centml.png" }
+            centml: { name: "CentML", logo: "https://centml.ai/assets/logo.png" }
         };
 
         // perf obtained from https://cloud.google.com/blog/topics/developers-practitioners/benchmarking-rendering-software-compute-engine
@@ -191,7 +191,7 @@ export default class ProviderPanel extends React.Component {
                         <Col></Col>
                     </Row>
                     </Container>
-                    <XYPlot width={500} height={300}>
+                    <XYPlot width={450} height={300}>
                         <VerticalGridLines />
                         <HorizontalGridLines />
                         <XAxis title="Relative Training Time" style={{ fontSize: 15}}/>

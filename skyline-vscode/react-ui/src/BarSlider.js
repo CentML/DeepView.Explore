@@ -14,7 +14,6 @@ class BarSlider extends React.Component {
       onClick,
     } = this.props;
     const limitBarHeight = 100 - limitPercentage;
-    console.log(percentage, limitPercentage);
     return (
       <div
         className="innpv-barslider"

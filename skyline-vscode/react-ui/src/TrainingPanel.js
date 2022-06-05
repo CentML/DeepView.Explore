@@ -45,7 +45,7 @@ export default class TrainingPanel extends React.Component {
             <>
                 { this.state.trainingCurveData.length == 0 && <Button variant='primary' onClick={this.beginTraining}>Begin Training</Button> }
                 <ProgressBar variant={this.state.pbarProps.variant} animated={this.state.pbarProps.animated} now={this.state.pbarProps.value} />
-                <XYPlot width={500} height={300}>
+                <XYPlot width={450} height={300}>
                     <VerticalGridLines />
                     <HorizontalGridLines />
                     <XAxis title="Epoch" style={{ fontSize: 15 }}/>
