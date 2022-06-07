@@ -1,6 +1,8 @@
 {
   "name": "skyline-vscode",
   "displayName": "skyline-vscode",
+  "publisher": "centml",
+  "repository": "https://github.com/CentML/mltools-vscode",
   "description": "",
   "version": "0.0.1",
   "engines": {
