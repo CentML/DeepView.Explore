@@ -1,5 +1,7 @@
 # VSCode Plugin for ML Tools
 
+![Demo GIF](https://raw.githubusercontent.com/CentML/mltools-vscode/jun07-usability-improvements/images/demo.gif)
+
 ## Installation
 Installation consists of two parts: the front-end UI and the profiler (which needs to be installed separately).
 
