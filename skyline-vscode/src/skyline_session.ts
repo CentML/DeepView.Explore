@@ -128,6 +128,15 @@ export class SkylineSession {
         this.webviewPanel.webview.postMessage(changeEvent);
     }
 
+    report_error(err_text: String) {
+        console.log("Reporting Error");
+        let errorEvent = {
+            "message_type": "error",
+            "error_text": err_text
+        };
+        this.webviewPanel.webview.postMessage(errorEvent);
+    }
+
     webview_handle_message(msg: any) {
         console.log("webview_handle_message");
         console.log(msg);

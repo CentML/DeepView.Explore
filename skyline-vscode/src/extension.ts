@@ -82,6 +82,9 @@ export function activate(context: vscode.ExtensionContext) {
 							console.log("Backend ready.");
 							sess = new SkylineSession(sess_options, environ_options);
 							sess.skylineProcess = skylineProcess;
+						} else if (stderr.includes("An error occured during analysis")) {
+							console.log("Error, reporting to UI!");
+							sess.report_error(stderr);
 						}
 					});
 				}
