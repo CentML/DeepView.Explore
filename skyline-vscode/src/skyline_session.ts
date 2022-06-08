@@ -205,7 +205,7 @@ export class SkylineSession {
                     break;
                 case pb.FromServer.PayloadCase.BREAKDOWN:
                     this.msg_breakdown = msg.getBreakdown();
-                    this.highlight_breakdown();
+                    // this.highlight_breakdown();
                     break;
                 case pb.FromServer.PayloadCase.HABITAT:
                     this.msg_habitat = msg.getHabitat();
