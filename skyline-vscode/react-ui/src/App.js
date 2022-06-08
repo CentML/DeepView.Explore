@@ -90,6 +90,7 @@ function App() {
     const [textChanged, setTextChanged] = useState(false);
 
     const [vscodeApi, setVscodeApi] = useState(acquireApi());
+    const [errorText, setErrorText] = useState();
     App.vscodeApi = vscodeApi;
 
     const onMemoryResize = function (change) {
@@ -117,6 +118,8 @@ function App() {
             } else if (event.data['message_type'] == "text_change") {
                 console.log("Text change!");
                 setTextChanged(true);
+            } else if (event.data['message_type'] == 'error') {
+                setErrorText(event.data['error_text']);
             }
         });
 
@@ -129,8 +132,33 @@ function App() {
                 setAnalysisState(mockResponse);
                 updateSliders(mockResponse, 0.5, null, setSliderMemory, setSliderThroughput);
             }, 1000);
+
+            setTimeout(() => {
+                setErrorText("this is the body");
+            }, 5000);
         }
     }, []);
+
+    if (errorText) {
+        return (
+            <>
+            <Alert variant="danger">
+            <Alert.Heading>Analysis Error</Alert.Heading>
+            <p>
+                An error has occurred during analysis. This could be a problem with Skyline or possibly your code. For more information, refer to the detailed message below:
+            </p>
+            <hr />
+            <p className="mb-0">
+                <code>
+                    {errorText}
+                </code>
+            </p>
+            <hr />
+            <Button onClick={restartProfiling}>Restart Profiling</Button>
+            </Alert>
+            </>
+        )
+    }
 
     if (analysisState && analysisState['throughput'] && Object.keys(analysisState['throughput']).length > 0)
         return (
