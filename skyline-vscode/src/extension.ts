@@ -15,7 +15,7 @@ export function activate(context: vscode.ExtensionContext) {
 	};
 
 	let disposable = vscode.commands.registerCommand('skyline-vscode.cmd_begin_analyze', () => {
-		if (sess != undefined) {
+		if (false && sess != undefined) {
 			vscode.window.showInformationMessage("Sending analysis request.");
 			console.log("sess", sess);
 			console.log("skylineProcess", skylineProcess);
