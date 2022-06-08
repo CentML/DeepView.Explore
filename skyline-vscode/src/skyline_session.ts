@@ -30,6 +30,7 @@ export class SkylineSession {
     seq_num: number;
     last_length: number;
     message_buffer: Uint8Array;
+    startSkyline?: () => void | undefined;
 
     // Set to true if the backend should be restarted
     backendShouldRestart: boolean;
@@ -75,6 +76,7 @@ export class SkylineSession {
         this.webviewPanel.onDidDispose(this.kill_backend.bind(this));
 
         vscode.workspace.onDidChangeTextDocument(this.on_text_change.bind(this));
+	this.restart_profiling = this.restart_profiling.bind(this);
     }
 
     send_message(message: any, payloadName: string) {
@@ -116,8 +118,10 @@ export class SkylineSession {
     }
 
     restart_profiling() {
+	console.log("restart_profiling", this.startSkyline, this.skylineProcess);
         this.backendShouldRestart = true;
         this.skylineProcess?.kill('SIGKILL');
+	// this.startSkyline && this.startSkyline();
     }
 
     on_text_change() {

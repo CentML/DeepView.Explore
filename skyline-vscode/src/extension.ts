@@ -59,6 +59,16 @@ export function activate(context: vscode.ExtensionContext) {
 					webviewPanel: 	panel
 				};
 
+				let on_close = function() {
+					console.log(sess.backendShouldRestart);
+					if (sess.backendShouldRestart) {
+						console.log("Process closed, restarting.");
+						startSkyline();
+					} else {
+						console.log("Process closed, not restarting.");
+					}
+				};
+
 				let startSkyline = function() {
 					skylineProcess = cp.spawn(
 						environ_options.binaryPath,
@@ -82,16 +92,21 @@ export function activate(context: vscode.ExtensionContext) {
 							console.log("Backend ready.");
 							sess = new SkylineSession(sess_options, environ_options);
 							sess.skylineProcess = skylineProcess;
+							sess.startSkyline = startSkyline;
 						} else if (stderr.includes("An error occured during analysis")) {
 							console.log("Error, reporting to UI!");
 							sess.report_error(stderr);
 						}
 					});
+
+					skylineProcess.on("close", on_close);
 				}
 
 				startSkyline();
+				sess.startSkyline = startSkyline;
 
 				skylineProcess.on("close", function() {
+				// on_close = function() {
 					if (sess.backendShouldRestart) {
 						console.log("Process closed, restarting.");
 						startSkyline();

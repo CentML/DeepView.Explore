@@ -27,12 +27,22 @@ export default class ProviderPanel extends React.Component {
             maxNumGpu: 4
         };
 
+	/*
         this.providers = {
             google: { name: "Google Cloud Platform", logo: "https://logos-world.net/wp-content/uploads/2021/02/Google-Cloud-Emblem.png" },
             azure: { name: "Microsoft Azure", logo: "https://designlogovector.com/wp-content/uploads/2022/01/azure-svg-logo-.jpg" },
             aws: { name: "Amazon Web Services", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Amazon_Web_Services_Logo.svg/1200px-Amazon_Web_Services_Logo.svg.png" },
             centml: { name: "CentML", logo: "https://centml.ai/assets/logo.png" }
         };
+	*/
+
+        this.providers = {
+            google: { name: "Google Cloud Platform", logo: "resources/google.png" },
+            azure: { name: "Microsoft Azure", logo: "resources/azure.jpg" },
+            aws: { name: "Amazon Web Services", logo: "resources/aws.png" },
+            centml: { name: "CentML", logo: "resources/centml.png" }
+        };
+
 
         // perf obtained from https://cloud.google.com/blog/topics/developers-practitioners/benchmarking-rendering-software-compute-engine
         // assume k80 half as fast as p4
