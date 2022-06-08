@@ -18,7 +18,7 @@ import WelcomeScreen from './WelcomeScreen';
  * @param {*} bs 
  * @returns an object containing {memory, maxMemory, thoughput, maxThroughput}
  */
-function updateSliders(analysisState, memoryPerc, throughputPerc, setSliderMemory, setSliderThroughput) {
+function updateSliders(analysisState, memoryPerc, throughputPerc, setSliderMemory, setSliderThroughput, bs) {
     let memoryModel = analysisState['throughput']['peak_usage_bytes'];
     let throughputModel = analysisState['throughput']['run_time_ms'];
 
@@ -27,27 +27,29 @@ function updateSliders(analysisState, memoryPerc, throughputPerc, setSliderMemor
     let maxMemory = analysisState['breakdown']['memory_capacity_bytes'];
     let maxThroughput = maxBatch * 1000.0 / (maxBatch * throughputModel[0] + throughputModel[1]);
 
-    let bs = 1;
-    if (memoryPerc && throughputPerc) {
-        console.log("memory and throughput perc cannot both be not null");
-        return;
-    } else if (memoryPerc) {
-        bs = Math.floor(memoryPerc * maxBatch / 100.0);
-    } else if (throughputPerc) {
-        let tp = throughputPerc * maxThroughput / 100.0;
-        bs = Math.floor(tp * throughputModel[1]) / (1000.0 - tp * throughputModel[0]);
-    } else {
-        console.log("memory and throughput perc cannot both be null");
-        return;
+    if (bs == null) {
+	    if (memoryPerc && throughputPerc) {
+		console.log("memory and throughput perc cannot both be not null");
+		return;
+	    } else if (memoryPerc) {
+		bs = Math.floor(memoryPerc * maxBatch / 100.0);
+	    } else if (throughputPerc) {
+		let tp = throughputPerc * maxThroughput / 100.0;
+		bs = Math.floor(tp * throughputModel[1]) / (1000.0 - tp * throughputModel[0]);
+	    } else {
+		console.log("memory and throughput perc cannot both be null");
+		return;
+	    }
+
+	    bs = Math.max(1, Math.min(bs, maxBatch));
     }
-
-    bs = Math.max(1, Math.min(bs, maxBatch));
-
     let memory = bs * memoryModel[0] + memoryModel[1];
     let throughput = bs * 1000.0 / (bs * throughputModel[0] + throughputModel[1]);
 
     setSliderMemory([100.0 * memory / maxMemory, memory / 1e6, maxMemory / 1e6]);
     setSliderThroughput([100.0 * throughput / maxThroughput, throughput, maxThroughput]);
+
+    return bs;
 }
 
 // https://stackoverflow.com/questions/54135313/webview-extension-in-typescript
@@ -88,6 +90,7 @@ function App() {
     const [sliderThroughput, setSliderThroughput] = useState([50, 69, 420]);
     const [analysisState, setAnalysisState] = useState();
     const [textChanged, setTextChanged] = useState(false);
+    const [curBatchSize, setCurBatchSize] = useState(0);
 
     const [vscodeApi, setVscodeApi] = useState(acquireApi());
     const [errorText, setErrorText] = useState();
@@ -98,14 +101,16 @@ function App() {
         newHeight = Math.min(100, Math.max(0, newHeight));
         // setSliderMemoryPerc(newHeight);
 
-        updateSliders(analysisState, newHeight, null, setSliderMemory, setSliderThroughput);
+        let bs = updateSliders(analysisState, newHeight, null, setSliderMemory, setSliderThroughput, null);
+        setCurBatchSize(bs);
     }
 
     const onThroughputResize = function (change) {
         var newHeight = sliderThroughput[0] * (1 + change / 100);
         newHeight = Math.min(100, Math.max(0, newHeight));
 
-        updateSliders(analysisState, null, newHeight, setSliderMemory, setSliderThroughput);
+        let bs = updateSliders(analysisState, null, newHeight, setSliderMemory, setSliderThroughput, null);
+        setCurBatchSize(bs);
     }
 
     useEffect(function () {
@@ -114,7 +119,8 @@ function App() {
             if (event.data['message_type'] == "analysis") {
                 setAnalysisState(event.data);
                 // updateSliders(event.data, 0.5, null, setSliderMemory, setSliderThroughput);
-                updateSliders(event.data, null, 0.5, setSliderMemory, setSliderThroughput);
+		// updateSliders(event.data, null, 0.5, setSliderMemory, setSliderThroughput);
+                updateSliders(event.data, null, null, setSliderMemory, setSliderThroughput, event.data["breakdown"]["batch_size"]);
             } else if (event.data['message_type'] == "text_change") {
                 console.log("Text change!");
                 setTextChanged(true);
@@ -184,6 +190,7 @@ function App() {
                 <Tabs defaultActiveKey="profiling" className="mb-3">
                     <Tab eventKey="profiling" title="Profiling">
                     <div className="innpv-memory innpv-subpanel">
+			{ curBatchSize != 0 && <><Alert variant='secondary'>Using predicted batch size <b>{Math.round(curBatchSize)}</b></Alert><br /></> }
                         <Subheader icon="database">Peak Memory Usage</Subheader>
                             <Row>
                                 <Col>
