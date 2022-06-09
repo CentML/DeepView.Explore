@@ -66,7 +66,7 @@ export default class WelcomeScreen extends React.Component {
                     <Card.Title></Card.Title>
                     <Card.Body>
                         <Stack gap={3}>
-                        <Image src="https://skylineprof.github.io/img/skyline_wordmark.svg" width="400px"></Image>
+                        <Image src="resources/skyline.svg" width="400px"></Image>
                         { analysisState &&
                             <>
                                 <ProjectInfo
