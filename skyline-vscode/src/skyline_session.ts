@@ -8,7 +8,7 @@ import {Socket} from 'net';
 import { simpleDecoration } from './decorations';
 
 const crypto = require('crypto');
-const resolve = require('path').resolve
+const resolve = require('path').resolve;
 
 export interface SkylineSessionOptions {
     context: vscode.ExtensionContext;
