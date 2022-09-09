@@ -10,7 +10,7 @@ export function activate(context: vscode.ExtensionContext) {
 	let skylineProcess: cp.ChildProcess;
 
 	let environ_options: SkylineEnvironment = {
-		binaryPath: "/home/jim/research/port-habitat/venv/bin/skyline",
+		binaryPath: vscode.workspace.getConfiguration('skyline')['skyline_bin_location'],
 		reactProjectRoot: path.join(context.extensionPath, "react-ui")
 	};
 
