@@ -21,7 +21,40 @@ After installation, please make note of the path to the `skyline` binary. To do 
 3. Click on `Begin Analysis`.
 
 ## Development Environment Setup
-Clone this repository then run `npm install` to install all the prerequisites. The `package.json` file defines actions to both build and run the extension using VSCode.
+
+### Dependencies
+1. https://github.com/CentML/skyline. Note: depending on you choose to install the backend you might need to set the backend path.
+1. [Node.js](https://nodejs.org/en/) and npm
+1. Protobuf
+```zsh
+apt install protobuf-compiler
+```
+
+### Setup
+1. Clone this repository:
+   ```zsh
+   git clone https://github.com/CentML/mltools-vscode
+   ```
+1. Install project dependencies
+   ```zsh
+   cd mltools-vscode/react-ui && npm install
+   cd ../..
+   cd mltools-vscode/skyline-vscode && npm install
+   ```
+1. Compile protobuf files:
+   ```zsh
+   cd src/protobuf
+   make
+   ```
+## Run extension
+Start VSCode in the plugin source directory:
+```
+cd mltools-vscode/skyline-vscode;
+code .
+```
+Press `F5` to compile and run the extension. When the extension window appears, open of the [example projects](https://github.com/CentML/skyline/tree/main/examples). Then press `Ctrl-Shift-P` then select `Begin Analysis`.
+
+To debug the React UI without extension code, set `const sendMock = true;` in the `react-ui/App.js`, then start the project as any other React.app.
 
 ## Release process
 In the development environment, run `vsce package` to generate the `.vsix` file.
