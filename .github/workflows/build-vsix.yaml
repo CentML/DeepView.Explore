@@ -1,4 +1,4 @@
-name: whl-build-all
+name: build-vsix
 
 on:
   workflow_dispatch:
