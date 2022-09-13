@@ -6,13 +6,14 @@ pushd skyline-vscode/react-ui && \
     npm run build && \
     popd;
 
-# Build plugin
+# Build backend
+# TODO: Replace "npm install react" with a proper fix in package.json
 pushd skyline-vscode && \
     npm install && \
     pushd src/protobuf && 
     make && make old && \
     popd && \
-    npm install react react-dom && \        # TODO: Replace this with a proper fix in package.json
-    vsce package && \
+    npm install react react-dom && \
+    yes | vsce package && \
     popd;
 
