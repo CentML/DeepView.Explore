@@ -1,0 +1,31 @@
+name: whl-build-all
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-vsix:
+    runs-on: [self-hosted]
+    steps:
+      - name: Display host information
+        run: |
+          uname -a
+          hostname
+          pwd
+          id
+          ls -la
+
+      - name: Fetch repository
+        uses: actions/checkout@v3
+        with:
+          ref: fix-setup
+
+      - name: Build VSIX
+        run: |
+          scripts/build_vsix.sh
+
+      - name: Upload vsix artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: mltools-vscode
+          path: skyline-vscode/skyline-vscode-*.vsix

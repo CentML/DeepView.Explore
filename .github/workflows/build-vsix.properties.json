@@ -1,0 +1,4 @@
+{
+    "name": "build-vsix",
+    "description": "Build vsix file for VSCode"
+}
