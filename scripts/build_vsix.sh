@@ -3,7 +3,7 @@
 # Build react UI
 pushd skyline-vscode/react-ui && \
     npm install && \
-    npm run build && \
+    CI=false npm run build && \
     popd;
 
 # Build backend
