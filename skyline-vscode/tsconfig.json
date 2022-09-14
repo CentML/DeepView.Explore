@@ -9,7 +9,7 @@
 		"sourceMap": true,
 		"rootDir": "src",
 		"strict": true,   /* enable all strict type-checking options */
-		"allowJs": false
+		"allowJs": true
 		// "strictPropertyInitialization": false
 		/* Additional Checks */
 		// "noImplicitReturns": true, /* Report error when not all code paths in function return a value. */
@@ -20,7 +20,7 @@
 		"src/**/*.ts",
 	],
 	"files": [
-		"src/protobuf/innpv_pb.d.ts"
+		"src/protobuf/innpv_pb.js"
 	],
 	"exclude": [
 		"node_modules",
