@@ -6,6 +6,7 @@ import * as cp from 'child_process';
 
 import {Socket} from 'net';
 import { simpleDecoration } from './decorations';
+import { privateEncrypt } from 'crypto';
 
 const crypto = require('crypto');
 const resolve = require('path').resolve;
@@ -223,54 +224,60 @@ export class SkylineSession {
         }
     }
 
-    highlight_breakdown() {
-        if (this.msg_breakdown) {
-            let highlights = new Map<string, Array<[number, vscode.MarkdownString]>>();
-            for (let node of this.msg_breakdown.getOperationTreeList()) {
-                for (let ctx of node.getContextsList()) {
-                    let path = ctx.getFilePath()?.getComponentsList().join("/");
+    /**
+     * Append annotations to an editor when opened. This function should be called by some 
+     * hook that occurs when a new editor is opened.
+     * 
+     * @param editor The editor to annotate
+     */
+    annotate_editor(editor: vscode.TextEditor) {
+        let document = editor.document;
+        console.log("annotate_editor: ", editor.document.fileName);
+
+        // Don't do anything for non-project files, or when breakdown information is not yet available.
+        if (!document.fileName.startsWith(this.root_dir)) return;
+        if (!this.msg_breakdown) return;
+
+        let relativePath = document.fileName.slice(this.root_dir.length + 1);
+        console.log("relativePath", relativePath);
+
+        // Collect the annotations that belong to this open file
+        let decorations = new Map<vscode.Range, vscode.DecorationOptions>();
+
+        for (let node of this.msg_breakdown.getOperationTreeList()) {
+            for (let ctx of node.getContextsList()) {
+                let path = ctx.getFilePath()?.getComponentsList().join("/");
+                console.log("candidiate: ", path);
+                if (path == relativePath) {
                     let lineno = ctx.getLineNumber();
                     let opdata = node.getOperation();
+                    
+                    let label = new vscode.MarkdownString();
+                    label.appendMarkdown(`**Forward**: ${opdata!.getForwardMs().toFixed(3)} ms\n\n`);
+                    label.appendMarkdown(`**Backward**: ${opdata!.getBackwardMs().toFixed(3)} ms\n\n`);
+                    label.appendMarkdown(`**Size**: ${opdata!.getSizeBytes()} bytes\n\n`);
 
-                    if (path) {
-                        let lst = highlights.get(path);
-                        if (!lst) {
-                            lst = new Array<[number, vscode.MarkdownString]>();
-                            highlights.set(path, lst);
-                        }
+                    let range = new vscode.Range(
+                        new vscode.Position(lineno-1, 0),
+                        new vscode.Position(lineno-1, 
+                            document.lineAt(lineno-1).text.length)
+                    );
 
-                        let label = new vscode.MarkdownString();
-                        label.appendMarkdown(`**Forward**: ${opdata!.getForwardMs().toFixed(3)} ms\n\n`);
-                        label.appendMarkdown(`**Backward**: ${opdata!.getBackwardMs().toFixed(3)} ms\n\n`);
-                        label.appendMarkdown(`**Size**: ${opdata!.getSizeBytes()} bytes\n\n`);
-                        lst.push([lineno, label]);
+                    if (!decorations.has(range)) {
+                        decorations.set(range, {
+                            range: range,
+                            hoverMessage: [label]
+                        });
+                    } else {
+                        (decorations.get(range)?.hoverMessage as vscode.MarkdownString).appendMarkdown("---");
+                        (decorations.get(range)?.hoverMessage as vscode.MarkdownString).appendMarkdown(label.value);
                     }
                 }
             }
-
-            for (let path of highlights.keys()) {
-                let uri = vscode.Uri.parse(this.root_dir + "/" + path);
-                console.log("opening file", uri.toString());
-                vscode.workspace.openTextDocument(uri).then(document => {
-                    vscode.window.showTextDocument(document, vscode.ViewColumn.Beside).then(editor => {
-                    // vscode.window.showTextDocument(document, vscode.ViewColumn.One).then(editor => {
-                        let decorations = [];
-                        for (let marker of highlights.get(path)!) {
-                            let range = new vscode.Range(
-                                new vscode.Position(marker[0]-1, 0),
-                                new vscode.Position(marker[0]-1, 
-                                    document.lineAt(marker[0]-1).text.length)
-                            );
-                            decorations.push({
-                                range: range,
-                                hoverMessage: marker[1]
-                            });
-                        }
-                        editor.setDecorations(simpleDecoration, decorations);
-                    });
-                });
-            }
         }
+
+        // Add the annotations to the editor window
+        editor.setDecorations(simpleDecoration, Array.from(decorations.values()));
     }
 
     on_close() {
