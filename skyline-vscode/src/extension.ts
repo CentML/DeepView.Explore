@@ -29,7 +29,8 @@ export function activate(context: vscode.ExtensionContext) {
 			let options: vscode.OpenDialogOptions = {
 				canSelectFiles: false,
 				canSelectFolders: true,
-				canSelectMany: false
+				canSelectMany: false,
+				title: "Skyline"
 			};
 
 			vscode.window.showOpenDialog(options).then(uri => {
