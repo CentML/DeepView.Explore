@@ -37,7 +37,7 @@ def skyline_input_provider(batch_size=128):
 
     return (
         torch.randn(input_shape).cuda(),
-        torch.randint(low=0, high=1000, size=output_shape)).cuda(),
+        torch.randint(low=0, high=1000, size=output_shape).cuda(),
     )
 
 def skyline_iteration_provider(model):
