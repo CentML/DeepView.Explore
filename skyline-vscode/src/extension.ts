@@ -94,6 +94,11 @@ export function activate(context: vscode.ExtensionContext) {
 							sess = new SkylineSession(sess_options, environ_options);
 							sess.skylineProcess = skylineProcess;
 							sess.startSkyline = startSkyline;
+
+							vscode.window.onDidChangeActiveTextEditor(editor => {
+								console.log("onDidChangeActiveTextEditor");
+								if (editor) sess.annotate_editor(editor);
+							});
 						} else if (stderr.includes("An error occured during analysis")) {
 							console.log("Error, reporting to UI!");
 							sess.report_error(stderr);
