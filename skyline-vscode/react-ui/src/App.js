@@ -11,6 +11,10 @@ import ProjectInfo from './ProjectInfo'
 import Habitat from './Habitat'
 import DeploymentTab from './DeploymentTab'
 import WelcomeScreen from './WelcomeScreen';
+import PerfBarContainer from './PerfBarContainer';
+import MemoryPerfBar from './MemoryPerfBar';
+
+import ReactTooltip from 'react-tooltip';
 
 /**
  * Returns information required to draw memory and throughput information
@@ -129,7 +133,7 @@ function App() {
             }
         });
 
-        const sendMock = false;
+        const sendMock = true;
 
         if (sendMock) {
             setTimeout(() => {
@@ -139,9 +143,9 @@ function App() {
                 updateSliders(mockResponse, 0.5, null, setSliderMemory, setSliderThroughput);
             }, 1000);
 
-            setTimeout(() => {
-                setErrorText("this is the body");
-            }, 5000);
+            // setTimeout(() => {
+            //     setErrorText("this is the body");
+            // }, 5000);
         }
     }, []);
 
@@ -189,8 +193,43 @@ function App() {
                 <br></br>
                 <Tabs defaultActiveKey="profiling" className="mb-3">
                     <Tab eventKey="profiling" title="Profiling">
+                    <div className='innpv-contents-columns'>
+                    <div className='innpv-perfbar-contents'>
+                        <PerfBarContainer 
+                            labels={[
+                                {label: "test1", percentage: 30, clickable: false},
+                                {label: "test2", percentage: 70, clickable: false}
+                            ]}
+                            renderPerfBars={() => {
+                                return [
+                                    <MemoryPerfBar
+                                        key={"test1"}
+                                        isActive={true}
+                                        label={"test1"}
+                                        overallPct={30}
+                                        resizable={false}
+                                        percentage={30}
+                                        colorClass="innpv-blue-color-1"
+                                    />, 
+
+                                    <MemoryPerfBar
+                                        key={"test2"}
+                                        isActive={true}
+                                        label={"test2"}
+                                        overallPct={70}
+                                        resizable={false}
+                                        percentage={70}
+                                        colorClass="innpv-blue-color-2"
+                                    />, 
+                                ]
+                            }}
+                        />
+                        <ReactTooltip type="info" effect="float" />
+                    </div>
+                    <div className="innpv-contents-subrows">
                     <div className="innpv-memory innpv-subpanel">
-			{ curBatchSize != 0 && <><Alert variant='secondary'>Using predicted batch size <b>{Math.round(curBatchSize)}</b></Alert><br /></> }
+                        { curBatchSize != 0 && <><Alert variant='secondary'>Using predicted batch size <b>{Math.round(curBatchSize)}</b></Alert><br /></> }
+                        
                         <Subheader icon="database">Peak Memory Usage</Subheader>
                             <Row>
                                 <Col>
@@ -247,6 +286,8 @@ function App() {
                         </div>
                     </div>
                     <Habitat habitatData={analysisState['habitat']}/>
+                    </div>
+                    </div>
                     </Tab>
                     <Tab eventKey="deploy" title="Deployment">
                         <DeploymentTab></DeploymentTab>
