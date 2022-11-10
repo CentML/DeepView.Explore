@@ -119,7 +119,7 @@ class Elastic extends React.Component {
   }
 
   render() {
-    const {heightPct, className} = this.props;
+    const {heightPct, className, tooltipHTML} = this.props;
     const {height, paddingTop, paddingBottom} = this.state;
     // Use the initial height unless the user has dragged the element
     const containerStyle = {
@@ -138,7 +138,7 @@ class Elastic extends React.Component {
         onMouseMove={this._handleMouseMove}
         onMouseLeave={this._handleMouseLeave}
         style={containerStyle}
-        data-tip={`test tip ${heightPct}`}
+        data-tip={tooltipHTML}
       >
         <div className="innpv-elastic-inner" style={innerStyle}>
           {this.props.children}

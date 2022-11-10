@@ -142,6 +142,7 @@ class PerfBar extends React.Component {
       percentage,
       updateMarginTop,
       colorClass,
+      tooltipHTML
     } = this.props;
     const {perfHintState} = this.state;
 
@@ -154,6 +155,7 @@ class PerfBar extends React.Component {
         handleShrink={this._handleDecrease}
         handleGrow={this._handleIncrease}
         handleSnapBack={this._handleRestore}
+        tooltipHTML={tooltipHTML}
       >
         <div
           ref={this._barRef}
@@ -162,7 +164,6 @@ class PerfBar extends React.Component {
           onMouseLeave={this._handleHoverExit}
           onClick={this._handleClick}
         />
-        <ReactTooltip type="info" effect="float" />
         {renderPerfHints(perfHintState)}
       </Elastic>
     );

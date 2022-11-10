@@ -24,12 +24,12 @@ class MemoryPerfBar extends React.Component {
 
   render() {
     // const {memoryNode, editorsByPath, ...rest} = this.props;
-    const {...rest} = this.props;
+    const {tooltipHTML, ...rest} = this.props;
     return (
       <PerfBar
         clickable={true}
         renderPerfHints={()=>{}}
-        tooltipHTML={"asdf"}
+        tooltipHTML={tooltipHTML}
         // onClick={this._onClick}
         // onDoubleClick={this._onDoubleClick}
         // onActiveChange={this._onActiveChange}

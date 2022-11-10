@@ -57,3 +57,20 @@ export function scalePercentages({scaleSelector, shouldScale, applyFactor}) {
       applyFactor(element, toPercentage(newValue, total)));
   };
 };
+
+export function getTopLevelTraces(tree) {
+  var tree_size = function(idx) {
+    let total = 1;
+    let top_level = [];
+    let num_children = tree[idx]["num_children"];
+    for (let i = 0; i < num_children; i++) {
+      top_level.push(tree[idx+total]);
+      let ret = tree_size(idx + total);
+      total += ret.total;
+    }
+    return { total, top_level };
+  };
+
+  let { total, top_level } = tree_size(0);
+  return top_level;
+}
