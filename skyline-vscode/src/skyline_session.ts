@@ -3,6 +3,7 @@ import * as vscode from 'vscode';
 import * as pb from './protobuf/innpv_pb';
 import * as path from 'path';
 import * as cp from 'child_process';
+const fs = require('fs');
 
 import {Socket} from 'net';
 import { simpleDecoration } from './decorations';
@@ -213,9 +214,13 @@ export class SkylineSession {
                     break;
             };
 
-            // this.webviewPanel.webview.html = await this.rEaCt();
             let json_msg = await this.generateStateJson();
             json_msg['message_type'] = 'analysis';
+            try {
+                fs.writeFileSync('/tmp/msg.json', JSON.stringify(json_msg));
+            } catch (err) {
+                console.error(err);
+            }
             this.webviewPanel.webview.postMessage(json_msg);
         } catch (e) {
             console.log("exception!");
@@ -357,7 +362,25 @@ export class SkylineSession {
                 "iteration_run_time_ms": this.msg_breakdown.getIterationRunTimeMs(),
                 "batch_size": this.msg_breakdown.getBatchSize(),
                 "num_nodes_operation_tree": this.msg_breakdown.getOperationTreeList().length,
-                "num_nodes_weight_tree": this.msg_breakdown.getWeightTreeList().length
+                "num_nodes_weight_tree": this.msg_breakdown.getWeightTreeList().length,
+
+                "operation_tree": this.msg_breakdown.getOperationTreeList().map((elem) => {
+                    return { 
+                        name: elem.getName(),
+                        num_children: elem.getNumChildren(),
+                        forward_ms: elem.getOperation()?.getForwardMs(),
+                        backward_ms: elem.getOperation()?.getBackwardMs(),
+                        size_bytes: elem.getOperation()?.getSizeBytes(),
+                        file_refs: elem.getOperation()?.getContextInfoMapList().map((ctx) => {
+                            return { 
+                                path: ctx.getContext()?.getFilePath()?.toString(),
+                                line_no: ctx.getContext()?.getLineNumber(),
+                                run_time_ms: ctx.getRunTimeMs(),
+                                size_bytes: ctx.getSizeBytes(),
+                            }
+                        })
+                    };
+                })
             };
         }
 
