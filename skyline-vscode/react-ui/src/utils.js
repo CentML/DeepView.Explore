@@ -58,19 +58,34 @@ export function scalePercentages({scaleSelector, shouldScale, applyFactor}) {
   };
 };
 
-export function getTopLevelTraces(tree) {
+export function getTraceByLevel(tree) {
+  console.log("getTraceByLevel");
   var tree_size = function(idx) {
     let total = 1;
-    let top_level = [];
     let num_children = tree[idx]["num_children"];
     for (let i = 0; i < num_children; i++) {
-      top_level.push(tree[idx+total]);
-      let ret = tree_size(idx + total);
-      total += ret.total;
+      tree[idx+total]["depth"] = 1 + tree[idx]["depth"];
+      tree[idx+total]["parent"] = tree[idx];
+      total += tree_size(idx + total);
     }
-    return { total, top_level };
+    return total;
   };
 
-  let { total, top_level } = tree_size(0);
-  return top_level;
+  tree[0]["depth"] = 0;
+  tree_size(0);
+
+  let coarseDecomposition = tree.filter(node => { return node["depth"] == 1; });
+  for (let fineLevel = 1; ; fineLevel ++) {
+    let fineDecomposition = tree.filter(node => { return node["depth"] == fineLevel; });
+    console.log(`fineLevel: ${fineLevel}, length: ${fineDecomposition.length}`);
+    if (fineDecomposition.length == 0) return { coarse: coarseDecomposition, fine: coarseDecomposition };
+    if (fineDecomposition.length >= 7) return { coarse: coarseDecomposition, fine: fineDecomposition };
+  }
+}
+
+export function computePercentage(operations) {
+  let total_time = 0;
+  for (let elem in operations) total_time += operations[elem]["forward_ms"] + operations[elem]["backward_ms"];
+  for (let elem in operations) operations[elem]["percentage"] = 100 * (operations[elem]["forward_ms"] + operations[elem]["backward_ms"]) / total_time;
+  return operations;
 }
