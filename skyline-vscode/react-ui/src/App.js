@@ -15,10 +15,8 @@ import PerfBarContainer from './PerfBarContainer';
 import MemoryPerfBar from './MemoryPerfBar';
 
 import ReactTooltip from 'react-tooltip';
-import { even } from 'nunjucks/src/tests';
 
 import { getTopLevelTraces } from './utils'; 
-import { isAccordionItemSelected } from 'react-bootstrap/esm/AccordionContext';
 
 /**
  * Returns information required to draw memory and throughput information
