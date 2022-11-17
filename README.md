@@ -7,7 +7,7 @@ Installation consists of two parts: the front-end UI, this repository, and the b
 
 ### Frontend Installation
 To install, either:
-* **TODO**: Download the prebuilt VSCode plugin package from the [Releases](https://github.com/CentML/mltools-vscode/releases) page, then run `code --install-extension vscode*.vsix` to install the extension.
+* **TODO**: Download the prebuilt VSCode plugin package from the [Releases](https://github.com/CentML/skyline-vscode/releases) page, then run `code --install-extension vscode*.vsix` to install the extension.
 * Clone the repository and run the actions as defined in `package.json` using VSCode. This usually involves pressing `F5` while having the project open in VSCode.
 
 ### Backend Installation
@@ -33,13 +33,13 @@ apt install protobuf-compiler
 ### Setup
 1. Clone this repository:
    ```zsh
-   git clone https://github.com/CentML/mltools-vscode
+   git clone https://github.com/CentML/skyline-vscode
    ```
 1. Install project dependencies
    ```zsh
-   cd mltools-vscode/react-ui && npm install
+   cd skyline-vscode/react-ui && npm install
    cd ../..
-   cd mltools-vscode/skyline-vscode && npm install
+   cd skyline-vscode/skyline-vscode && npm install
    ```
 1. Compile protobuf files:
    ```zsh
@@ -49,7 +49,7 @@ apt install protobuf-compiler
 ## Run extension
 Start VSCode in the plugin source directory:
 ```
-cd mltools-vscode/skyline-vscode;
+cd skyline-vscode/skyline-vscode;
 code .
 ```
 Press `F5` to compile and run the extension. When the extension window appears, open of the [example projects](https://github.com/CentML/skyline/tree/main/examples). Then press `Ctrl-Shift-P` then select `Begin Analysis`.
