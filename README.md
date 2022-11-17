@@ -37,7 +37,9 @@ apt install protobuf-compiler
    ```
 1. Install project dependencies
    ```zsh
-   cd skyline-vscode/react-ui && npm install
+   cd skyline-vscode/react-ui
+   npm install
+   npm run build
    cd ../..
    cd skyline-vscode/skyline-vscode && npm install
    ```
@@ -60,7 +62,7 @@ To debug the React UI without extension code, set `const sendMock = true;` in th
 In the development environment, run `vsce package` to generate the `.vsix` file.
 
 ## Release history
-See [Releases](https://github.com/CentML/mltools-vscode/releases).
+See [Releases](https://github.com/CentML/skyline-vscode/releases).
 
 ## Meta
 See [Skyline](https://github.com/CentML/skyline).
