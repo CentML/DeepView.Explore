@@ -44,7 +44,7 @@ apt install protobuf-compiler
 1. Compile protobuf files:
    ```zsh
    cd src/protobuf
-   make
+   make old
    ```
 ## Run extension
 Start VSCode in the plugin source directory:
