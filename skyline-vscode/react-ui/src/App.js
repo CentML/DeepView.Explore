@@ -242,7 +242,7 @@ function App() {
                         <Subheader icon="database">Peak Memory Usage</Subheader>
                             <Row>
                                 <Col>
-                                <Badge className="float-end" bg="secondary">RTX2070</Badge>
+                                <Badge className="float-end" bg="secondary">{analysisState["hardware_info"]["gpus"][0]}</Badge>
                                 <Badge className="float-end" bg="success">Local</Badge>
                                 </Col>
                             </Row>
