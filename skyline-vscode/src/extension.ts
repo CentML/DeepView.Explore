@@ -110,7 +110,6 @@ export function activate(context: vscode.ExtensionContext) {
 				}
 
 				startSkyline();
-				// sess.startSkyline = startSkyline;
 
 				skylineProcess.on("close", function() {
 				// on_close = function() {
