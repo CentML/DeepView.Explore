@@ -42,40 +42,9 @@ def skyline_input_provider(batch_size=128):
 
 def skyline_iteration_provider(model):
     optimizer = torch.optim.SGD(model.parameters(), lr=1e-3)
-    def iteration(*inputs):
+    def iteration(inputs, targets):
         optimizer.zero_grad()
-        out = model(*inputs)
-        out.backward()
+        out = model(inputs)
+        out.sum().backward()
         optimizer.step()
     return iteration
-
-if __name__ == '__main__':
-    if False:
-        import habitat
-
-        tracker = habitat.OperationTracker(
-            device=habitat.Device.RTX2070,
-        )
-
-        model = skyline_model_provider()
-        iteration = skyline_iteration_provider(model)
-        X, y = skyline_input_provider()
-
-        with tracker.track():
-            iteration(X)
-
-        trace = tracker.get_tracked_trace()
-
-        devices = [
-            habitat.Device.P4000,
-            habitat.Device.GTX1080Ti,
-            habitat.Device.RTX2070,
-            habitat.Device.RTX2080Ti,
-            habitat.Device.P4,
-            habitat.Device.T4,
-            habitat.Device.V100,
-            habitat.Device.P100,
-        ]
-
-        for d in devices:
-            print(d, trace.to_device(d).run_time_ms)

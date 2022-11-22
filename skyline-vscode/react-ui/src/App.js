@@ -16,6 +16,7 @@ import MemoryPerfBar from './MemoryPerfBar';
 
 import ReactTooltip from 'react-tooltip';
 
+
 import { computePercentage, getTraceByLevel } from './utils'; 
 
 /**
