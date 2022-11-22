@@ -88,7 +88,8 @@ export function activate(context: vscode.ExtensionContext) {
 
 					skylineProcess.stderr?.on('data', function(data) {
 						let stderr = data.toString();
-						console.log("stderr", stderr);
+						if (!stderr.includes("Missing kernel metadata entry"))
+							console.log("stderr", stderr);
 						if (stderr.includes("listening for connections")) {
 							console.log("Backend ready.");
 							sess = new SkylineSession(sess_options, environ_options);
@@ -109,7 +110,7 @@ export function activate(context: vscode.ExtensionContext) {
 				}
 
 				startSkyline();
-				sess.startSkyline = startSkyline;
+				// sess.startSkyline = startSkyline;
 
 				skylineProcess.on("close", function() {
 				// on_close = function() {
