@@ -77,8 +77,6 @@ function acquireApi() {
         } else {
             acquireApi.api = null;
         }
-    } else {
-        console.log("Api previously acquired. returning.");
     }
 
     return acquireApi.api;
@@ -127,8 +125,8 @@ function App() {
             let operation_tree = state.breakdown.operation_tree;
             let { coarse, fine } = getTraceByLevel(operation_tree);
             setTimeBreakdown({ 
-                coarse: computePercentage(coarse),
-                fine: computePercentage(fine)
+                coarse: computePercentage(coarse, state.breakdown.iteration_run_time_ms),
+                fine: computePercentage(fine, state.breakdown.iteration_run_time_ms)
             });
             ReactTooltip.rebuild();
         }
@@ -229,8 +227,8 @@ function App() {
                                         overallPct={elem["percentage"]}
                                         percentage={elem["percentage"]}
                                         resizable={false}
-                                        colorClass={"innpv-blue-color-" + ((idx % 5)+1)}
-                                        tooltipHTML={`<b>${elem["name"]}</b><br>Forward: ${Math.round(elem["forward_ms"]*100)/100}ms<br>Backward: ${Math.round(elem["backward_ms"]*100)/100}ms`}
+                                        colorClass={elem["name"] == "untracked" ?  "innpv-untracked-color" : "innpv-blue-color-" + ((idx % 5)+1)}
+                                        tooltipHTML={elem["name"] == "untracked" ? `<b>Untracked</b><br>Time: ${Math.round(elem["total_time"] * 100)/100}ms` : `<b>${elem["name"]}</b><br>Forward: ${Math.round(elem["forward_ms"]*100)/100}ms<br>Backward: ${Math.round(elem["backward_ms"]*100)/100}ms`}
                                     />
                                 }) : () => { return []; }
                             }}

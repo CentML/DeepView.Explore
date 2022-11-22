@@ -83,9 +83,24 @@ export function getTraceByLevel(tree) {
   }
 }
 
-export function computePercentage(operations) {
-  let total_time = 0;
-  for (let elem in operations) total_time += operations[elem]["forward_ms"] + operations[elem]["backward_ms"];
-  for (let elem in operations) operations[elem]["percentage"] = 100 * (operations[elem]["forward_ms"] + operations[elem]["backward_ms"]) / total_time;
+export function computePercentage(operations, total_time) {
+  let tracked_total_time = 0;
+  for (let elem in operations) {
+    tracked_total_time += operations[elem]["forward_ms"] + operations[elem]["backward_ms"];
+    operations[elem]["percentage"] = 100 * (operations[elem]["forward_ms"] + operations[elem]["backward_ms"]) / total_time;
+  }
+
+  if (tracked_total_time < total_time) {
+    operations.push({
+      name: "untracked",
+      percentage: 100 * (total_time - tracked_total_time) / total_time,
+      num_children: 0,
+      forward_ms: 0,
+      backward_ms: 0,
+      size_bytes: 0,
+      total_time: total_time - tracked_total_time
+    });
+  }
+
   return operations;
 }
