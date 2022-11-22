@@ -4,6 +4,7 @@
 import React from 'react';
 
 import PerfBar from './PerfBar';
+import App from './App';
 import {toReadableByteSize} from './utils';
 
 class MemoryPerfBar extends React.Component {
@@ -11,7 +12,7 @@ class MemoryPerfBar extends React.Component {
     super(props);
     // this._renderPerfHints = this._renderPerfHints.bind(this);
     // this._onClick = this._onClick.bind(this);
-    // this._onDoubleClick = this._onDoubleClick.bind(this);
+    this._onDoubleClick = this._onDoubleClick.bind(this);
     // this._onActiveChange = this._onActiveChange.bind(this);
   }
 
@@ -22,6 +23,16 @@ class MemoryPerfBar extends React.Component {
   //     `${overallPct.toFixed(2)}%`;
   // }
 
+  _onDoubleClick() {
+    let file_context = this.props.elem.file_refs[0];
+
+    App.vscodeApi.postMessage({
+      command: "highlight_source_line",
+      file: file_context.path,
+      lineno: file_context.line_no
+    });
+  }
+
   render() {
     // const {memoryNode, editorsByPath, ...rest} = this.props;
     const {tooltipHTML, ...rest} = this.props;
@@ -31,7 +42,7 @@ class MemoryPerfBar extends React.Component {
         renderPerfHints={()=>{}}
         tooltipHTML={tooltipHTML}
         // onClick={this._onClick}
-        // onDoubleClick={this._onDoubleClick}
+        onDoubleClick={this._onDoubleClick}
         // onActiveChange={this._onActiveChange}
         {...rest}
       />

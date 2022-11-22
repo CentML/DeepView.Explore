@@ -16,7 +16,8 @@ import MemoryPerfBar from './MemoryPerfBar';
 
 import ReactTooltip from 'react-tooltip';
 
-import { getTopLevelTraces } from './utils'; 
+
+import { computePercentage, getTraceByLevel } from './utils'; 
 
 /**
  * Returns information required to draw memory and throughput information
@@ -124,13 +125,11 @@ function App() {
         setAnalysisState(state);
         if (state.breakdown) {
             let operation_tree = state.breakdown.operation_tree;
-            let top_level = getTopLevelTraces(operation_tree);
-            console.log(top_level);
-            let total_time = 0;
-            for (let elem in top_level) total_time += top_level[elem]["forward_ms"] + top_level[elem]["backward_ms"];
-            for (let elem in top_level) top_level[elem]["percentage"] = 100*(top_level[elem]["forward_ms"] + top_level[elem]["backward_ms"]) / total_time;
-            console.log(top_level);
-            setTimeBreakdown(top_level);
+            let { coarse, fine } = getTraceByLevel(operation_tree);
+            setTimeBreakdown({ 
+                coarse: computePercentage(coarse),
+                fine: computePercentage(fine)
+            });
             ReactTooltip.rebuild();
         }
     }
@@ -213,17 +212,18 @@ function App() {
                     <div className='innpv-contents-columns'>
                     <div className='innpv-perfbar-contents'>
                         <PerfBarContainer 
-                            labels={timeBreakDown.map(elem => {
+                            labels={timeBreakDown.coarse ? timeBreakDown.coarse.map(elem => {
                                 return {
                                     label: elem["name"], 
                                     percentage: elem["percentage"],
                                     clickable: false
                                 }
-                            })}
+                            }) : []}
                             renderPerfBars={() => {
-                                return timeBreakDown.map((elem, idx) => {
+                                return timeBreakDown.fine ? timeBreakDown.fine.map((elem, idx) => {
                                     return <MemoryPerfBar 
                                         key={elem["name"]}
+                                        elem={elem}
                                         isActive={true}
                                         label={elem["name"]}
                                         overallPct={elem["percentage"]}
@@ -232,7 +232,7 @@ function App() {
                                         colorClass={"innpv-blue-color-" + ((idx % 5)+1)}
                                         tooltipHTML={`<b>${elem["name"]}</b><br>Forward: ${Math.round(elem["forward_ms"]*100)/100}ms<br>Backward: ${Math.round(elem["backward_ms"]*100)/100}ms`}
                                     />
-                                })
+                                }) : () => { return []; }
                             }}
                         />
                         <ReactTooltip type="info" effect="float" html={true}/>

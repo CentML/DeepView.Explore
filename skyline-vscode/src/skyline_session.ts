@@ -153,6 +153,14 @@ export class SkylineSession {
         } else if (msg['command'] == 'restart_profiling_clicked') {
 			vscode.window.showInformationMessage("Restarting profiling.");
             this.restart_profiling();
+        } else if (msg['command'] == "highlight_source_line") {
+            const openPath = vscode.Uri.file(path.join(this.root_dir, msg["file"]));
+            vscode.workspace.openTextDocument(openPath).then(doc => {
+                vscode.window.showTextDocument(doc).then(editor => {
+                    editor.revealRange(new vscode.Range(msg["lineno"], 0, msg["lineno"]+1, 0),
+                    vscode.TextEditorRevealType.InCenter)
+                });
+            });
         }
     }
 
