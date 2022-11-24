@@ -78,7 +78,7 @@ export class SkylineSession {
         this.webviewPanel.onDidDispose(this.kill_backend.bind(this));
 
         vscode.workspace.onDidChangeTextDocument(this.on_text_change.bind(this));
-	this.restart_profiling = this.restart_profiling.bind(this);
+        this.restart_profiling = this.restart_profiling.bind(this);
     }
 
     send_message(message: any, payloadName: string) {
@@ -339,6 +339,11 @@ export class SkylineSession {
 
             "project_root": this.msg_initialize?.getServerProjectRoot()?.toString(),
             "project_entry_point": this.msg_initialize?.getEntryPoint()?.toString(),
+            "hardware_info": {
+                "hostname": this.msg_initialize?.getHardware()?.getHostname(),
+                "os": this.msg_initialize?.getHardware()?.getOs(),
+                "gpus": this.msg_initialize?.getHardware()?.getGpusList(),
+            },
 
             "throughput": {},
             "breakdown": {},
