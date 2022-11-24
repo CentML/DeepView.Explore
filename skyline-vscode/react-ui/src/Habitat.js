@@ -60,7 +60,6 @@ export default function Habitat({habitatData}) {
             y: habitatData[i][0],
             x: habitatData[i][1],
             color: habitatData[i][0] == "source" ? colors[colors.length - 1] : colors[i % (colors.length - 1)]
-            // color: habitatData[i][0] == "source" ? colors.length - 1 : i % (colors.length - 1)
         });
     }
 
