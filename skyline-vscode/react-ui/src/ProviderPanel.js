@@ -139,7 +139,6 @@ export default class ProviderPanel extends React.Component {
     recalculateCost() {
         let thisGpu = this.state.clicked;
         if (thisGpu == null) return;
-        // console.log(thisGpu);
         // V100: 40ms
         // Relative per-iteration time is 40 * perf(v100) / perf(current)
         let iters = this.state.numEpochs * this.state.numIters;
