@@ -1,12 +1,13 @@
 
 import Subheader from './Subheader';
-import { XYPlot, VerticalGridLines, HorizontalGridLines, XAxis, YAxis, MarkSeries } from 'react-vis';
+import { XYPlot, VerticalGridLines, HorizontalGridLines, XAxis, YAxis, MarkSeries, makeWidthFlexible, FlexibleWidthXYPlot } from 'react-vis';
 import { Badge, Button, ButtonGroup, Card, CardGroup, Container, Form, Row, ToggleButton, Col, Image, Table } from 'react-bootstrap';
 import React from 'react';
 
 export default class ProviderPanel extends React.Component {
     constructor(props) {
         super(props);
+        this.componentDidMount = this._componentDidMount.bind(this);
         this.onClickConfig = this.onClickConfig.bind(this);
         this.recalculateCost = this.recalculateCost.bind(this);
         this.populateProviderGraph = this.populateProviderGraph.bind(this);
@@ -100,6 +101,12 @@ export default class ProviderPanel extends React.Component {
 
         // populate graph
         this.populateProviderGraph(4);
+        this.setState({plotHeight: 300});
+    }
+    
+    _componentDidMount() {
+        console.log("_componentDidMount");
+        window.dispatchEvent(new Event('resize'));
     }
 
     populateProviderGraph(maxGpus) {
@@ -135,7 +142,7 @@ export default class ProviderPanel extends React.Component {
         // V100: 40ms
         // Relative per-iteration time is 40 * perf(v100) / perf(current)
         let iters = this.state.numEpochs * this.state.numIters;
-        let perf = this.gpus[thisGpu.info.gpu].perf * thisGpu.ngpus * (1114.12/341.6241/4);
+        let perf = this.gpus[thisGpu.info.gpu].perf * thisGpu.info.ngpus * (1114.12/341.6241/4);
         let perIterMs = 40 * (1/0.1472) / perf;
         let totalHr = iters * perIterMs / (3.6e+6);
         let totalCost = thisGpu.info.cost * totalHr;
@@ -162,7 +169,6 @@ export default class ProviderPanel extends React.Component {
         // Relative per-iteration time is 40 * perf(v100) / perf(current)
         let iters = this.state.numEpochs * this.state.numIters;
         let perf = this.gpus[value.info.gpu].perf * value.info.ngpus * (1114.12/341.6241/4);
-        // let perIterMs = 40 * (1/0.1472) / this.gpus[value.info.gpu].perf;
         let perIterMs = 40 * (1/0.1472) / perf;
         let totalHr = iters * perIterMs / (3.6e+6);
         let totalCost = value.info.cost * totalHr;
@@ -180,7 +186,7 @@ export default class ProviderPanel extends React.Component {
                     <Subheader icon="database">Providers</Subheader>
                     <Container>
                     <Row>
-                        <Col>Filter Num GPUs:</Col>
+                        <Col>Filter Max Number of GPUs:</Col>
                         <Col>
                         <ButtonGroup className="me-2" aria-label="">
                             { [1, 2, 4].map(idx => (
@@ -201,7 +207,7 @@ export default class ProviderPanel extends React.Component {
                         <Col></Col>
                     </Row>
                     </Container>
-                    <XYPlot width={450} height={300}>
+                    <FlexibleWidthXYPlot width={600} height={300}>
                         <VerticalGridLines />
                         <HorizontalGridLines />
                         <XAxis title="Relative Training Time" style={{ fontSize: 15}}/>
@@ -217,7 +223,7 @@ export default class ProviderPanel extends React.Component {
                             onSeriesMouseOut={() => this.setState({nearest: null})}
                             onValueClick={this.onClickConfig}
                         />
-                    </XYPlot>
+                    </FlexibleWidthXYPlot>
                 </div>
                 <div className="innpv-memory innpv-subpanel">
                     <Subheader icon="database">Training Schedule</Subheader>

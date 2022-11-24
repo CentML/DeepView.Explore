@@ -87,6 +87,10 @@ export function computePercentage(operations, total_time) {
   let tracked_total_time = 0;
   for (let elem in operations) {
     tracked_total_time += operations[elem]["forward_ms"] + operations[elem]["backward_ms"];
+  }
+  total_time = Math.max(total_time, tracked_total_time);
+
+  for (let elem in operations) {
     operations[elem]["percentage"] = 100 * (operations[elem]["forward_ms"] + operations[elem]["backward_ms"]) / total_time;
   }
 
