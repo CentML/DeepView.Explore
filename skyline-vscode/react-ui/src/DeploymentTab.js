@@ -36,7 +36,7 @@ export default class DeploymentTab extends React.Component {
                         <Accordion.Body>
                             <ProviderPanel setParentState={this.setState.bind(this)} />
                             <Row>
-                                <Col><Button variant={this.state.btnDeployVariant} disabled={this.state.btnDeployVariant=='secondary'} onClick={this.deployOnClick}>{this.state.btnDeployLabel}</Button></Col>
+                                <Col><Button variant={this.state.btnDeployVariant} disabled={true || this.state.btnDeployVariant=='secondary'} onClick={this.deployOnClick}>{this.state.btnDeployLabel}</Button></Col>
                             </Row>
                         </Accordion.Body>
                     </Accordion.Item>
