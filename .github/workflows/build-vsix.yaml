@@ -24,8 +24,6 @@ jobs:
 
       - name: Fetch repository
         uses: actions/checkout@v3
-        with:
-          ref: fix-setup
 
       - name: Build VSIX
         run: |
