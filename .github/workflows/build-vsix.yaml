@@ -41,12 +41,12 @@ jobs:
         run: |
           aws s3 cp skyline-vscode/skyline-vscode-*.vsix s3://centml-habitat/skyline-vscode/
 
-        - name: Create index.html
+      - name: Create index.html
         run: |
           file_list=(skyline-vscode/skyline-vscode-*.vsix)
           formatted_file_list=$(basename -a ${file_list[@]})
           python3 /home/builduser/create_index.py skyline-vscode -f $formatted_file_list
         
-        - name: Upload index.html to S3
+      - name: Upload index.html to S3
         run: |
           aws s3 cp index.html s3://centml-habitat/skyline-vscode/
