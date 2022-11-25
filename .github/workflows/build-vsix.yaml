@@ -7,6 +7,13 @@ jobs:
   build-vsix:
     runs-on: [self-hosted]
     steps:
+      - name: Configure AWS Credentials
+          uses: aws-actions/configure-aws-credentials@v1
+          with:
+            aws-access-key-id: ${{ secrets.HABITAT_AWS_ACCESS_KEY }}
+            aws-region: ${{ secrets.HABITAT_AWS_REGION }}
+            aws-secret-access-key: ${{ secrets.HABITAT_AWS_SECRET_ACCESS_KEY }}
+
       - name: Display host information
         run: |
           uname -a
@@ -29,3 +36,17 @@ jobs:
         with:
           name: mltools-vscode
           path: skyline-vscode/skyline-vscode-*.vsix
+
+      - name: Upload vsix artifact to S3
+        run: |
+          aws s3 cp skyline-vscode/skyline-vscode-*.vsix s3://centml-habitat/skyline-vscode/
+
+        - name: Create index.html
+        run: |
+          file_list=(skyline-vscode/skyline-vscode-*.vsix)
+          formatted_file_list=$(basename -a ${file_list[@]})
+          python3 /home/builduser/create_index.py skyline-vscode -f $formatted_file_list
+        
+        - name: Upload index.html to S3
+        run: |
+          aws s3 cp index.html s3://centml-habitat/skyline-vscode/
