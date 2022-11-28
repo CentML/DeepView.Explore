@@ -3,15 +3,26 @@
 ![Demo GIF](https://raw.githubusercontent.com/CentML/mltools-vscode/jun07-usability-improvements/images/demo.gif)
 
 ## Installation
-Installation consists of two parts: the front-end UI, this repository, and the backend https://github.com/CentML/skyline, which needs to be installed separately.
+Installation consists of two parts: the front-end UI (this repository) and [Skyline](https://github.com/CentML/skyline) (the backend), which needs to be installed separately.
 
 ### Frontend Installation
 To install, either:
-* **TODO**: Download the prebuilt VSCode plugin package from the [Releases](https://github.com/CentML/skyline-vscode/releases) page, then run `code --install-extension vscode*.vsix` to install the extension.
-* Clone the repository and run the actions as defined in `package.json` using VSCode. This usually involves pressing `F5` while having the project open in VSCode.
+* [Download](http://centml-habitat.s3-website-us-east-1.amazonaws.com/skyline-vscode/) the prebuilt VSCode plugin package
+* Build it from source
+  1. Prerequisites:
+     - node.js v14+
+     - [Protobuf Compiler](https://grpc.io/docs/protoc-installation/)
+  2. Run the following commands    
+      ```bash
+      git clone https://github.com/CentML/mltools-vscode
+      ./scripts/build_vsix.sh
+      ```
+  3. The vsix file will be generated in the current working directory
+
+Once you have the vsix file, run `code --install-extension vscode*.vsix` to install the extension.
 
 ### Backend Installation
-This plugin requires both the skyline profiling backend (the installation instruction for which can be found [here](https://github.com/CentML/skyline)) and Habitat (used to extrapolate GPU runtimes, instructions found [here](https://github.com/CentML/habitat)).
+This plugin requires Skyline (the installation instruction for which can be found [here](https://github.com/CentML/skyline)) and (optionally) Habitat (used to extrapolate GPU runtimes, instructions found [here](https://github.com/CentML/habitat)).
 
 After installation, please make note of the path to the `skyline` binary. To do so, run `which skyline` after ensuring that the `skyline` binary works. This path is different depending on how the backend was installed. Default installation from PyPI will place the binary to `/usr/bin/skyline`, however if you're running the backend in virtual environment you'll have to update the path at `Settings -> Extensions -> Skyline -> Skyline_bin_location`.
 
@@ -23,10 +34,12 @@ After installation, please make note of the path to the `skyline` binary. To do 
 ## Development Environment Setup
 
 ### Dependencies
-1. https://github.com/CentML/skyline. Note: depending on you choose to install the backend you might need to set the backend path.
-1. [Node.js](https://nodejs.org/en/) and npm
-1. Protobuf
-```zsh
+1. https://github.com/CentML/skyline
+   
+   - Note: depending on you choose to install the backend you might need to set the backend path.
+2. [Node.js](https://nodejs.org/en/) and npm
+3. Protobuf
+```bash
 apt install protobuf-compiler
 ```
 
