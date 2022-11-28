@@ -36,7 +36,10 @@
           "description": "If enabled, skyline profiler logs will be written to /tmp/skyline.log"
         },
         "skyline.profile_remote_ip": {
-          "type": ["string", "null"],
+          "type": [
+            "string",
+            "null"
+          ],
           "default": null,
           "description": "Specifies the address of the remote profiler."
         },
@@ -75,9 +78,10 @@
     "bootstrap-fork": "^3.3.6",
     "google-protobuf": "^3.18.0",
     "nunjucks": "^3.2.3",
+    "react": "^18.2.0",
     "react-bootstrap": "^2.2.0",
+    "react-dom": "^18.2.0",
     "ts-protoc-gen": "^0.15.0",
     "ws": "^8.2.3"
   }
 }
-

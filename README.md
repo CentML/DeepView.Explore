@@ -14,7 +14,7 @@ To install, either:
      - [Protobuf Compiler](https://grpc.io/docs/protoc-installation/)
   2. Run the following commands    
       ```bash
-      git clone https://github.com/CentML/mltools-vscode
+      git clone https://github.com/CentML/skyline-vscode
       ./scripts/build_vsix.sh
       ```
   3. The vsix file will be generated in the current working directory
@@ -50,9 +50,9 @@ apt install protobuf-compiler
    ```
 1. Install project dependencies
    ```zsh
-   cd skyline-vscode/react-ui && npm install
+   cd skyline-vscode/react-ui && npm install --legacy-peer-deps
    cd ../..
-   cd skyline-vscode/skyline-vscode && npm install
+   cd skyline-vscode/skyline-vscode && npm install --legacy-peer-deps
    ```
 1. Compile protobuf files:
    ```zsh
