@@ -1,31 +1,42 @@
 import React, { useState, useEffect } from "react";
-import { Container, Row, Col, Spinner, Card } from "react-bootstrap";
+import { Container, Row, Col, Spinner, Card, ListGroup } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircle } from "@fortawesome/free-solid-svg-icons";
 
 import Subheader from "../Subheader";
 import { environmental_data } from "../data/mock_data";
-import PieChart from "../components/PieChart";
+import BarGraph from "../components/BarGraph";
+import PieGraph from "../components/PieGraph";
 
 const EnergyConsumption = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const { cpu_energy, gpu_energy } = environmental_data;
-  const total = cpu_energy + gpu_energy;
-  const cpu_perc = ((cpu_energy / total) * 100).toFixed(2);
-  const gpu_perc = ((gpu_energy / total) * 100).toFixed(2);
+  const { cpu_energy, gpu_energy, equivalent, other_experiments } =
+    environmental_data;
+  const total = (cpu_energy + gpu_energy).toFixed(2);
 
-  const barchart_data = [
+  const piegraph_data = [
     {
-      angle: cpu_energy / total,
-      label: `CPU & DRAM Consumption: ${cpu_energy}J`,
-      subLabel: `${cpu_perc}%`,
-      color: "#aed6f1",
+      name: 'CPU & DRAM Consumption (J)',
+      value: cpu_energy,
+      fill: "#b77032",
     },
     {
-      angle: gpu_energy / total,
-      label: `GPU Consumption: ${gpu_energy}J`,
-      subLabel: `${gpu_perc}%`,
-      color: " #f5b041",
+      name: 'GPU Consumption (J)',
+      value: gpu_energy,
+      fill: "#215d6e",
     },
   ];
+
+  const bargraph_data = [
+    ...other_experiments,
+    {
+      name: "current",
+      value: total,
+      fill: "#1555bd",
+    },
+  ];
+
+  bargraph_data.sort((a, b) => a.value - b.value);
 
   useEffect(() => {
     setTimeout(() => {
@@ -52,25 +63,52 @@ const EnergyConsumption = () => {
           ) : (
             <Container fluid>
               <Row>
-                <Col>
+                <Col xxl={6}>
                   <div>
-                    <p>
+                    <h5>
                       Total Consumption:
-                      <strong>{cpu_energy + gpu_energy}J</strong>
-                    </p>
+                      <strong> {total}J</strong>
+                    </h5>
                   </div>
                   <div>
                     <h4>Breakdown:</h4>
-                    <PieChart
-                      data={barchart_data}
-                      height={225}
-                      labelMultiplier={2.5}
-                      fontSize={14}
-                      showLabel={true}
-                    />
+
+                    <PieGraph data={piegraph_data} height={225} />
                   </div>
                 </Col>
-                <Col>Bar Chart</Col>
+                <Col xxl={6}>
+                  <div>
+                    <h5>Equivalent to:</h5>{" "}
+                  </div>
+                  <div>
+                    <ListGroup variant="flush">
+                      <ListGroup.Item style={{ border: "none" }}>
+                        <FontAwesomeIcon icon={faCircle} />{" "}
+                        <strong>{equivalent.carbon}</strong> kg of CO2 released
+                      </ListGroup.Item>
+                      <ListGroup.Item style={{ border: "none" }}>
+                        <FontAwesomeIcon icon={faCircle} />{" "}
+                        <strong>{equivalent.miles}</strong> miles driven
+                      </ListGroup.Item>
+                      <ListGroup.Item style={{ border: "none" }}>
+                        <FontAwesomeIcon icon={faCircle} />{" "}
+                        <strong>{equivalent.appliance}</strong> hours of TV
+                      </ListGroup.Item>
+                      <ListGroup.Item style={{ border: "none" }}>
+                        <FontAwesomeIcon icon={faCircle} />{" "}
+                        <strong>{equivalent.household}%</strong> of average
+                        household consumption
+                      </ListGroup.Item>
+                    </ListGroup>
+                  </div>
+
+                  <div>
+                    <h5>Relative to your other experiments</h5>
+                  </div>
+                  <div>
+                    <BarGraph data={bargraph_data} height={500} xlabel={'Experiments'} ylabel={'Energy Consumption (J)'}/>
+                  </div>
+                </Col>
               </Row>
             </Container>
           )}

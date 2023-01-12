@@ -18,6 +18,8 @@
     "react-scripts": "5.0.0",
     "react-tooltip": "^4.4.3",
     "react-vis": "^1.11.7",
+    "recharts": "^2.3.2",
+    "styled-components": "^5.3.6",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

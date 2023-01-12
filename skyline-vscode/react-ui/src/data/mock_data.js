@@ -884,6 +884,19 @@ export const profiling_data = {
 };
 
 export const environmental_data = {
-    cpu_energy: 5035.40,
-    gpu_energy: 5210.53
-}
+  cpu_energy: 2035.4,
+  gpu_energy: 1210.53,
+  equivalent: {
+    carbon: 75,
+    miles: 100,
+    appliance: 50,
+    household: 20,
+  },
+  other_experiments: [
+    { name: "exp_1", value: 800 },
+    { name: "exp_2", value: 1800 },
+    { name: "exp_3", value: 8000 },
+    { name: "exp_4", value: 1750 },
+    { name: "exp_5", value: 5670.11 },
+  ],
+};
