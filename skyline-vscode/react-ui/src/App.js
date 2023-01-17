@@ -150,7 +150,7 @@ function App() {
             }
         });
 
-        const sendMock = true;
+        const sendMock = false;
 
         if (sendMock) {
             setTimeout(() => {
