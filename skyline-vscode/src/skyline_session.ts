@@ -323,7 +323,7 @@ export class SkylineSession {
 				<title>Skyline</title>
 				<link rel="stylesheet" type="text/css" href="${styleUri}">
 				<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src vscode-resource: https:; script-src 'nonce-${nonce}';style-src vscode-resource: 'unsafe-inline' http: https: data:;">
-				<base href="${ buildUri })}/">
+				<base href="${ buildUri }/">
 			</head>
 			<body>
 				<noscript>You need to enable JavaScript to run this app.</noscript>
