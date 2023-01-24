@@ -150,7 +150,7 @@ function App() {
             }
         });
 
-        const sendMock = false;
+        const sendMock = true;
 
         if (sendMock) {
             setTimeout(() => {
@@ -303,7 +303,7 @@ function App() {
                         </div>
                     </div>
                     <Habitat habitatData={analysisState['habitat']}/>
-                    <EnergyConsumption />
+                    <EnergyConsumption energyData={analysisState['energy']}/>
                     </div>
                     </div>
                     </Tab>

@@ -9,6 +9,49 @@ const BYTE_UNITS = [
   'GB',
 ];
 
+const ENERGY_UNITS = [
+  'J',
+  'KJ',
+  'MG',
+  'GJ',
+  'PJ'
+]
+
+const GENERIC_UNITS = [
+  '',
+  'Thousands',
+  'Millions',
+  "Billions"
+]
+
+// reference : https://www.epa.gov/energy/greenhouse-gas-equivalencies-calculator
+const ENERGY_CONVERSION_UNITS = {
+  kwh: 2.77778e-7, // 1J = 2.77778e-7 kwh
+  carbon: 7.09e-4, // Electricity consumed (kilowatt-hours) : 7.09 × 10-4 metric tons CO2/kWh
+  miles: 1/(4.03e-4), // Miles driven by the average gasoline-powered passenger vehicle : 4.03 x 10-4 metric tons CO2E/mile
+  household: 1/7.94, // Home energy use : 7.94 metric tons CO2 per home per year.
+  phone: 1/(8.22e-6) // 8.22 x 10-6 metric tons CO2/smartphone charged
+}
+
+export function unitScale(quantity, unit){
+  let idx = 0;
+  while(quantity > 1000){
+    quantity /=1000;
+    idx +=1;
+  }
+
+  switch(unit){
+    case 'energy':
+      return {val:parseFloat(Number(quantity).toFixed(2)),scale:ENERGY_UNITS[idx]}
+    case 'generic':
+      return {val:parseFloat(Number(quantity).toFixed(2)),scale:GENERIC_UNITS[idx]}
+    default:
+      return null
+  }
+
+}
+
+
 // export function processFileReference(fileReferenceProto) {
 //   return {
 //     filePath: path.join(...(fileReferenceProto.getFilePath().getComponentsList())),
@@ -107,4 +150,24 @@ export function computePercentage(operations, total_time) {
   }
 
   return operations;
+}
+
+export function energy_data(currentTotal){
+  const kwh = currentTotal * ENERGY_CONVERSION_UNITS['kwh'];
+  const carbon_emission_tons = kwh*ENERGY_CONVERSION_UNITS['carbon'];
+  const carbon_unit = carbon_emission_tons < 0 ? 
+      `${parseFloat(Number(carbon_emission_tons*1000).toFixed(2))} kg`: 
+      `${parseFloat(Number(carbon_emission_tons).toFixed(2))} Metric Tons`;
+  const miles = unitScale(carbon_emission_tons * ENERGY_CONVERSION_UNITS['miles'],'generic');
+  const household = carbon_emission_tons * ENERGY_CONVERSION_UNITS['household'];
+  const phone = unitScale(carbon_emission_tons * ENERGY_CONVERSION_UNITS['phone'],'generic');
+
+  return {
+    kwh: parseFloat(Number(kwh).toFixed(2)),
+    carbon: carbon_unit,
+    miles: `${miles.val} ${miles.scale}`,
+    household: parseFloat(Number(household).toFixed(2)),
+    phone: `${phone.val} ${phone.scale}`
+  }
+
 }

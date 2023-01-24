@@ -4,6 +4,7 @@ import { XYPlot, VerticalGridLines, HorizontalGridLines, XAxis, YAxis, MarkSerie
 import { Badge, Button, ButtonGroup, Card, CardGroup, Container, Form, Row, ToggleButton, Col, Image, Table } from 'react-bootstrap';
 import React from 'react';
 
+
 export default class ProviderPanel extends React.Component {
     constructor(props) {
         super(props);

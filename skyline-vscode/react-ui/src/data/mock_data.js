@@ -881,22 +881,48 @@ export const profiling_data = {
     ["RTX2070", 35.13387680053711],
     ["RTX2080Ti", 23.35439109802246],
   ],
-};
-
-export const environmental_data = {
-  cpu_energy: 2035.4,
-  gpu_energy: 1210.53,
-  equivalent: {
-    carbon: 75,
-    miles: 100,
-    appliance: 50,
-    household: 20,
+  energy: {
+    current: {
+      total_consumption: 99.5328e9,
+      components: [
+        { type: "ENERGY_UNSPECIFIED", consumption: 0 },
+        { type: "ENERGY_CPU_DRAM", consumption: 63.173e9 },
+        { type: "ENERGY_GPU", consumption: 36.173e9 },
+      ],
+    },
+    past_measurements: [
+      {
+        total_consumption: 103400.345,
+        components: [
+          { type: "ENERGY_UNSPECIFIED", consumption: 0 },
+          { type: "ENERGY_CPU_DRAM", consumption: 70000.173 },
+          { type: "ENERGY_GPU", consumption: 33400.173 },
+        ],
+      },
+      {
+        total_consumption: 3034.345,
+        components: [
+          { type: "ENERGY_UNSPECIFIED", consumption: 0 },
+          
+          { type: "ENERGY_GPU", consumption: 1534.173 },
+        ],
+      },
+      {
+        total_consumption: 10034.345,
+        components: [
+          { type: "ENERGY_UNSPECIFIED", consumption: 0 },
+          { type: "ENERGY_CPU_DRAM", consumption: 3000.173 },
+          { type: "ENERGY_GPU", consumption: 7034.173 },
+        ],
+      },
+      {
+        total_consumption: 903.345,
+        components: [
+          { type: "ENERGY_UNSPECIFIED", consumption: 0 },
+          { type: "ENERGY_CPU_DRAM", consumption: 450.173 },
+          { type: "ENERGY_GPU", consumption: 453.173 },
+        ],
+      },
+    ],
   },
-  other_experiments: [
-    { name: "exp_1", value: 800 },
-    { name: "exp_2", value: 1800 },
-    { name: "exp_3", value: 8000 },
-    { name: "exp_4", value: 1750 },
-    { name: "exp_5", value: 5670.11 },
-  ],
 };

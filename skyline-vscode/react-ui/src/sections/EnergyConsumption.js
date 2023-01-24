@@ -1,49 +1,95 @@
-import React, { useState, useEffect } from "react";
-import { Container, Row, Col, Spinner, Card, ListGroup } from "react-bootstrap";
+import React from "react";
+import { Container, Row, Col, Spinner, Card } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircle } from "@fortawesome/free-solid-svg-icons";
+import {
+  faGlobeAmericas,
+  faCar,
+  faHome,
+  faMobileAlt
+} from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
-
 import Subheader from "../Subheader";
-import { environmental_data } from "../data/mock_data";
-import BarGraph from "../components/BarGraph";
 import PieGraph from "../components/PieGraph";
+import StackedBarGraph from "../components/StackedBarGraph";
+import { energy_data, unitScale } from "../utils";
 
-const EnergyConsumption = () => {
-  const [isLoading, setIsLoading] = useState(true);
-  const { cpu_energy, gpu_energy, equivalent, other_experiments } =
-    environmental_data;
-  const total = (cpu_energy + gpu_energy).toFixed(2);
+const EnergyConsumption = ({ energyData }) => {
 
-  const piegraph_data = [
-    {
-      name: "CPU & DRAM Consumption (J)",
-      value: cpu_energy,
-      fill: "#b77032",
-    },
-    {
-      name: "GPU Consumption (J)",
-      value: gpu_energy,
-      fill: "#215d6e",
-    },
-  ];
+  let total = null;
+  let curr_cpu_dram = null;
+  let curr_gpu = null;
+  let piegraph_data = null;
+  let bargraph_data = [];
+  let conversions = null;
+  const { current, past_measurements } = energyData;
+  if (current && current.components && current.total_consumption) {
+    curr_cpu_dram = current.components.find(
+      (item) => item.type === "ENERGY_CPU_DRAM"
+    );
+    curr_gpu = current.components.find((item) => item.type === "ENERGY_GPU");
+    total = unitScale(current.total_consumption,"energy");
+    conversions = energy_data(current.total_consumption);
+    console.log(conversions)
+    if (curr_cpu_dram && curr_gpu) {
+      const cpu_scale = unitScale(curr_cpu_dram.consumption,"energy");
+      const gpu_scale = unitScale(curr_gpu.consumption,"energy")
+      console.log(cpu_scale.val,gpu_scale.val)
+      piegraph_data = [
+        {
+          name: `CPU & DRAM Consumption (${cpu_scale.scale})`,
+          value: cpu_scale.val, // parseFloat(Number(cpu_dram.consumption / 1000).toFixed(2))
+          fill: "#b77032",
+        },
+        {
+          name: `GPU Consumption (${gpu_scale.scale})`,
+          value: gpu_scale.val,
+          fill: "#215d6e",
+        },
+      ];
+    }
+  }
 
-  const bargraph_data = [
-    ...other_experiments,
-    {
-      name: "current",
-      value: total,
-      fill: "#1555bd",
-    },
-  ];
+  if (past_measurements && past_measurements.length > 0) {
+    let idx = 0;
+    const arr_past_mesurements = past_measurements.flatMap((item) => {
+      if (item.total_consumption && item.components) {
+        const cpu_dram = item.components.find(
+          (prev_item) => prev_item.type === "ENERGY_CPU_DRAM"
+        );
+        const gpu = item.components.find(
+          (prev_item) => prev_item.type === "ENERGY_GPU"
+        );
+        if (cpu_dram && gpu) {
+          return {
+            name: `exp_${(idx += 1)}`,
+            total: parseFloat(Number(Math.log10(item.total_consumption)).toFixed(2)),
+            cpu: parseFloat(Number(Math.log10(cpu_dram.consumption)).toFixed(2)) ,
+            gpu: parseFloat(Number(Math.log10(gpu.consumption)).toFixed(2)),
+          };
+        }
+      }
+      return [];
+    });
+    bargraph_data = arr_past_mesurements;
+  }
 
-  bargraph_data.sort((a, b) => a.value - b.value);
+  // add current experiment
+  if (piegraph_data) {
+    bargraph_data = [
+      ...bargraph_data,
+      {
+        name: `current`,
+        total: parseFloat(Number(Math.log10(current.total_consumption)).toFixed(2)),
+        cpu: parseFloat(Number(Math.log10(curr_cpu_dram.consumption)).toFixed(2)),
+        gpu: parseFloat(Number(Math.log10(curr_gpu.consumption)).toFixed(2)),
+      },
+    ];
+  }
 
-  useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 5000);
-  }, []);
+  if(bargraph_data.length > 0) bargraph_data.sort((a, b) => a.total - b.total);
+ 
+  
+  console.log(bargraph_data);
 
   return (
     <>
@@ -51,7 +97,7 @@ const EnergyConsumption = () => {
         <div className="innpv-memory innpv-subpanel">
           <Subheader icon="database">Energy and Environmental Impact</Subheader>
           <div className="innpv-subpanel-content">
-            {isLoading ? (
+            {Object.keys(energyData).length === 0 ? (
               <Container fluid>
                 <Row className="justify-content-md-center">
                   <Card>
@@ -65,57 +111,101 @@ const EnergyConsumption = () => {
             ) : (
               <Container fluid>
                 <Row>
-                  <Col xxl={6}>
-                    <div>
-                      <h5>
-                        Total Consumption:
-                        <strong> {total}J</strong>
-                      </h5>
-                    </div>
-                    <div>
-                      <h6>Breakdown:</h6>
-                      <PieGraph data={piegraph_data} height={500} />
-                    </div>
-                  </Col>
-                  <Col xxl={6}>
-                    <div>
-                      <h6>Equivalent to: </h6>
-                    </div>
-                    <div>
-                      <ListGroup variant="flush">
-                        <ListGroup.Item className="list-item">
-                          <FontAwesomeIcon icon={faCircle} />{" "}
-                          <strong>{equivalent.carbon}</strong> kg of CO2
-                          released
-                        </ListGroup.Item>
-                        <ListGroup.Item className="list-item">
-                          <FontAwesomeIcon icon={faCircle} />{" "}
-                          <strong>{equivalent.miles}</strong> miles driven
-                        </ListGroup.Item>
-                        <ListGroup.Item className="list-item">
-                          <FontAwesomeIcon icon={faCircle} />{" "}
-                          <strong>{equivalent.appliance}</strong> hours of TV
-                        </ListGroup.Item>
-                        <ListGroup.Item className="list-item">
-                          <FontAwesomeIcon icon={faCircle} />{" "}
-                          <strong>{equivalent.household}%</strong> of average
-                          household consumption
-                        </ListGroup.Item>
-                      </ListGroup>
-                    </div>
-
-                    <div>
-                      <h5>Relative to your other experiments</h5>
-                    </div>
-                    <div className="bargraph-container">
-                      <BarGraph
-                        data={bargraph_data}
-                        height={500}
-                        xlabel={"Experiments"}
-                        ylabel={"Energy Consumption (J)"}
-                      />
-                    </div>
-                  </Col>
+                  {piegraph_data ? (
+                    <Col xxl={6}>
+                      <div>
+                        <h5>
+                          Total Consumption:
+                          <strong> {`${total.val} ${total.scale}`} </strong>
+                        </h5>
+                      </div>
+                      <div>
+                        <h6>Breakdown:</h6>
+                        <PieGraph data={piegraph_data} height={225} />
+                      </div>
+                      <div>
+                        <h6>Equivalent to: </h6>
+                      </div>
+                      <Row>
+                        <Col sm={3} className="center">
+                          <div>
+                            <FontAwesomeIcon
+                              icon={faGlobeAmericas}
+                              size="4x"
+                              color="#27ae60"
+                            />{" "}
+                          </div>
+                          <p>
+                            <strong>{conversions?.carbon}</strong> of C02 emissions released
+                          </p>
+                        </Col>
+                        <Col sm={3} className="center">
+                          <div>
+                            <FontAwesomeIcon
+                              icon={faCar}
+                              size="4x"
+                              color="#3498db"
+                            />{" "}
+                          </div>
+                          <p>
+                            <strong>{conversions?.miles}</strong> miles driven
+                          </p>
+                        </Col>
+                        <Col sm={3} className="center">
+                          <div>
+                            <FontAwesomeIcon
+                              icon={faMobileAlt}
+                              size="4x"
+                              color="#ec7063"
+                            />{" "}
+                          </div>
+                          <p>
+                            <strong>{conversions?.phone}</strong> of smartphones charged
+                          </p>
+                        </Col>
+                        <Col sm={3} className="center">
+                          <div>
+                            <FontAwesomeIcon
+                              icon={faHome}
+                              size="4x"
+                              color="#34495e"
+                            />{" "}
+                          </div>
+                          <p>
+                            <strong>{conversions?.household} x</strong> homes' energy use for one year
+                          </p>
+                        </Col>
+                        <small>ref: https://www.epa.gov/energy/greenhouse-gas-equivalencies-calculator</small>
+                      </Row>
+                    </Col>
+                  ) : (
+                    <Col xxl={6}>
+                      <div>
+                        <h5>Could not load the data</h5>
+                      </div>
+                    </Col>
+                  )}
+                  {bargraph_data.length > 0 ? (
+                    <Col xxl={6}>
+                      <div>
+                        <h5>Relative to your other experiments [DEMO]</h5>
+                      </div>
+                      <div className="bargraph-container">
+                        <StackedBarGraph
+                          data={bargraph_data}
+                          height={500}
+                          xlabel={"Experiments"}
+                          ylabel={"Energy Consumption (J) log scale"}
+                        />
+                      </div>
+                    </Col>
+                  ) : (
+                    <Col xxl={6}>
+                      <div>
+                        <h5>Could not load the data</h5>
+                      </div>
+                    </Col>
+                  )}
                 </Row>
               </Container>
             )}
@@ -127,21 +217,34 @@ const EnergyConsumption = () => {
 };
 
 const Wrapper = styled.main`
-h5 {
-  margin-top: 1rem;
-}
+  h5 {
+    margin-top: 1rem;
+    text-align: center;
+  }
 
-h6 {
-  margin-top: 1rem;
-}
+  h6 {
+    text-align: center;
+    margin-top: 1rem;
+  }
 
-.list-item {
-  border: none;
-}
+  .list-item {
+    border: none;
+  }
 
-.bargraph-container{
-  margin-top: 1rem;
-}
+  .center {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding: 0.25rem;
+    text-align: center;
+    p {
+      margin-top: 0.5rem;
+    }
+  }
+
+  .bargraph-container {
+    margin-top: 1rem;
+  }
 `;
 
 export default EnergyConsumption;
