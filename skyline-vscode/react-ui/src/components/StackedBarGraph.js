@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import {
   ResponsiveContainer,
   BarChart,
@@ -9,56 +9,75 @@ import {
   Bar,
   Legend,
   Label,
-  ReferenceLine,
-  Cell
+  LabelList,
+  Cell,
 } from "recharts";
 
-const StackedBarGraph = ({ data, height, xlabel, ylabel }) => {
-    const [focusBar, setFocusBar] = useState(null);
-const [mouseLeave, setMouseLeave] = useState(true);
+const renderCustomizedLabel = (props) => {
+  const { x, y, width, height, value } = props;
+  const Y_OFFSET = 10;
 
   return (
+    value === "current" && (
+      <g>
+        <text
+          x={x + width / 2}
+          y={y - Y_OFFSET}
+          fill="#1c2833"
+          fontSize={12}
+          fontWeight={900}
+          fontFamily="sans-serif"
+          textAnchor="middle"
+          dominantBaseline="middle"
+        >
+          {"Current Profiling"}
+        </text>
+      </g>
+    )
+  );
+};
+
+const StackedBarGraph = ({ data, height, xlabel, ylabel }) => {
+  return (
     <ResponsiveContainer height={height}>
-      <BarChart 
-      onMouseMove={(state) => {
-        if (state.isTooltipActive) {
-          setFocusBar(state.activeTooltipIndex);
-          setMouseLeave(false);
-        } else {
-          setFocusBar(null);
-          setMouseLeave(true);
-        }
-     }}
+      <BarChart
         data={data}
-        margin={{ top: 10, right: 10, left: 50, bottom: 50 }}
+        margin={{ top: 30, right: 10, left: 50, bottom: 50 }}
       >
-        <CartesianGrid horizontal={false} vertical={false}/>
-        <XAxis dataKey="name" label={{ value: xlabel, position: 'insideBottom', offset:-45}}/>
-        <YAxis width={100}>
-          <Label value={ylabel} angle={-90} position="outside"/>
+        <CartesianGrid horizontal={false} vertical={false} />
+        <XAxis
+          dataKey="name"
+          label={{ value: xlabel, position: "insideBottom", offset: -45 }}
+        />
+        <YAxis width={120}>
+          <Label value={ylabel} angle={-90} position="outside" />
         </YAxis>
         <Tooltip />
-        <Bar dataKey="cpu" stackId="a" fill='#5499c7'>
-        {data.map((entry, index) => (
-            <Cell key={`bar1-${index}`} fill={
-                entry.name === 'current'
-                  ? "#5499c7"
-                  : "rgba(84,153,199,0.55)"
-              }/>
-        ))}
+        <Bar dataKey="cpu" stackId="a" fill="#5499c7">
+          {data.map((entry, index) => (
+            <Cell
+              key={`bar1-${index}`}
+              fill={
+                entry.name === "current" ? "#5499c7" : "rgba(84,153,199,0.55)"
+              }
+            />
+          ))}
         </Bar>
-        <Bar dataKey="gpu" stackId="a" fill='#17a589'> 
-        {data.map((entry, index) => (
-            <Cell key={`bar2-${index}`} fill={
-                entry.name === 'current'
-                  ? "#17a589"
-                  : "rgba(23,165,137,0.55)"
-              }/>
-        ))}
-        </Bar>        
-        <ReferenceLine x="current" strokeWidth={0} >
-            <Label width={10} value={'Current Experiment'} position={'insideTop'} style={{fontSize:20,fontWeight:900,fontFamily:'sans-serif',fill:'#17202a'}}/> 
-            </ReferenceLine>
+        <Bar isAnimationActive={false} dataKey="gpu" stackId="a" fill="#17a589">
+          {data.map((entry, index) => (
+            <Cell
+              key={`bar2-${index}`}
+              fill={
+                entry.name === "current" ? "#17a589" : "rgba(23,165,137,0.55)"
+              }
+            />
+          ))}
+          <LabelList
+            dataKey="name"
+            position="top"
+            content={renderCustomizedLabel}
+          />
+        </Bar>
         <Legend align="center" />
       </BarChart>
     </ResponsiveContainer>

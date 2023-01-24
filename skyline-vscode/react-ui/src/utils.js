@@ -155,7 +155,7 @@ export function computePercentage(operations, total_time) {
 export function energy_data(currentTotal){
   const kwh = currentTotal * ENERGY_CONVERSION_UNITS['kwh'];
   const carbon_emission_tons = kwh*ENERGY_CONVERSION_UNITS['carbon'];
-  const carbon_unit = carbon_emission_tons < 0 ? 
+  const carbon_unit = carbon_emission_tons < 1 ? 
       `${parseFloat(Number(carbon_emission_tons*1000).toFixed(2))} kg`: 
       `${parseFloat(Number(carbon_emission_tons).toFixed(2))} Metric Tons`;
   const miles = unitScale(carbon_emission_tons * ENERGY_CONVERSION_UNITS['miles'],'generic');

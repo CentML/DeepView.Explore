@@ -883,46 +883,46 @@ export const profiling_data = {
   ],
   energy: {
     current: {
-      total_consumption: 99.5328e9,
+      total_consumption: 2.8,
       components: [
         { type: "ENERGY_UNSPECIFIED", consumption: 0 },
-        { type: "ENERGY_CPU_DRAM", consumption: 63.173e9 },
-        { type: "ENERGY_GPU", consumption: 36.173e9 },
+        { type: "ENERGY_CPU_DRAM", consumption: 1.1 },
+        { type: "ENERGY_GPU", consumption: 1.7 },
       ],
     },
     past_measurements: [
-      {
-        total_consumption: 103400.345,
-        components: [
-          { type: "ENERGY_UNSPECIFIED", consumption: 0 },
-          { type: "ENERGY_CPU_DRAM", consumption: 70000.173 },
-          { type: "ENERGY_GPU", consumption: 33400.173 },
-        ],
-      },
-      {
-        total_consumption: 3034.345,
-        components: [
-          { type: "ENERGY_UNSPECIFIED", consumption: 0 },
-          
-          { type: "ENERGY_GPU", consumption: 1534.173 },
-        ],
-      },
-      {
-        total_consumption: 10034.345,
-        components: [
-          { type: "ENERGY_UNSPECIFIED", consumption: 0 },
-          { type: "ENERGY_CPU_DRAM", consumption: 3000.173 },
-          { type: "ENERGY_GPU", consumption: 7034.173 },
-        ],
-      },
-      {
-        total_consumption: 903.345,
-        components: [
-          { type: "ENERGY_UNSPECIFIED", consumption: 0 },
-          { type: "ENERGY_CPU_DRAM", consumption: 450.173 },
-          { type: "ENERGY_GPU", consumption: 453.173 },
-        ],
-      },
+      // {
+      //   total_consumption: 10.10,
+      //   components: [
+      //     { type: "ENERGY_UNSPECIFIED", consumption: 0 },
+      //     { type: "ENERGY_CPU_DRAM", consumption: 3.05 },
+      //     { type: "ENERGY_GPU", consumption: 7.05 },
+      //   ],
+      // },
+      // {
+      //   total_consumption: 7.30,
+      //   components: [
+      //     { type: "ENERGY_UNSPECIFIED", consumption: 0 },
+      //     { type: "ENERGY_CPU_DRAM", consumption: 2.15 },
+      //     { type: "ENERGY_GPU", consumption: 5.15 },
+      //   ],
+      // },
+      // {
+      //   total_consumption: 20.20,
+      //   components: [
+      //     { type: "ENERGY_UNSPECIFIED", consumption: 0 },
+      //     { type: "ENERGY_CPU_DRAM", consumption: 10.10 },
+      //     { type: "ENERGY_GPU", consumption: 10.10 },
+      //   ],
+      // },
+      // {
+      //   total_consumption: 30.345,
+      //   components: [
+      //     { type: "ENERGY_UNSPECIFIED", consumption: 0 },
+      //     { type: "ENERGY_CPU_DRAM", consumption: 15.173 },
+      //     { type: "ENERGY_GPU", consumption: 15.173 },
+      //   ],
+      // },
     ],
   },
 };

@@ -5,7 +5,7 @@ import {
   faGlobeAmericas,
   faCar,
   faHome,
-  faMobileAlt
+  faMobileAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 import Subheader from "../Subheader";
@@ -14,7 +14,6 @@ import StackedBarGraph from "../components/StackedBarGraph";
 import { energy_data, unitScale } from "../utils";
 
 const EnergyConsumption = ({ energyData }) => {
-
   let total = null;
   let curr_cpu_dram = null;
   let curr_gpu = null;
@@ -27,13 +26,11 @@ const EnergyConsumption = ({ energyData }) => {
       (item) => item.type === "ENERGY_CPU_DRAM"
     );
     curr_gpu = current.components.find((item) => item.type === "ENERGY_GPU");
-    total = unitScale(current.total_consumption,"energy");
+    total = unitScale(current.total_consumption, "energy");
     conversions = energy_data(current.total_consumption);
-    console.log(conversions)
     if (curr_cpu_dram && curr_gpu) {
-      const cpu_scale = unitScale(curr_cpu_dram.consumption,"energy");
-      const gpu_scale = unitScale(curr_gpu.consumption,"energy")
-      console.log(cpu_scale.val,gpu_scale.val)
+      const cpu_scale = unitScale(curr_cpu_dram.consumption, "energy");
+      const gpu_scale = unitScale(curr_gpu.consumption, "energy");
       piegraph_data = [
         {
           name: `CPU & DRAM Consumption (${cpu_scale.scale})`,
@@ -62,9 +59,9 @@ const EnergyConsumption = ({ energyData }) => {
         if (cpu_dram && gpu) {
           return {
             name: `exp_${(idx += 1)}`,
-            total: parseFloat(Number(Math.log10(item.total_consumption)).toFixed(2)),
-            cpu: parseFloat(Number(Math.log10(cpu_dram.consumption)).toFixed(2)) ,
-            gpu: parseFloat(Number(Math.log10(gpu.consumption)).toFixed(2)),
+            total: parseFloat(Number(item.total_consumption)).toFixed(2),
+            cpu: parseFloat(Number(cpu_dram.consumption).toFixed(2)),
+            gpu: parseFloat(Number(gpu.consumption).toFixed(2)),
           };
         }
       }
@@ -78,18 +75,15 @@ const EnergyConsumption = ({ energyData }) => {
     bargraph_data = [
       ...bargraph_data,
       {
-        name: `current`,
-        total: parseFloat(Number(Math.log10(current.total_consumption)).toFixed(2)),
-        cpu: parseFloat(Number(Math.log10(curr_cpu_dram.consumption)).toFixed(2)),
-        gpu: parseFloat(Number(Math.log10(curr_gpu.consumption)).toFixed(2)),
+        name: "current",
+        total: total.val,
+        cpu: piegraph_data[0].value,
+        gpu: piegraph_data[1].value,
       },
     ];
   }
 
-  if(bargraph_data.length > 0) bargraph_data.sort((a, b) => a.total - b.total);
- 
-  
-  console.log(bargraph_data);
+  if (bargraph_data.length > 0) bargraph_data.sort((a, b) => a.total - b.total);
 
   return (
     <>
@@ -121,7 +115,7 @@ const EnergyConsumption = ({ energyData }) => {
                       </div>
                       <div>
                         <h6>Breakdown:</h6>
-                        <PieGraph data={piegraph_data} height={225} />
+                        <PieGraph data={piegraph_data} height={320} />
                       </div>
                       <div>
                         <h6>Equivalent to: </h6>
@@ -136,7 +130,8 @@ const EnergyConsumption = ({ energyData }) => {
                             />{" "}
                           </div>
                           <p>
-                            <strong>{conversions?.carbon}</strong> of C02 emissions released
+                            <strong>{conversions?.carbon}</strong> of C02
+                            emissions released
                           </p>
                         </Col>
                         <Col sm={3} className="center">
@@ -160,7 +155,8 @@ const EnergyConsumption = ({ energyData }) => {
                             />{" "}
                           </div>
                           <p>
-                            <strong>{conversions?.phone}</strong> of smartphones charged
+                            <strong>{conversions?.phone}</strong> of smartphones
+                            charged
                           </p>
                         </Col>
                         <Col sm={3} className="center">
@@ -172,10 +168,14 @@ const EnergyConsumption = ({ energyData }) => {
                             />{" "}
                           </div>
                           <p>
-                            <strong>{conversions?.household} x</strong> homes' energy use for one year
+                            <strong>{conversions?.household} x</strong> homes'
+                            energy use for one year
                           </p>
                         </Col>
-                        <small>ref: https://www.epa.gov/energy/greenhouse-gas-equivalencies-calculator</small>
+                        <small>
+                          ref:
+                          https://www.epa.gov/energy/greenhouse-gas-equivalencies-calculator
+                        </small>
                       </Row>
                     </Col>
                   ) : (
@@ -188,14 +188,14 @@ const EnergyConsumption = ({ energyData }) => {
                   {bargraph_data.length > 0 ? (
                     <Col xxl={6}>
                       <div>
-                        <h5>Relative to your other experiments [DEMO]</h5>
+                        <h5>Relative to your other experiments</h5>
                       </div>
                       <div className="bargraph-container">
                         <StackedBarGraph
                           data={bargraph_data}
                           height={500}
                           xlabel={"Experiments"}
-                          ylabel={"Energy Consumption (J) log scale"}
+                          ylabel={`Energy Consumption Joules (${total.scale})`}
                         />
                       </div>
                     </Col>
@@ -224,7 +224,7 @@ const Wrapper = styled.main`
 
   h6 {
     text-align: center;
-    margin-top: 1rem;
+    margin-top: 0.25rem;
   }
 
   .list-item {
