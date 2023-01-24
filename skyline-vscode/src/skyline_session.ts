@@ -2,7 +2,6 @@
 import * as vscode from 'vscode';
 import * as pb from './protobuf/innpv_pb';
 import * as path from 'path';
-import * as cp from 'child_process';
 const fs = require('fs');
 
 import {Socket} from 'net';
@@ -22,13 +21,11 @@ export interface SkylineSessionOptions {
 }
 
 export interface SkylineEnvironment {
-    binaryPath: string;
     reactProjectRoot: string;
 }
 
 export class SkylineSession {
     // Backend socket connection
-    skylineProcess?: cp.ChildProcess;
     connection: Socket;
     seq_num: number;
     last_length: number;
@@ -36,7 +33,7 @@ export class SkylineSession {
     startSkyline?: () => void | undefined;
 
     // Set to true if the backend should be restarted
-    backendShouldRestart: boolean;
+    resetBackendConnection: boolean;
 
     // VSCode extension and views
     context: vscode.ExtensionContext;
@@ -59,7 +56,7 @@ export class SkylineSession {
     constructor(options: SkylineSessionOptions, environ: SkylineEnvironment) {
         console.log("SkylineSession instantiated");
 
-        this.backendShouldRestart = false;
+        this.resetBackendConnection = false;
         this.connection = new Socket();
         this.connection.on('data', this.on_data.bind(this));
         this.connection.on('close', this.on_close.bind(this));
@@ -77,7 +74,7 @@ export class SkylineSession {
         this.reactProjectRoot = environ.reactProjectRoot;
 
         this.webviewPanel.webview.onDidReceiveMessage(this.webview_handle_message.bind(this));
-        this.webviewPanel.onDidDispose(this.kill_backend.bind(this));
+        this.webviewPanel.onDidDispose(this.disconnect.bind(this));
 
         vscode.workspace.onDidChangeTextDocument(this.on_text_change.bind(this));
         this.restart_profiling = this.restart_profiling.bind(this);
@@ -106,6 +103,8 @@ export class SkylineSession {
         console.log("Sending initialization request");
         const message = new pb.InitializeRequest();
         message.setProtocolVersion(5);
+        message.setProjectRoot(this.root_dir);
+        message.setEntryPoint("entry_point.py");
         this.send_message(message, "Initialize");
     }
 
@@ -117,17 +116,16 @@ export class SkylineSession {
         this.send_message(message, "Analysis");
     }
 
-    kill_backend() {
-        this.skylineProcess?.kill('SIGKILL');
+    disconnect() {
+        this.connection.destroy()
     }
 
     restart_profiling() {
-	console.log("restart_profiling", this.startSkyline, this.skylineProcess);
-        this.backendShouldRestart = true;
-        this.skylineProcess?.kill('SIGKILL');
-	// this.startSkyline && this.startSkyline();
+        console.log("restart_profiling", this.startSkyline);
+        this.resetBackendConnection = true;
+        this.disconnect();
     }
-
+    
     on_text_change() {
         console.log("Text change");
         let changeEvent = {
@@ -300,6 +298,10 @@ export class SkylineSession {
 
     on_close() {
         console.log("Socket Closed!");
+        if (this.resetBackendConnection)
+        {
+            this.startSkyline?.();
+        }
     }
 
     private _getHtmlForWebview() {
