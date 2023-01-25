@@ -37,7 +37,7 @@ const renderCustomizedLabel = (props) => {
   );
 };
 
-const StackedBarGraph = ({ data, height, xlabel, ylabel }) => {
+const StackedBarGraph = ({ data, height, xlabel, ylabel, bar1_color, bar2_color }) => {
   return (
     <ResponsiveContainer height={height}>
       <BarChart
@@ -53,22 +53,22 @@ const StackedBarGraph = ({ data, height, xlabel, ylabel }) => {
           <Label value={ylabel} angle={-90} position="outside" />
         </YAxis>
         <Tooltip />
-        <Bar dataKey="cpu" stackId="a" fill="#5499c7">
+        <Bar dataKey="cpu" stackId="a" fill={bar1_color}>
           {data.map((entry, index) => (
             <Cell
               key={`bar1-${index}`}
               fill={
-                entry.name === "current" ? "#5499c7" : "rgba(84,153,199,0.55)"
+                entry.name === "current" ? entry.cpu_color : entry.cpu_color_opacity
               }
             />
           ))}
         </Bar>
-        <Bar isAnimationActive={false} dataKey="gpu" stackId="a" fill="#17a589">
+        <Bar isAnimationActive={false} dataKey="gpu" stackId="a" fill={bar2_color}>
           {data.map((entry, index) => (
             <Cell
               key={`bar2-${index}`}
               fill={
-                entry.name === "current" ? "#17a589" : "rgba(23,165,137,0.55)"
+                entry.name === "current" ? entry.gpu_color : entry.gpu_color_opacity
               }
             />
           ))}

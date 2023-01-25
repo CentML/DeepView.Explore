@@ -18,10 +18,8 @@ import ReactTooltip from 'react-tooltip';
 
 
 import { computePercentage, getTraceByLevel } from './utils';
-// Changed by John 
 import { profiling_data } from './data/mock_data';
 import EnergyConsumption from './sections/EnergyConsumption';
-// end changed by John
 
 /**
  * Returns information required to draw memory and throughput information
@@ -38,7 +36,7 @@ function updateSliders(analysisState, memoryPerc, throughputPerc, setSliderMemor
     let maxMemory = analysisState['breakdown']['memory_capacity_bytes'];
     let maxThroughput = maxBatch * 1000.0 / (maxBatch * throughputModel[0] + throughputModel[1]);
 
-    if (!bs) { // changed by John, was if (bs == null)
+    if (!bs) {
 	    if (memoryPerc && throughputPerc) {
 		console.log("memory and throughput perc cannot both be not null");
 		return;
@@ -72,9 +70,9 @@ function updateSliders(analysisState, memoryPerc, throughputPerc, setSliderMemor
  */
 function acquireApi() {
     // if (typeof this.acquireApi.api == 'undefined') {
-    if (typeof acquireApi.api === 'undefined') { // changed by John, was ==
+    if (typeof acquireApi.api === 'undefined') {
         console.log("Calling acquire function");
-        if (typeof acquireVsCodeApi === "function") { // changed by John, was ==
+        if (typeof acquireVsCodeApi === "function") {
             let f = window['acquireVsCodeApi'];
             let a = f();
             acquireApi.api = a;
@@ -139,13 +137,13 @@ function App() {
     useEffect(function () {
         window.addEventListener('message', event => {
             console.log("Message:", JSON.stringify(event.data));
-            if (event.data['message_type'] === "analysis") { // changed by John, was ==
+            if (event.data['message_type'] === "analysis") {
                 processAnalysisState(event.data);
                 updateSliders(event.data, null, null, setSliderMemory, setSliderThroughput, event.data["breakdown"]["batch_size"]);
-            } else if (event.data['message_type'] === "text_change") { // changed by John, was ==
+            } else if (event.data['message_type'] === "text_change") {
                 console.log("Text change!");
                 setTextChanged(true);
-            } else if (event.data['message_type'] === 'error') { // changed by John, was ==
+            } else if (event.data['message_type'] === 'error') {
                 setErrorText(event.data['error_text']);
             }
         });
@@ -230,9 +228,7 @@ function App() {
                                         overallPct={elem["percentage"]}
                                         percentage={elem["percentage"]}
                                         resizable={false}
-                                        // changed by John, was ==
                                         colorClass={elem["name"] === "untracked" ?  "innpv-untracked-color" : "innpv-blue-color-" + ((idx % 5)+1)} 
-                                        // changed by John, was ==
                                         tooltipHTML={elem["name"] === "untracked" ? `<b>Untracked</b><br>Time: ${Math.round(elem["total_time"] * 100)/100}ms` : `<b>${elem["name"]}</b><br>Forward: ${Math.round(elem["forward_ms"]*100)/100}ms<br>Backward: ${Math.round(elem["backward_ms"]*100)/100}ms`}
                                     />
                                 }) : () => { return []; }
@@ -244,7 +240,6 @@ function App() {
                     <div className="innpv-memory innpv-subpanel">
                         
                         {
-                        // changed by John, was == 
                         curBatchSize !== 0 && <><Alert variant='secondary'>Using predicted batch size <b>{Math.round(curBatchSize)}</b></Alert><br /></> }
                         
                         <Subheader icon="database">Peak Memory Usage</Subheader>

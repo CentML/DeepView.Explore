@@ -14,6 +14,11 @@ import StackedBarGraph from "../components/StackedBarGraph";
 import { energy_data, unitScale } from "../utils";
 
 const EnergyConsumption = ({ energyData }) => {
+  const cpu_color = "#5499c7";
+  const cpu_color_opacity = "rgba(84,153,199,0.55)";
+  const gpu_color = "#17a589";
+  const gpu_color_opacity = "rgba(23,165,137,0.55)";
+
   let total = null;
   let curr_cpu_dram = null;
   let curr_gpu = null;
@@ -21,6 +26,7 @@ const EnergyConsumption = ({ energyData }) => {
   let bargraph_data = [];
   let conversions = null;
   const { current, past_measurements } = energyData;
+
   if (current && current.components && current.total_consumption) {
     curr_cpu_dram = current.components.find(
       (item) => item.type === "ENERGY_CPU_DRAM"
@@ -62,6 +68,10 @@ const EnergyConsumption = ({ energyData }) => {
             total: parseFloat(Number(item.total_consumption)).toFixed(2),
             cpu: parseFloat(Number(cpu_dram.consumption).toFixed(2)),
             gpu: parseFloat(Number(gpu.consumption).toFixed(2)),
+            cpu_color,
+            cpu_color_opacity,
+            gpu_color,
+            gpu_color_opacity,
           };
         }
       }
@@ -79,6 +89,10 @@ const EnergyConsumption = ({ energyData }) => {
         total: total.val,
         cpu: piegraph_data[0].value,
         gpu: piegraph_data[1].value,
+        cpu_color,
+        cpu_color_opacity,
+        gpu_color,
+        gpu_color_opacity,
       },
     ];
   }
@@ -196,6 +210,8 @@ const EnergyConsumption = ({ energyData }) => {
                           height={500}
                           xlabel={"Experiments"}
                           ylabel={`Energy Consumption Joules (${total.scale})`}
+                          bar1_color={cpu_color}
+                          bar2_color={gpu_color}
                         />
                       </div>
                     </Col>

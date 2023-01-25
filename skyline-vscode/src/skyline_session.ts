@@ -7,7 +7,6 @@ const fs = require('fs');
 import {Socket} from 'net';
 import { simpleDecoration } from './decorations';
 import { energy_component_type_mapping } from './utils';
-import { privateEncrypt } from 'crypto';
 
 const crypto = require('crypto');
 const resolve = require('path').resolve;

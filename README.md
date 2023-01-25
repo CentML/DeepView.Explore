@@ -12,6 +12,7 @@ To install, either:
   1. Prerequisites:
      - node.js v14+
      - [Protobuf Compiler](https://grpc.io/docs/protoc-installation/)
+     - npm install -g @vscode/vsce (to build the vscode extension)
   2. Run the following commands    
       ```bash
       git clone https://github.com/CentML/skyline-vscode
@@ -20,6 +21,7 @@ To install, either:
   3. The vsix file will be generated in the current working directory
 
 Once you have the vsix file, run `code --install-extension vscode*.vsix` to install the extension.
+**Note: the file [build_vsix_dev.sh] is only to be used for development**
 
 ### Backend Installation
 This plugin requires Skyline (the installation instruction for which can be found [here](https://github.com/CentML/skyline)) and (optionally) Habitat (used to extrapolate GPU runtimes, instructions found [here](https://github.com/CentML/habitat)). **Skyline must be launched before running this extension.**

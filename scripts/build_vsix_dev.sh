@@ -1,5 +1,5 @@
 #!/bin/bash
-# UNDER DEVELOPMENT DO NOT USE
+# ONLY USE FOR DEVELOPMENT
 
 # Build react UI
 pushd skyline-vscode/react-ui && \
