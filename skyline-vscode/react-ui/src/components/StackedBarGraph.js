@@ -42,14 +42,14 @@ const StackedBarGraph = ({ data, height, xlabel, ylabel, bar1_color, bar2_color 
     <ResponsiveContainer height={height}>
       <BarChart
         data={data}
-        margin={{ top: 30, right: 10, left: 50, bottom: 50 }}
+        margin={{ top: 30, right: 60, left: 25, bottom: 50 }}
       >
         <CartesianGrid horizontal={false} vertical={false} />
         <XAxis
           dataKey="name"
           label={{ value: xlabel, position: "insideBottom", offset: -45 }}
         />
-        <YAxis width={120}>
+        <YAxis width={150}>
           <Label value={ylabel} angle={-90} position="outside" />
         </YAxis>
         <Tooltip />

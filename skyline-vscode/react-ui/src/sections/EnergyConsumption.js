@@ -1,5 +1,5 @@
-import React from "react";
-import { Container, Row, Col, Spinner, Card } from "react-bootstrap";
+import React, { useState } from "react";
+import { Container, Row, Col, Spinner, Card, Form } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faGlobeAmericas,
@@ -14,6 +14,8 @@ import StackedBarGraph from "../components/StackedBarGraph";
 import { energy_data, unitScale } from "../utils";
 
 const EnergyConsumption = ({ energyData }) => {
+  const numIterations = 10000; 
+
   const cpu_color = "#5499c7";
   const cpu_color_opacity = "rgba(84,153,199,0.55)";
   const gpu_color = "#17a589";
@@ -32,15 +34,15 @@ const EnergyConsumption = ({ energyData }) => {
       (item) => item.type === "ENERGY_CPU_DRAM"
     );
     curr_gpu = current.components.find((item) => item.type === "ENERGY_GPU");
-    total = unitScale(current.total_consumption, "energy");
-    conversions = energy_data(current.total_consumption);
+    total = unitScale(current.total_consumption*numIterations, "energy");
+    conversions = energy_data(current.total_consumption*numIterations);
     if (curr_cpu_dram && curr_gpu) {
-      const cpu_scale = unitScale(curr_cpu_dram.consumption, "energy");
-      const gpu_scale = unitScale(curr_gpu.consumption, "energy");
+      const cpu_scale = unitScale(curr_cpu_dram.consumption*numIterations, "energy");
+      const gpu_scale = unitScale(curr_gpu.consumption*numIterations, "energy");
       piegraph_data = [
         {
           name: `CPU & DRAM Consumption (${cpu_scale.scale})`,
-          value: cpu_scale.val, // parseFloat(Number(cpu_dram.consumption / 1000).toFixed(2))
+          value: cpu_scale.val,
           fill: "#b77032",
         },
         {
@@ -65,9 +67,9 @@ const EnergyConsumption = ({ energyData }) => {
         if (cpu_dram && gpu) {
           return {
             name: `exp_${(idx += 1)}`,
-            total: parseFloat(Number(item.total_consumption)).toFixed(2),
-            cpu: parseFloat(Number(cpu_dram.consumption).toFixed(2)),
-            gpu: parseFloat(Number(gpu.consumption).toFixed(2)),
+            total: parseFloat(Number(current.total_consumption*numIterations)).toFixed(2),
+            cpu: parseFloat(Number(cpu_dram.consumption*numIterations).toFixed(2)),
+            gpu: parseFloat(Number(gpu.consumption*numIterations).toFixed(2)),
             cpu_color,
             cpu_color_opacity,
             gpu_color,
@@ -86,9 +88,9 @@ const EnergyConsumption = ({ energyData }) => {
       ...bargraph_data,
       {
         name: "current",
-        total: total.val,
-        cpu: piegraph_data[0].value,
-        gpu: piegraph_data[1].value,
+        total: parseFloat(Number(current.total_consumption*numIterations)).toFixed(2),
+        cpu: parseFloat(Number(curr_cpu_dram.consumption*numIterations)).toFixed(2),
+        gpu: parseFloat(Number(curr_gpu.consumption*numIterations)).toFixed(2),
         cpu_color,
         cpu_color_opacity,
         gpu_color,

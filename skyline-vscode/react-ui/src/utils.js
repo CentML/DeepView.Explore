@@ -12,7 +12,7 @@ const BYTE_UNITS = [
 const ENERGY_UNITS = [
   'J',
   'KJ',
-  'MG',
+  'MJ',
   'GJ',
   'PJ'
 ]
