@@ -6,6 +6,7 @@ const fs = require('fs');
 
 import {Socket} from 'net';
 import { simpleDecoration } from './decorations';
+import { energy_component_type_mapping } from './utils';
 
 const crypto = require('crypto');
 const resolve = require('path').resolve;
@@ -36,13 +37,14 @@ export class SkylineSession {
     // VSCode extension and views
     context: vscode.ExtensionContext;
     webviewPanel: vscode.WebviewPanel;
-    openedEditors: Map<string, vscode.TextEditor>
+    openedEditors: Map<string, vscode.TextEditor>;
 
     // Received messages
     msg_initialize?: pb.InitializeResponse;
     msg_throughput?: pb.ThroughputResponse;
     msg_breakdown?: pb.BreakdownResponse;
     msg_habitat?: pb.HabitatResponse;
+    msg_energy?: pb.EnergyResponse;
 
     // Project information
     root_dir: string;
@@ -217,6 +219,9 @@ export class SkylineSession {
                 case pb.FromServer.PayloadCase.HABITAT:
                     this.msg_habitat = msg.getHabitat();
                     break;
+                case pb.FromServer.PayloadCase.ENERGY:
+                    this.msg_energy = msg.getEnergy();
+                    break;
             };
 
             let json_msg = await this.generateStateJson();
@@ -312,6 +317,7 @@ export class SkylineSession {
         const scriptUri = this.webviewPanel.webview.asWebviewUri(scriptPathOnDisk);
         const stylePathOnDisk = vscode.Uri.file(path.join(buildPath, 'build', mainStyle));
         const styleUri = this.webviewPanel.webview.asWebviewUri(stylePathOnDisk);
+
 		// Use a nonce to whitelist which scripts can be run
 		const nonce = crypto.randomBytes(16).toString('base64');
 
@@ -350,7 +356,8 @@ export class SkylineSession {
             "throughput": {},
             "breakdown": {},
 
-            "habitat": [] as Array<[string, number]>
+            "habitat": [] as Array<[string, number]>,
+            "energy": {}
         };
 
         if (this.msg_throughput) {
@@ -403,6 +410,23 @@ export class SkylineSession {
             for (let prediction of this.msg_habitat.getPredictionsList()) {
                 fields['habitat'].push([ prediction.getDeviceName(), prediction.getRuntimeMs() ]);
             }
+        }
+
+
+
+        if (this.msg_energy){
+            fields['energy'] = {
+                current:{
+                    total_consumption: this.msg_energy.getTotalConsumption(),
+                    components: this.msg_energy.getComponentsList().map((item)=> ({type:energy_component_type_mapping(item.getComponentType()), consumption:item.getConsumptionJoules()}))
+                },
+                past_measurements: this.msg_energy.getPastMeasurementsList().map((exp)=>(
+                    {
+                        total_consumption: exp.getTotalConsumption(),
+                        components: exp.getComponentsList().map((item)=> ({type:energy_component_type_mapping(item.getComponentType()), consumption:item.getConsumptionJoules()}))
+                    }
+                ))
+            };
         }
 
         return fields;

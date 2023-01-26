@@ -9,7 +9,7 @@ import NumericDisplay from './NumericDisplay';
 import AnalysisActions from '../redux/actions/analysis';
 import { toPercentage } from '../utils';
 
-export default class Memory extends React.Component {
+class Memory extends React.Component {
     constructor(props) {
         super(props);
         this._handleResize = this._handleResize.bind(this);
