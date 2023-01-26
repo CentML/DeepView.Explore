@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Container, Row, Col, Spinner, Card, Form } from "react-bootstrap";
+import React from "react";
+import { Container, Row, Col, Spinner, Card } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faGlobeAmericas,
@@ -67,7 +67,7 @@ const EnergyConsumption = ({ energyData }) => {
         if (cpu_dram && gpu) {
           return {
             name: `exp_${(idx += 1)}`,
-            total: parseFloat(Number(current.total_consumption*numIterations)).toFixed(2),
+            total: parseFloat(Number(current?.total_consumption*numIterations)).toFixed(2),
             cpu: parseFloat(Number(cpu_dram.consumption*numIterations).toFixed(2)),
             gpu: parseFloat(Number(gpu.consumption*numIterations).toFixed(2)),
             cpu_color,
@@ -211,7 +211,7 @@ const EnergyConsumption = ({ energyData }) => {
                           data={bargraph_data}
                           height={500}
                           xlabel={"Experiments"}
-                          ylabel={`Energy Consumption Joules (${total.scale})`}
+                          ylabel={`Energy Consumption Joules (${total?.scale})`}
                           bar1_color={cpu_color}
                           bar2_color={gpu_color}
                         />

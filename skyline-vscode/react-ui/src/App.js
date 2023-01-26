@@ -102,6 +102,7 @@ function App() {
 
     const [vscodeApi, setVscodeApi] = useState(acquireApi());
     const [errorText, setErrorText] = useState();
+
     App.vscodeApi = vscodeApi;
 
     const onMemoryResize = function (change) {
