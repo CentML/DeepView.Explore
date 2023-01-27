@@ -20,6 +20,7 @@ import ReactTooltip from 'react-tooltip';
 import { computePercentage, getTraceByLevel } from './utils';
 import { profiling_data } from './data/mock_data';
 import EnergyConsumption from './sections/EnergyConsumption';
+import Iterations from './sections/Iterations';
 
 /**
  * Returns information required to draw memory and throughput information
@@ -102,6 +103,8 @@ function App() {
 
     const [vscodeApi, setVscodeApi] = useState(acquireApi());
     const [errorText, setErrorText] = useState();
+    const [numIterations,setNumIterations] = useState(10000);
+
     App.vscodeApi = vscodeApi;
 
     const onMemoryResize = function (change) {
@@ -148,12 +151,12 @@ function App() {
             }
         });
 
-        const sendMock = false;
+        const sendMock = true;
 
         if (sendMock) {
             setTimeout(() => {
                 const mockResponse = profiling_data;
-                console.log("mock response", mockResponse);
+                //console.log("mock response", mockResponse);
                 processAnalysisState(mockResponse);
                 updateSliders(mockResponse, 0.5, null, setSliderMemory, setSliderThroughput);
             }, 1000);
@@ -205,6 +208,7 @@ function App() {
                         }
                     </Card.Body>
                 </Card>
+                <Iterations setNumIterations={setNumIterations}/>
                 <br></br>
                 <Tabs defaultActiveKey="profiling" className="mb-3">
                     <Tab eventKey="profiling" title="Profiling">
@@ -298,12 +302,12 @@ function App() {
                         </div>
                     </div>
                     <Habitat habitatData={analysisState['habitat']}/>
-                    <EnergyConsumption energyData={analysisState['energy']}/>
+                    <EnergyConsumption energyData={analysisState['energy']} numIterations={numIterations}/>
                     </div>
                     </div>
                     </Tab>
                     <Tab eventKey="deploy" title="Deployment">
-                        <DeploymentTab></DeploymentTab>
+                        <DeploymentTab numIterations={numIterations} habitatData={analysisState['habitat']}/>
                     </Tab>
                 </Tabs>
                 </Container>

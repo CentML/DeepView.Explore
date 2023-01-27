@@ -14,14 +14,18 @@ const ENERGY_UNITS = [
   'KJ',
   'MJ',
   'GJ',
-  'PJ'
+  'TJ',
+  'PJ',
+  'EJ'
 ]
 
 const GENERIC_UNITS = [
   '',
   'Thousands',
   'Millions',
-  "Billions"
+  "Billions",
+  'Trillion',
+  'Quadrillion'
 ]
 
 // reference : https://www.epa.gov/energy/greenhouse-gas-equivalencies-calculator
@@ -42,9 +46,9 @@ export function unitScale(quantity, unit){
 
   switch(unit){
     case 'energy':
-      return {val:parseFloat(Number(quantity).toFixed(2)),scale:ENERGY_UNITS[idx]}
+      return {val:parseFloat(Number(quantity).toFixed(2)),scale:ENERGY_UNITS[idx],scale_index:idx}
     case 'generic':
-      return {val:parseFloat(Number(quantity).toFixed(2)),scale:GENERIC_UNITS[idx]}
+      return {val:parseFloat(Number(quantity).toFixed(2)),scale:GENERIC_UNITS[idx],scale_index:idx}
     default:
       return null
   }

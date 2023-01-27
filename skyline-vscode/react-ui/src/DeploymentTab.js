@@ -1,42 +1,35 @@
-
-import Subheader from './Subheader';
 import ProviderPanel from './ProviderPanel';
 import TrainingPanel from './TrainingPanel';
-import { Alert, Accordion, Button, Card, Col, Tab, Tabs, Row, Container } from 'react-bootstrap';
-import React from 'react';
-import { useState } from 'react';
+import { Accordion, Button, Col,Row } from 'react-bootstrap';
+import React,{ useState } from 'react';
 
-export default class DeploymentTab extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = { activeTab: "0", btnDeployVariant: 'secondary', btnDeployLabel: 'Deploy and Run Model'}; 
-        this.deployOnClick = this.deployOnClick.bind(this);
-    }
-
-
-    deployOnClick() {
+const DeploymentTab = ({numIterations, habitatData}) => {
+    const [deploymentTabSettings, setDeploymentTabSettings] = useState({activeTab: "0", btnDeployVariant: 'secondary', btnDeployLabel: 'Deploy and Run Model'})
+    const deployOnClick = () => {
         const sleep = (milliseconds) => {
             return new Promise(resolve => setTimeout(resolve, milliseconds))
         }
 
         setTimeout(async () => {
-            this.setState({ btnDeployVariant: 'secondary', btnDeployLabel: 'Deploying Model....'});
+            setDeploymentTabSettings((prevState)=>({ ...prevState, btnDeployVariant: 'secondary', btnDeployLabel: 'Deploying Model....'}));
             await sleep(1000);
 
-            this.setState({ activeTab: "1" });
+            setDeploymentTabSettings((prevState)=>({ ...prevState, activeTab: "1" }));
         }, 100);
     }
 
-    render() {
+    
         return (
             <>
-                <Accordion defaultActiveKey="0" activeKey={this.state.activeTab}>
+                <Accordion defaultActiveKey="0" activeKey={deploymentTabSettings.activeTab}>
                     <Accordion.Item eventKey="0">
                         <Accordion.Header>Deployment Target</Accordion.Header>
                         <Accordion.Body>
-                            <ProviderPanel setParentState={this.setState.bind(this)} />
+                            <ProviderPanel numIterations={numIterations} 
+                            habitatData={habitatData}
+                            changeParentState={setDeploymentTabSettings} />
                             <Row>
-                                <Col><Button variant={this.state.btnDeployVariant} disabled={true || this.state.btnDeployVariant=='secondary'} onClick={this.deployOnClick}>{this.state.btnDeployLabel}</Button></Col>
+                                <Col><Button variant={deploymentTabSettings.btnDeployVariant} disabled={true || deploymentTabSettings.btnDeployVariant==='secondary'} onClick={deployOnClick}>{deploymentTabSettings.btnDeployLabel}</Button></Col>
                             </Row>
                         </Accordion.Body>
                     </Accordion.Item>
@@ -49,5 +42,7 @@ export default class DeploymentTab extends React.Component {
                 </Accordion>
             </>
         );
-    }
+    
 }
+
+export default DeploymentTab;
