@@ -37,7 +37,7 @@ jobs:
 
       - name: Upload vsix artifact to S3
         run: |
-          aws s3 cp skyline-vscode/skyline-vscode-*.vsix s3://centml-habitat/skyline-vscode/
+          aws s3 cp skyline-vscode/skyline-vscode-*.vsix s3://centml-releases/skyline-vscode/
 
       - name: Create index.html
         run: |
@@ -47,4 +47,4 @@ jobs:
         
       - name: Upload index.html to S3
         run: |
-          aws s3 cp index.html s3://centml-habitat/skyline-vscode/
+          aws s3 cp index.html s3://centml-releases/skyline-vscode/
