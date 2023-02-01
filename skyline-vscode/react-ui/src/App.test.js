@@ -1,8 +1,12 @@
-import { render, screen } from '@testing-library/react';
+import {act, create} from 'react-test-renderer';
 import App from './App';
 
-test('renders learn react link', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+describe('App', () => {
+  it ('should render successfully', () => {
+    let root;
+    act(() => {
+      root = create(<App />);
+    });
+    expect(root).toBeTruthy();
+  });
 });
