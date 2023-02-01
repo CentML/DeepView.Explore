@@ -47,9 +47,9 @@ const StackedBarGraph = ({ data, height, xlabel, ylabel, bar1_color, bar2_color 
         <CartesianGrid horizontal={false} vertical={false} />
         <XAxis
           dataKey="name"
-          label={{ value: xlabel, position: "insideBottom", offset: -45 }}
+          label={{ value: xlabel, position: "insideBottom", offset: -25 }}
         />
-        <YAxis width={150}>
+        <YAxis width={120}>
           <Label value={ylabel} angle={-90} position="outside" />
         </YAxis>
         <Tooltip />
@@ -78,7 +78,7 @@ const StackedBarGraph = ({ data, height, xlabel, ylabel, bar1_color, bar2_color 
             content={renderCustomizedLabel}
           />
         </Bar>
-        <Legend align="center" />
+        <Legend align="center" verticalAlign="top"/>
       </BarChart>
     </ResponsiveContainer>
   );

@@ -175,11 +175,3 @@ export function energy_data(currentTotal){
   }
 
 }
-
-export function find_card_in_habitat(habitat,card){
-  let cardData = null;
-  if(habitat){
-    cardData = habitat.find(item=> item[0].toLowerCase() === card.toLowerCase())
-  }
-  return cardData ? cardData[1]:null;
-}
