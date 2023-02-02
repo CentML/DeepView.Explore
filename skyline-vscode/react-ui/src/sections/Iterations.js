@@ -3,8 +3,8 @@ import { Button, Form, FloatingLabel } from "react-bootstrap";
 
 const Iterations = ({ setNumIterations }) => {
   const [iterations, setIterations] = useState({
-    epochs: 100,
-    iterPerEpoch: 100,
+    epochs: 50,
+    iterPerEpoch: 2000,
   });
   const [message, setMessage] = useState(null);
   const [estimation, setEstimation] = useState(false);

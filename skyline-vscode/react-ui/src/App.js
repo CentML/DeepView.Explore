@@ -103,7 +103,7 @@ function App() {
 
     const [vscodeApi, setVscodeApi] = useState(acquireApi());
     const [errorText, setErrorText] = useState();
-    const [numIterations,setNumIterations] = useState(10000);
+    const [numIterations,setNumIterations] = useState(100000);
 
     App.vscodeApi = vscodeApi;
 
@@ -139,7 +139,7 @@ function App() {
 
     useEffect(function () {
         window.addEventListener('message', event => {
-            console.log("Message:", JSON.stringify(event.data));
+            //console.log("Message:", JSON.stringify(event.data));
             if (event.data['message_type'] === "analysis") {
                 processAnalysisState(event.data);
                 updateSliders(event.data, null, null, setSliderMemory, setSliderThroughput, event.data["breakdown"]["batch_size"]);
@@ -151,7 +151,7 @@ function App() {
             }
         });
 
-        const sendMock = true;
+        const sendMock = false;
 
         if (sendMock) {
             setTimeout(() => {
