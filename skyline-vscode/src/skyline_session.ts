@@ -208,6 +208,10 @@ export class SkylineSession {
                     this.webviewPanel.webview.html = await this._getHtmlForWebview();
                     break;
                 case pb.FromServer.PayloadCase.ANALYSIS_ERROR:
+                    let error_message = msg.getAnalysisError()?.getErrorMessage()
+                    if (error_message) {
+                        this.report_error(error_message);
+                    }
                     break;
                 case pb.FromServer.PayloadCase.THROUGHPUT:
                     this.msg_throughput = msg.getThroughput();
