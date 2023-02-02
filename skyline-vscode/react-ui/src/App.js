@@ -92,6 +92,13 @@ function restartProfiling() {
     });
 }
 
+function connect(){
+    let vscode = App.vscodeApi;
+    vscode.postMessage({
+        command: "connect"
+    });
+}
+
 function App() {
     const [sliderMemory, setSliderMemory] = useState([50, 69, 420]);
     const [sliderThroughput, setSliderThroughput] = useState([50, 69, 420]);
@@ -104,7 +111,7 @@ function App() {
     const [errorText, setErrorText] = useState();
 
     App.vscodeApi = vscodeApi;
-
+    // App.vscodeApi.postMessage()
     const onMemoryResize = function (change) {
         let newHeight = sliderMemory[0] * (1 + change / 100);
         newHeight = Math.min(100, Math.max(0, newHeight));
@@ -138,6 +145,7 @@ function App() {
     useEffect(function () {
         window.addEventListener('message', event => {
             console.log("Message:", JSON.stringify(event.data));
+            // TODO: add a handler for connection
             if (event.data['message_type'] === "analysis") {
                 processAnalysisState(event.data);
                 updateSliders(event.data, null, null, setSliderMemory, setSliderThroughput, event.data["breakdown"]["batch_size"]);
@@ -185,8 +193,11 @@ function App() {
             </>
         )
     }
+    if (not_connected) {
 
-    if (analysisState && analysisState['throughput'] && Object.keys(analysisState['throughput']).length > 0)
+    }
+    else {
+        if (analysisState && analysisState['throughput'] && Object.keys(analysisState['throughput']).length > 0)
         return (
             <>
                 <Container fluid>
@@ -316,6 +327,8 @@ function App() {
             <WelcomeScreen analysisState={analysisState} vscodeApi={vscodeApi}></WelcomeScreen>
         </>
     );
+    }
+
 }
 
 export default App;

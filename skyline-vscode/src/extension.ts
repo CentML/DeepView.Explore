@@ -48,16 +48,7 @@ export function activate(context: vscode.ExtensionContext) {
 					webviewPanel: 	panel
 				};
 
-				let on_close = function() {
-					console.log(sess.resetBackendConnection);
-					console.log("Closing connection to backend");
-					if (sess.resetBackendConnection) {
-						console.log("Reconnecting to backend.");
-						startSkyline();
-					} else {
-						console.log("Not reconnecting to backend.");
-					}
-				};
+
 
 				let startSkyline = function() {
 					sess = new SkylineSession(sess_options, environ_options);

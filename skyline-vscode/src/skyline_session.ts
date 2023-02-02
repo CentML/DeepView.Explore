@@ -26,6 +26,8 @@ export interface SkylineEnvironment {
 export class SkylineSession {
     // Backend socket connection
     connection: Socket;
+    port: number;
+    addr: string;
     seq_num: number;
     last_length: number;
     message_buffer: Uint8Array;
@@ -57,9 +59,11 @@ export class SkylineSession {
 
         this.resetBackendConnection = false;
         this.connection = new Socket();
+        this.connection.on('connect', this.on_connect.bind(this));
         this.connection.on('data', this.on_data.bind(this));
         this.connection.on('close', this.on_close.bind(this));
-        this.connection.connect(options.port, options.addr, this.on_open.bind(this));
+        this.port = options.port
+        this.addr = options.addr
 
         this.seq_num = 0;
         this.last_length = -1;
@@ -74,6 +78,7 @@ export class SkylineSession {
 
         this.webviewPanel.webview.onDidReceiveMessage(this.webview_handle_message.bind(this));
         this.webviewPanel.onDidDispose(this.disconnect.bind(this));
+        this.webviewPanel.webview.html = this._getHtmlForWebview();
 
         vscode.workspace.onDidChangeTextDocument(this.on_text_change.bind(this));
         this.restart_profiling = this.restart_profiling.bind(this);
@@ -97,6 +102,14 @@ export class SkylineSession {
         this.connection.write(buf);
     }
 
+    on_connect() {
+        let connectionMessage = {
+            "message_type": "connection",
+            "status": true
+        };
+        this.webviewPanel.webview.postMessage(connectionMessage);
+    }  
+
     on_open() {
         // Send skyline initialization request
         console.log("Sending initialization request");
@@ -113,6 +126,10 @@ export class SkylineSession {
         const message = new pb.AnalysisRequest();
         message.setMockResponse(false);
         this.send_message(message, "Analysis");
+    }
+
+    connect() {
+        this.connection.connect(this.port, this.addr, this.on_open.bind(this));
     }
 
     disconnect() {
@@ -145,8 +162,10 @@ export class SkylineSession {
     webview_handle_message(msg: any) {
         console.log("webview_handle_message");
         console.log(msg);
-
-        if (msg['command'] == 'begin_analysis_clicked') {
+        if (msg['command'] == 'connect') {
+            vscode.window.showInformationMessage("Attempting to connect to backend.");
+            this.connect();
+        } else if (msg['command'] == 'begin_analysis_clicked') {
 			vscode.window.showInformationMessage("Sending analysis request.");
 			this.send_analysis_request();
         } else if (msg['command'] == 'restart_profiling_clicked') {
@@ -204,10 +223,12 @@ export class SkylineSession {
                     break;
                 case pb.FromServer.PayloadCase.INITIALIZE:
                     this.msg_initialize = msg.getInitialize();
-                    // TODO: Move this to other file.
-                    this.webviewPanel.webview.html = await this._getHtmlForWebview();
                     break;
                 case pb.FromServer.PayloadCase.ANALYSIS_ERROR:
+                    let errMessage = msg.getAnalysisError()?.getErrorMessage();
+                    if (errMessage) {
+                        this.report_error(errMessage);
+                    }
                     break;
                 case pb.FromServer.PayloadCase.THROUGHPUT:
                     this.msg_throughput = msg.getThroughput();
@@ -296,11 +317,15 @@ export class SkylineSession {
     }
 
     on_close() {
-        console.log("Socket Closed!");
         if (this.resetBackendConnection)
         {
             this.startSkyline?.();
         }
+        let connectionMessage = {
+            "message_type": "connection",
+            "status": false
+        };
+        this.webviewPanel.webview.postMessage(connectionMessage);
     }
 
     private _getHtmlForWebview() {

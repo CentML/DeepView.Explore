@@ -19,7 +19,7 @@ def skyline_model_provider():
     return net.cuda()
 
 
-def skyline_input_provider(batch_size=128):
+def skyline_input_provider(batch_size=1024):
     """
     target torch.Size([131072])
     going into E torch.Size([128, 1, 32, 32])
