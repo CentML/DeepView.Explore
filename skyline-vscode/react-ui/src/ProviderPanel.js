@@ -13,34 +13,14 @@ import {
   Image,
   Table,
   Form,
-  Dropdown,
-  DropdownButton,
 } from "react-bootstrap";
 
-import { instances, cardMemory } from "./data/providers";
+import { instances, cardMemory, providers } from "./data/providers";
+import { calculate_training_time,numberFormat,currencyFormat } from "./utils";
 
 const highlightColor = "#9b59b6";
 const normalSize = 200;
 const highlightSize = 280;
-
-const providers = {
-  google: {
-    name: "Google Cloud Platform",
-    logo: "resources/google.png",
-    color: "#f1c40f",
-  },
-  azure: {
-    name: "Microsoft Azure",
-    logo: "resources/azure.jpg",
-    color: "#3498db",
-  },
-  aws: {
-    name: "Amazon Web Services",
-    logo: "resources/aws.png",
-    color: "#e67e22",
-  },
-  centml: { name: "CentML", logo: "resources/centml.png", color: "#28b463" },
-};
 
 const populate_initial_data = (habitatData) => {
   let filtered_instances = [];
@@ -146,8 +126,7 @@ const ProviderPanel = ({ numIterations, habitatData }) => {
     if (provider == null) return;
     const originalData = initial_data.find((item) => item.id === provider.id);
 
-    let totalHr =
-      (numIterations * originalData.x) / 3.6e6 / provider.info.ngpus; // NEED YUBO FEEDBACK
+    let totalHr = calculate_training_time(numIterations, originalData); // NEED YUBO FEEDBACK
     let totalCost = provider.info.cost * totalHr;
 
     setProviderPanelSettings((prevState) => ({
@@ -190,78 +169,80 @@ const ProviderPanel = ({ numIterations, habitatData }) => {
         <Subheader icon="database">Providers</Subheader>
         <Container fluid>
           <Row>
-            <Col xl={8}>
+            <Col xl={12} xxl={8}>
               <Row>
-                <Col>
-                  <div>
-                    <h6>Filter by provider</h6>
-                    <Form.Select
-                      onChange={(e) =>
-                        handleFilterChange("provider", e.target.value)
-                      }
-                    >
-                      <option value="all">All</option>
-                      {Object.keys(providers).map((provider, index) => {
-                        return (
-                          <option key={`${index}`} value={provider}>
-                            {provider}
-                          </option>
-                        );
-                      })}
-                    </Form.Select>
-                  </div>
-                </Col>
-                <Col>
-                  <div>
-                    <h6>Filter by GPU</h6>
-                    <Form.Select
-                      onChange={(e) =>
-                        handleFilterChange("gpu", e.target.value)
-                      }
-                    >
-                      <option value="all">All</option>
-                      {[...gpuList].map((gpu, index) => {
-                        return (
-                          <option key={`${index}`} value={gpu}>
-                            {gpu}
-                          </option>
-                        );
-                      })}
-                    </Form.Select>
-                  </div>
-                </Col>
-                <Col>
-                  <div>
-                    <h6>Filter Max Number of GPUs:</h6>
-                    <ButtonGroup className="me-2">
-                      {MAX_GPU.map((numgpu) => (
-                        <ToggleButton
-                          key={numgpu}
-                          id={`radio-${numgpu}`}
-                          type="radio"
-                          variant={
-                            numgpu === providerPanelSettings.maxNumGpu
-                              ? "primary"
-                              : "light"
-                          }
-                          name="radio"
-                          size="sm"
-                          value={numgpu}
-                          checked={numgpu === providerPanelSettings.maxNumGpu}
-                          onChange={(e) =>
-                            handleFilterChange(
-                              "numGpus ",
-                              e.currentTarget.value
-                            )
-                          }
-                        >
-                          {numgpu === 0 ? "all" : numgpu}
-                        </ToggleButton>
-                      ))}
-                    </ButtonGroup>
-                  </div>
-                </Col>
-                <Row>
+                <Row className="mt-4 mb-2">
+                  <Col>
+                    <div>
+                      <h6>Filter by provider</h6>
+                      <Form.Select
+                        onChange={(e) =>
+                          handleFilterChange("provider", e.target.value)
+                        }
+                      >
+                        <option value="all">All</option>
+                        {Object.keys(providers).map((provider, index) => {
+                          return (
+                            <option key={`${index}`} value={provider}>
+                              {provider}
+                            </option>
+                          );
+                        })}
+                      </Form.Select>
+                    </div>
+                  </Col>
+                  <Col>
+                    <div>
+                      <h6>Filter by GPU</h6>
+                      <Form.Select
+                        onChange={(e) =>
+                          handleFilterChange("gpu", e.target.value)
+                        }
+                      >
+                        <option value="all">All</option>
+                        {[...gpuList].map((gpu, index) => {
+                          return (
+                            <option key={`${index}`} value={gpu}>
+                              {gpu}
+                            </option>
+                          );
+                        })}
+                      </Form.Select>
+                    </div>
+                  </Col>
+                  <Col>
+                    <div>
+                      <h6>Filter Max Number of GPUs:</h6>
+                      <ButtonGroup className="me-2">
+                        {MAX_GPU.map((numgpu) => (
+                          <ToggleButton
+                            key={numgpu}
+                            id={`radio-${numgpu}`}
+                            type="radio"
+                            variant={
+                              numgpu === providerPanelSettings.maxNumGpu
+                                ? "primary"
+                                : "light"
+                            }
+                            name="radio"
+                            size="sm"
+                            value={numgpu}
+                            checked={numgpu === providerPanelSettings.maxNumGpu}
+                            onChange={(e) =>
+                              handleFilterChange(
+                                "numGpus ",
+                                e.currentTarget.value
+                              )
+                            }
+                          >
+                            {numgpu === 0 ? "all" : numgpu}
+                          </ToggleButton>
+                        ))}
+                      </ButtonGroup>
+                    </div>
+                  </Col>
+                </Row>
+                <Row className="pb-4">
                   <ScatterGraph
                     data={providerPanelSettings.plotData}
                     onClickHandler={onClickConfig}
@@ -273,15 +254,9 @@ const ProviderPanel = ({ numIterations, habitatData }) => {
                 </Row>
               </Row>
             </Col>
-            <Col xl={4}>
+            <Col xl={12} xxl={4} className="mb-4">
               <div className="innpv-memory innpv-subpanel">
                 <Subheader icon="database">Deployment Plan</Subheader>
-                {providerPanelSettings.clicked && (
-                  <h6>
-                    Estimation for <Badge bg="secondary">{numIterations}</Badge>{" "}
-                    total iterations
-                  </h6>
-                )}
                 {providerPanelSettings.clicked && (
                   <CardGroup>
                     <Card>
@@ -303,18 +278,13 @@ const ProviderPanel = ({ numIterations, habitatData }) => {
                                 {providerPanelSettings.clicked.info.instance}
                               </h1>
                               <Badge>
-                                Estimated Cost: $
-                                {providerPanelSettings.estimated_cost.toFixed(
-                                  2
-                                )}
+                                {`Estimated Cost: ${currencyFormat(providerPanelSettings.estimated_cost)}`}
                               </Badge>
+                              <p>
                               <Badge bg="success">
-                                Estimated Training Time:{" "}
-                                {providerPanelSettings.estimated_time.toFixed(
-                                  3
-                                )}{" "}
-                                Hours
+                                {`Estimated Training Time: ${numberFormat(providerPanelSettings.estimated_time)} Hours`}
                               </Badge>
+                              </p>
                             </Col>
                           </Row>
                         </Card.Title>

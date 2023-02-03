@@ -11,7 +11,7 @@ import styled from "styled-components";
 import Subheader from "../Subheader";
 import PieGraph from "../components/PieGraph";
 import StackedBarGraph from "../components/StackedBarGraph";
-import { energy_data, unitScale } from "../utils";
+import { energy_data, unitScale,numberFormat } from "../utils";
 
 const EnergyConsumption = ({ energyData, numIterations }) => {
   const cpu_color = "#5499c7";
@@ -128,10 +128,12 @@ const EnergyConsumption = ({ energyData, numIterations }) => {
       <Wrapper>
         <div className="innpv-memory innpv-subpanel">
           <Subheader icon="database">Energy and Environmental Impact</Subheader>
-          {(piegraph_data || bargraph_data.length > 0)&&<h6>
-            Estimation for <Badge bg="secondary">{numIterations}</Badge> total
-            iterations
-          </h6>}
+          {(piegraph_data || bargraph_data.length > 0) && (
+            <h6>
+              Estimation for <Badge bg="secondary">{numberFormat(numIterations)}</Badge> total
+              iterations
+            </h6>
+          )}
           <div className="innpv-subpanel-content">
             {Object.keys(energyData).length === 0 ? (
               <Container fluid>
@@ -148,7 +150,7 @@ const EnergyConsumption = ({ energyData, numIterations }) => {
               <Container fluid>
                 <Row>
                   {piegraph_data ? (
-                    <Col xxl={6}>
+                    <Col xxl={6} className="pb-4">
                       <div>
                         <h5>
                           Total Consumption:
@@ -197,7 +199,7 @@ const EnergyConsumption = ({ energyData, numIterations }) => {
                             />{" "}
                           </div>
                           <p>
-                            <strong>{conversions?.phone}</strong> of smartphones
+                            <strong>{conversions?.phone}</strong> smartphones
                             charged
                           </p>
                         </Col>
@@ -210,13 +212,18 @@ const EnergyConsumption = ({ energyData, numIterations }) => {
                             />{" "}
                           </div>
                           <p>
-                            <strong>{conversions?.household} x</strong> homes'
-                            energy use for one year
+                            <strong>{conversions?.household[0]} x</strong> homes'
+                            energy use for one {conversions?.household[1]}
                           </p>
                         </Col>
                         <small>
-                          ref:
-                          https://www.epa.gov/energy/greenhouse-gas-equivalencies-calculator
+                          <a
+                            href="
+                          https://www.epa.gov/energy/greenhouse-gas-equivalencies-calculator"
+                            target="_blank"
+                          >
+                            https://www.epa.gov/energy/greenhouse-gas-equivalencies-calculator
+                          </a>
                         </small>
                       </Row>
                     </Col>

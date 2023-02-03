@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { Button, Form, FloatingLabel } from "react-bootstrap";
+import styled from "styled-components";
+import { numberFormat } from "../utils";
 
 const Iterations = ({ setNumIterations }) => {
   const [iterations, setIterations] = useState({
@@ -22,7 +24,7 @@ const Iterations = ({ setNumIterations }) => {
       setIterations((prevState)=>({ ...prevState, [name]: val }));
       setMessage(null);
     } else {
-      setMessage("Your must only use integer numbers");
+      setMessage("You must only use integer numbers");
     }
   };
 
@@ -48,6 +50,7 @@ const Iterations = ({ setNumIterations }) => {
 
   return (
     <>
+      <Wrapper>
       <div className="innpv-memory innpv-subpanel">
         <div className="innpv-subpanel-content">
           <Form onSubmit={handleSubmit} className="mt-2">
@@ -74,14 +77,14 @@ const Iterations = ({ setNumIterations }) => {
               />
             </FloatingLabel>
             {message && (
-              <Form.Text id="warningMessage" muted>
+              <Form.Text id="warningMessage" className="warning-message text-danger">
                 {message}
               </Form.Text>
             )}
             <Form.Group className="mb-2">
-              <Form.Text>
+              <Form.Text className="iterations-text">
                 Total number of iterations:{" "}
-                {iterations.epochs * iterations.iterPerEpoch}
+                {numberFormat(iterations.epochs * iterations.iterPerEpoch)}
               </Form.Text>
             </Form.Group>
             <Form.Group className="mt-1">
@@ -92,8 +95,22 @@ const Iterations = ({ setNumIterations }) => {
           </Form>
         </div>
       </div>
+      </Wrapper>
     </>
   );
 };
+
+const Wrapper = styled.main`
+  .warning-message{
+    font-size: 14;
+    font-weight: 700;
+    color: "red";
+
+  }
+  .iterations-text{
+    font-size: 14;
+    font-weight: 700;
+  }
+`;
 
 export default Iterations;

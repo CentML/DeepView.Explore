@@ -1,41 +1,16 @@
 import ProviderPanel from "./ProviderPanel";
-import TrainingPanel from "./TrainingPanel";
 import {
-  Accordion,
-  Button,
-  Col,
   Row,
   Container,
   Card,
   Spinner,
+  Badge
 } from "react-bootstrap";
-import React, { useState } from "react";
+import React from "react";
+import { numberFormat } from "./utils";
 
 const DeploymentTab = ({ numIterations, habitatData }) => {
-  const [deploymentTabSettings, setDeploymentTabSettings] = useState({
-    activeTab: "0",
-    btnDeployVariant: "secondary",
-    btnDeployLabel: "Deploy and Run Model",
-  });
-  const deployOnClick = () => {
-    const sleep = (milliseconds) => {
-      return new Promise((resolve) => setTimeout(resolve, milliseconds));
-    };
-
-    setTimeout(async () => {
-      setDeploymentTabSettings((prevState) => ({
-        ...prevState,
-        btnDeployVariant: "secondary",
-        btnDeployLabel: "Deploying Model....",
-      }));
-      await sleep(1000);
-
-      setDeploymentTabSettings((prevState) => ({
-        ...prevState,
-        activeTab: "1",
-      }));
-    }, 100);
-  };
+  
 
   return (
     <>
@@ -53,48 +28,16 @@ const DeploymentTab = ({ numIterations, habitatData }) => {
         <Container fluid>
           <Row>
             <h1>Deployment Target</h1>
+            <h6>
+                    Estimation for <Badge bg="secondary">{numberFormat(numIterations)}</Badge>{" "}
+                    total iterations
+                  </h6>
                 <ProviderPanel
                 numIterations={numIterations}
                 habitatData={habitatData}
-                // changeParentState={setDeploymentTabSettings}
               />
           </Row>
         </Container>
-        // <Accordion
-        //   defaultActiveKey="0"
-        //   activeKey={deploymentTabSettings.activeTab}
-        // >
-        //   <Accordion.Item eventKey="0">
-        //     <Accordion.Header>Deployment Target</Accordion.Header>
-        //     <Accordion.Body>
-        //       <ProviderPanel
-        //         numIterations={numIterations}
-        //         habitatData={habitatData}
-        //         changeParentState={setDeploymentTabSettings}
-        //       />
-        //       <Row>
-        //         <Col>
-        //           <Button
-        //             variant={deploymentTabSettings.btnDeployVariant}
-        //             disabled={
-        //               true ||
-        //               deploymentTabSettings.btnDeployVariant === "secondary"
-        //             }
-        //             onClick={deployOnClick}
-        //           >
-        //             {deploymentTabSettings.btnDeployLabel}
-        //           </Button>
-        //         </Col>
-        //       </Row>
-        //     </Accordion.Body>
-        //   </Accordion.Item>
-        //   <Accordion.Item eventKey="1">
-        //     <Accordion.Header>Training</Accordion.Header>
-        //     <Accordion.Body>
-        //       <TrainingPanel></TrainingPanel>
-        //     </Accordion.Body>
-        //   </Accordion.Item>
-        // </Accordion>
       )}
     </>
   );

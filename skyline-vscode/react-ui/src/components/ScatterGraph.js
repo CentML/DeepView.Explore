@@ -10,12 +10,13 @@ import {
   Label,
   Legend,
 } from "recharts";
+import { calculate_training_time,currencyFormat } from "../utils";
 
 const ScatterGraph = ({ data, onClickHandler, xlabel, ylabel, providers,numIterations }) => {
   const finalData = [];
   if (data.length>0){
     data.forEach((item)=>{
-      const time = numIterations * item.x  / 3.6e6 / item.info.ngpus;
+      const time = calculate_training_time(numIterations, item);
       const cost = item.info.cost * time;
       finalData.push({
         ...item,
@@ -24,15 +25,18 @@ const ScatterGraph = ({ data, onClickHandler, xlabel, ylabel, providers,numItera
       })
     })
   }
-  const scientificFormater = new Intl.NumberFormat("en-US", {
-    style: 'currency', 
-    currency: 'USD',
-    notation: "compact",
-    compactDisplay: "short",
-  });
+  
   const formatYAxis = (value) => {
-    return scientificFormater.format(value);
+    return currencyFormat(value);
   };
+
+  const fortmatXAxis = (value) => {
+    const formatter = new Intl.NumberFormat("en-US", {
+      notation: "compact",
+    })
+    return formatter.format(value);
+  }
+
   return (
     <>
       {finalData.length > 0 ? (
@@ -46,7 +50,7 @@ const ScatterGraph = ({ data, onClickHandler, xlabel, ylabel, providers,numItera
             }}
           >
             <CartesianGrid />
-            <XAxis type="number" dataKey="x">
+            <XAxis type="number" dataKey="x" tickFormatter={fortmatXAxis}>
               <Label value={xlabel} position="insideBottom" offset={-15} />
             </XAxis>
             <YAxis

@@ -78,7 +78,7 @@ const StackedBarGraph = ({ data, height, xlabel, ylabel, bar1_color, bar2_color 
             content={renderCustomizedLabel}
           />
         </Bar>
-        <Legend align="center" verticalAlign="top"/>
+        <Legend align="center" verticalAlign="top" height={50}/>
       </BarChart>
     </ResponsiveContainer>
   );

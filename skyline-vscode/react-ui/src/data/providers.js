@@ -108,14 +108,14 @@ export const instances = [
     cost: 0.526,
   },
 
-  {
-    id: 13,
-    provider: "centml",
-    ngpus: 1,
-    instance: "CentML",
-    gpu: "rtx2080ti",
-    cost: 0.2,
-  },
+  // {
+  //   id: 13,
+  //   provider: "centml",
+  //   ngpus: 1,
+  //   instance: "CentML",
+  //   gpu: "rtx2080ti",
+  //   cost: 0.2,
+  // },
 
   // 2/4 GPU instances
 
@@ -243,6 +243,24 @@ export const instances = [
     cost: 3.912,
   },
 ];
+
+export const providers = {
+  google: {
+    name: "Google Cloud Platform",
+    logo: "resources/google.png",
+    color: "#f1c40f",
+  },
+  azure: {
+    name: "Microsoft Azure",
+    logo: "resources/azure.jpg",
+    color: "#3498db",
+  },
+  aws: {
+    name: "Amazon Web Services",
+    logo: "resources/aws.png",
+    color: "#e67e22",
+  },
+}
 
 export const cardMemory = [
   { name: "t4", vmem: 16 },

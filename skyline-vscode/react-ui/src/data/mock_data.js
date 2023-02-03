@@ -889,94 +889,94 @@ export const profiling_data = {
       //   { type: "ENERGY_CPU_DRAM", consumption: 2.1 },
       //   { type: "ENERGY_GPU", consumption: 2.7 },
       // ],
-      total_consumption: 9.30,
+      total_consumption: 2.30,
         components: [
           { type: "ENERGY_UNSPECIFIED", consumption: 0 },
           { type: "ENERGY_CPU_DRAM", consumption: 1.15 },
-          { type: "ENERGY_GPU", consumption: 8.15 },
+          { type: "ENERGY_GPU", consumption: 1.15 },
         ],
     },
     past_measurements: [
-      {
-        total_consumption: 8.10,
-        components: [
-          { type: "ENERGY_UNSPECIFIED", consumption: 0 },
-          { type: "ENERGY_CPU_DRAM", consumption: 7.05 },
-          { type: "ENERGY_GPU", consumption: 1.05 },
-        ],
-      },
-      {
-        total_consumption: 9.30,
-        components: [
-          { type: "ENERGY_UNSPECIFIED", consumption: 0 },
-          { type: "ENERGY_CPU_DRAM", consumption: 1.15 },
-          { type: "ENERGY_GPU", consumption: 8.15 },
-        ],
-      },
-      {
-        total_consumption: 8.20,
-        components: [
-          { type: "ENERGY_UNSPECIFIED", consumption: 0 },
-          { type: "ENERGY_CPU_DRAM", consumption: 6.10 },
-          { type: "ENERGY_GPU", consumption: 2.10 },
-        ],
-      },
-      {
-        total_consumption: 3.345,
-        components: [
-          { type: "ENERGY_UNSPECIFIED", consumption: 0 },
-          { type: "ENERGY_CPU_DRAM", consumption: 1.473 },
-          { type: "ENERGY_GPU", consumption: 1.873 },
-        ],
-      },
-      {
-        total_consumption: 7.345,
-        components: [
-          { type: "ENERGY_UNSPECIFIED", consumption: 0 },
-          { type: "ENERGY_CPU_DRAM", consumption: 4.173 },
-          { type: "ENERGY_GPU", consumption: 4.173 },
-        ],
-      },
-      {
-        total_consumption: 4.345,
-        components: [
-          { type: "ENERGY_UNSPECIFIED", consumption: 0 },
-          { type: "ENERGY_CPU_DRAM", consumption: 2.173 },
-          { type: "ENERGY_GPU", consumption: 2.173 },
-        ],
-      },
-      {
-        total_consumption: 5.345,
-        components: [
-          { type: "ENERGY_UNSPECIFIED", consumption: 0 },
-          { type: "ENERGY_CPU_DRAM", consumption: 2.573 },
-          { type: "ENERGY_GPU", consumption: 2.53 },
-        ],
-      },
-      {
-        total_consumption: 9.345,
-        components: [
-          { type: "ENERGY_UNSPECIFIED", consumption: 0 },
-          { type: "ENERGY_CPU_DRAM", consumption: 8.173 },
-          { type: "ENERGY_GPU", consumption: 1.173 },
-        ],
-      },
-      {
-        total_consumption: 2.345,
-        components: [
-          { type: "ENERGY_UNSPECIFIED", consumption: 0 },
-          { type: "ENERGY_CPU_DRAM", consumption: 1.173 },
-          { type: "ENERGY_GPU", consumption: 1.173 },
-        ],
-      },
-      {
-        total_consumption: 4.345,
-        components: [
-          { type: "ENERGY_UNSPECIFIED", consumption: 0 },
-          { type: "ENERGY_CPU_DRAM", consumption: 2.173 },
-          { type: "ENERGY_GPU", consumption: 2.173 },
-        ],
-      },
+      // {
+      //   total_consumption: 8.10,
+      //   components: [
+      //     { type: "ENERGY_UNSPECIFIED", consumption: 0 },
+      //     { type: "ENERGY_CPU_DRAM", consumption: 7.05 },
+      //     { type: "ENERGY_GPU", consumption: 1.05 },
+      //   ],
+      // },
+      // {
+      //   total_consumption: 9.30,
+      //   components: [
+      //     { type: "ENERGY_UNSPECIFIED", consumption: 0 },
+      //     { type: "ENERGY_CPU_DRAM", consumption: 1.15 },
+      //     { type: "ENERGY_GPU", consumption: 8.15 },
+      //   ],
+      // },
+      // {
+      //   total_consumption: 8.20,
+      //   components: [
+      //     { type: "ENERGY_UNSPECIFIED", consumption: 0 },
+      //     { type: "ENERGY_CPU_DRAM", consumption: 6.10 },
+      //     { type: "ENERGY_GPU", consumption: 2.10 },
+      //   ],
+      // },
+      // {
+      //   total_consumption: 3.345,
+      //   components: [
+      //     { type: "ENERGY_UNSPECIFIED", consumption: 0 },
+      //     { type: "ENERGY_CPU_DRAM", consumption: 1.473 },
+      //     { type: "ENERGY_GPU", consumption: 1.873 },
+      //   ],
+      // },
+      // {
+      //   total_consumption: 7.345,
+      //   components: [
+      //     { type: "ENERGY_UNSPECIFIED", consumption: 0 },
+      //     { type: "ENERGY_CPU_DRAM", consumption: 4.173 },
+      //     { type: "ENERGY_GPU", consumption: 4.173 },
+      //   ],
+      // },
+      // {
+      //   total_consumption: 4.345,
+      //   components: [
+      //     { type: "ENERGY_UNSPECIFIED", consumption: 0 },
+      //     { type: "ENERGY_CPU_DRAM", consumption: 2.173 },
+      //     { type: "ENERGY_GPU", consumption: 2.173 },
+      //   ],
+      // },
+      // {
+      //   total_consumption: 5.345,
+      //   components: [
+      //     { type: "ENERGY_UNSPECIFIED", consumption: 0 },
+      //     { type: "ENERGY_CPU_DRAM", consumption: 2.573 },
+      //     { type: "ENERGY_GPU", consumption: 2.53 },
+      //   ],
+      // },
+      // {
+      //   total_consumption: 9.345,
+      //   components: [
+      //     { type: "ENERGY_UNSPECIFIED", consumption: 0 },
+      //     { type: "ENERGY_CPU_DRAM", consumption: 8.173 },
+      //     { type: "ENERGY_GPU", consumption: 1.173 },
+      //   ],
+      // },
+      // {
+      //   total_consumption: 2.345,
+      //   components: [
+      //     { type: "ENERGY_UNSPECIFIED", consumption: 0 },
+      //     { type: "ENERGY_CPU_DRAM", consumption: 1.173 },
+      //     { type: "ENERGY_GPU", consumption: 1.173 },
+      //   ],
+      // },
+      // {
+      //   total_consumption: 4.345,
+      //   components: [
+      //     { type: "ENERGY_UNSPECIFIED", consumption: 0 },
+      //     { type: "ENERGY_CPU_DRAM", consumption: 2.173 },
+      //     { type: "ENERGY_GPU", consumption: 2.173 },
+      //   ],
+      // },
     ],
   },
 };
