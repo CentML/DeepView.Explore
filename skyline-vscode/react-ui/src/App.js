@@ -109,13 +109,12 @@ function App() {
 
     const [vscodeApi, setVscodeApi] = useState(acquireApi());
     const [errorText, setErrorText] = useState();
+    const [connectionStatus, setConnectionStatus] = useState(false);
 
     App.vscodeApi = vscodeApi;
-    // App.vscodeApi.postMessage()
     const onMemoryResize = function (change) {
         let newHeight = sliderMemory[0] * (1 + change / 100);
         newHeight = Math.min(100, Math.max(0, newHeight));
-        // setSliderMemoryPerc(newHeight);
 
         let bs = updateSliders(analysisState, newHeight, null, setSliderMemory, setSliderThroughput, null);
         setCurBatchSize(bs);
@@ -145,8 +144,9 @@ function App() {
     useEffect(function () {
         window.addEventListener('message', event => {
             console.log("Message:", JSON.stringify(event.data));
-            // TODO: add a handler for connection
-            if (event.data['message_type'] === "analysis") {
+            if (event.data['message_type'] === "connection") {
+                setConnectionStatus(event.data['status']);
+            } else if (event.data['message_type'] === "analysis") {
                 processAnalysisState(event.data);
                 updateSliders(event.data, null, null, setSliderMemory, setSliderThroughput, event.data["breakdown"]["batch_size"]);
             } else if (event.data['message_type'] === "text_change") {
@@ -166,10 +166,6 @@ function App() {
                 processAnalysisState(mockResponse);
                 updateSliders(mockResponse, 0.5, null, setSliderMemory, setSliderThroughput);
             }, 1000);
-
-            // setTimeout(() => {
-            //     setErrorText("this is the body");
-            // }, 5000);
         }
     }, []);
 
@@ -193,8 +189,18 @@ function App() {
             </>
         )
     }
-    if (not_connected) {
-
+    if (!connectionStatus) {
+        return (
+            <>
+            <Alert variant="danger">
+            <Alert.Heading>Connection Error</Alert.Heading>
+            <p>
+                Connection has been lost to the profiler. Please reconnect the profiler and double check your ports then click connect
+            </p>
+            <Button onClick={connect}>Reconnect</Button>
+            </Alert>
+            </>
+        )
     }
     else {
         if (analysisState && analysisState['throughput'] && Object.keys(analysisState['throughput']).length > 0)

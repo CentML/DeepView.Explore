@@ -79,6 +79,7 @@ export class SkylineSession {
         this.webviewPanel.webview.onDidReceiveMessage(this.webview_handle_message.bind(this));
         this.webviewPanel.onDidDispose(this.disconnect.bind(this));
         this.webviewPanel.webview.html = this._getHtmlForWebview();
+        this.connect();
 
         vscode.workspace.onDidChangeTextDocument(this.on_text_change.bind(this));
         this.restart_profiling = this.restart_profiling.bind(this);
@@ -107,10 +108,12 @@ export class SkylineSession {
             "message_type": "connection",
             "status": true
         };
+        console.log("on_connect")
         this.webviewPanel.webview.postMessage(connectionMessage);
     }  
 
     on_open() {
+
         // Send skyline initialization request
         console.log("Sending initialization request");
         const message = new pb.InitializeRequest();
@@ -133,7 +136,17 @@ export class SkylineSession {
     }
 
     disconnect() {
+        let connectionMessage = {
+            "message_type": "connection",
+            "status": false
+        };
+        console.log("disconnect")
+        this.webviewPanel.webview.postMessage(connectionMessage);
         this.connection.destroy()
+        this.connection = new Socket()
+        this.connection.on('connect', this.on_connect.bind(this));
+        this.connection.on('data', this.on_data.bind(this));
+        this.connection.on('close', this.on_close.bind(this));
     }
 
     restart_profiling() {
