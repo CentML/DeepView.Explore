@@ -108,12 +108,10 @@ export class SkylineSession {
             "message_type": "connection",
             "status": true
         };
-        console.log("on_connect")
         this.webviewPanel.webview.postMessage(connectionMessage);
     }  
 
     on_open() {
-
         // Send skyline initialization request
         console.log("Sending initialization request");
         const message = new pb.InitializeRequest();
@@ -140,7 +138,6 @@ export class SkylineSession {
             "message_type": "connection",
             "status": false
         };
-        console.log("disconnect")
         this.webviewPanel.webview.postMessage(connectionMessage);
         this.connection.destroy()
         this.connection = new Socket()
