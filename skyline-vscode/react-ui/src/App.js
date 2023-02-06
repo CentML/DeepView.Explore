@@ -140,14 +140,11 @@ function App() {
     useEffect(function () {
         window.addEventListener('message', event => {
             if (event.data['message_type'] === "analysis") {
-                console.log("Received data")
                 processAnalysisState(event.data);
                 updateSliders(event.data, null, null, setSliderMemory, setSliderThroughput, event.data["breakdown"]["batch_size"]);
             } else if (event.data['message_type'] === "text_change") {
-                console.log("Text change!");
                 setTextChanged(true);
             } else if (event.data['message_type'] === 'error') {
-                console.log("There was an error")
                 setErrorText(event.data['error_text']);
             }
         });
@@ -157,14 +154,9 @@ function App() {
         if (sendMock) {
             setTimeout(() => {
                 const mockResponse = profiling_data;
-                //console.log("mock response", mockResponse);
                 processAnalysisState(mockResponse);
                 updateSliders(mockResponse, 0.5, null, setSliderMemory, setSliderThroughput);
             }, 1000);
-
-            // setTimeout(() => {
-            //     setErrorText("this is the body");
-            // }, 5000);
         }
     }, []);
 
