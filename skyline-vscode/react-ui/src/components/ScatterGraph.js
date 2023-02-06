@@ -62,7 +62,6 @@ const ScatterGraph = ({ data, onClickHandler, xlabel, ylabel, providers,numItera
               <Label value={ylabel} angle={-90} position="outside" />
             </YAxis>
             <ZAxis type="number" dataKey="z" range={[200, 300]} />
-            {/* <Scatter data={data} onClick={(e) => onClickHandler(e.payload)} /> */}
             {Object.keys(providers).map((key, index) => {
               const providerData = providers[key];
               const providerInstances = finalData.filter(
