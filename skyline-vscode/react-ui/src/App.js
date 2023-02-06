@@ -158,6 +158,10 @@ function App() {
                 updateSliders(mockResponse, 0.5, null, setSliderMemory, setSliderThroughput);
             }, 1000);
         }
+
+        return() => {
+            window.removeEventListener("message",()=>{}) //remove event listener before re-render to avoid memory leaks
+        }
     }, []);
 
     if (errorText) {
