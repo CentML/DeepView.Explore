@@ -14,7 +14,7 @@ export default class WelcomeScreen extends React.Component {
     this.acquireApi = this.acquireApi.bind(this);
     this.onClickBeginAnalysis = this.onClickBeginAnalysis.bind(this);
 
-    this.setState({
+    this.state = ({
       btn_clicked: false,
     });
   }
