@@ -139,14 +139,15 @@ function App() {
 
     useEffect(function () {
         window.addEventListener('message', event => {
-            //console.log("Message:", JSON.stringify(event.data));
             if (event.data['message_type'] === "analysis") {
+                console.log("Received data")
                 processAnalysisState(event.data);
                 updateSliders(event.data, null, null, setSliderMemory, setSliderThroughput, event.data["breakdown"]["batch_size"]);
             } else if (event.data['message_type'] === "text_change") {
                 console.log("Text change!");
                 setTextChanged(true);
             } else if (event.data['message_type'] === 'error') {
+                console.log("There was an error")
                 setErrorText(event.data['error_text']);
             }
         });

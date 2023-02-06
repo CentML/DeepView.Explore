@@ -1,6 +1,6 @@
 // GPU Instances
 // costs are 1 GPU * hr
-export const instances = [
+export const cloudInstances = [
   {
     id: 0,
     provider: "google",
@@ -244,7 +244,7 @@ export const instances = [
   },
 ];
 
-export const providers = {
+export const cloudProviders = {
   google: {
     name: "Google Cloud Platform",
     logo: "resources/google.png",
@@ -262,7 +262,7 @@ export const providers = {
   },
 }
 
-export const cardMemory = [
+export const gpuPropertyList = [
   { name: "t4", vmem: 16 },
   { name: "p4", vmem: 8 },
   { name: "v100", vmem: 16 },

@@ -217,13 +217,17 @@ const EnergyConsumption = ({ energyData, numIterations }) => {
                           </p>
                         </Col>
                         <small>
+                          <p>
+                          {`Greenhouse gas equivalencies are based on calculations provided by `}
                           <a
                             href="
                           https://www.epa.gov/energy/greenhouse-gas-equivalencies-calculator"
                             target="_blank"
                           >
-                            https://www.epa.gov/energy/greenhouse-gas-equivalencies-calculator
+                            the EPA
                           </a>
+                          </p>
+                          
                         </small>
                       </Row>
                     </Col>

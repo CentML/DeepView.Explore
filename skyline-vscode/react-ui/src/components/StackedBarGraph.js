@@ -22,6 +22,18 @@ const renderCustomizedLabel = (props) => {
       <g>
         <text
           x={x + width / 2}
+          y={y - Y_OFFSET - 15}
+          fill="#1c2833"
+          fontSize={12}
+          fontWeight={900}
+          fontFamily="sans-serif"
+          textAnchor="middle"
+          dominantBaseline="middle"
+        >
+          {"Current"}
+        </text>
+        <text
+          x={x + width / 2}
           y={y - Y_OFFSET}
           fill="#1c2833"
           fontSize={12}
@@ -30,7 +42,7 @@ const renderCustomizedLabel = (props) => {
           textAnchor="middle"
           dominantBaseline="middle"
         >
-          {"Current Profiling"}
+          {"Profiling"}
         </text>
       </g>
     )

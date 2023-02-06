@@ -15,7 +15,7 @@ import {
   Form,
 } from "react-bootstrap";
 
-import { instances, cardMemory, providers } from "./data/providers";
+import { cloudInstances, gpuPropertyList, cloudProviders } from "./data/providers";
 import { calculate_training_time,numberFormat,currencyFormat } from "./utils";
 
 const highlightColor = "#9b59b6";
@@ -25,22 +25,22 @@ const highlightSize = 280;
 const populate_initial_data = (habitatData) => {
   let filtered_instances = [];
   if (habitatData) {
-    for (const instance of instances) {
+    for (const instance of cloudInstances) {
       const found_in_habitat = habitatData.find(
         (item) => item[0].toLowerCase() === instance.gpu.toLowerCase()
       );
-      const found_in_cardMemory = cardMemory.find(
+      const found_in_gpuPropertyList = gpuPropertyList.find(
         (item) =>
           item.name.toLocaleLowerCase() === instance.gpu.toLocaleLowerCase()
       );
-      if (found_in_habitat && found_in_cardMemory) {
+      if (found_in_habitat && found_in_gpuPropertyList) {
         filtered_instances.push({
           id: instance.id,
           x: found_in_habitat[1], // msec
           y: (instance.cost / 3.6e6) * found_in_habitat[1], // cost per msec * habitatData = cost per 1 iteration
           info: instance,
-          vmem: found_in_cardMemory.vmem,
-          fill: providers[instance.provider].color,
+          vmem: found_in_gpuPropertyList.vmem,
+          fill: cloudProviders[instance.provider].color,
           z: normalSize,
         });
       }
@@ -150,7 +150,7 @@ const ProviderPanel = ({ numIterations, habitatData }) => {
         }
         return {
           ...item,
-          fill: providers[item.info.provider].color,
+          fill: cloudProviders[item.info.provider].color,
           z: normalSize,
         };
       }),
@@ -181,7 +181,7 @@ const ProviderPanel = ({ numIterations, habitatData }) => {
                         }
                       >
                         <option value="all">All</option>
-                        {Object.keys(providers).map((provider, index) => {
+                        {Object.keys(cloudProviders).map((provider, index) => {
                           return (
                             <option key={`${index}`} value={provider}>
                               {provider}
@@ -248,7 +248,7 @@ const ProviderPanel = ({ numIterations, habitatData }) => {
                     onClickHandler={onClickConfig}
                     xlabel={"Total Training time (hrs)"}
                     ylabel={"Total Cost (US dollars)"}
-                    providers={providers}
+                    providers={cloudProviders}
                     numIterations={numIterations}
                   />
                 </Row>
@@ -266,7 +266,7 @@ const ProviderPanel = ({ numIterations, habitatData }) => {
                             <Col xs={3}>
                               <Image
                                 src={
-                                  providers[
+                                  cloudProviders[
                                     providerPanelSettings.clicked.info.provider
                                   ].logo
                                 }

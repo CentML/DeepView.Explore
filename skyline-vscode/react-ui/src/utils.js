@@ -201,6 +201,9 @@ export function energy_data(currentTotal){
 }
 
 export function calculate_training_time(numIterations, instance){
+  // instance.x is the time for 1 iterations in msec
+  // 3.6e6 to convert total training time from msec to hours, divided by the total number of GPUS
+  // output is in hours
   return numIterations * instance.x / 3.6e6 / instance.info.ngpus;
 }
 
@@ -209,7 +212,6 @@ export function numberFormat(num){
     notation: "compact",
     compactDisplay: "long",
   });
-  // 988M
   return formatter.format(num);
 }
 

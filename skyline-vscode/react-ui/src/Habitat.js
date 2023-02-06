@@ -17,10 +17,10 @@ export default function Habitat({ habitatData }) {
     "#ffc300",
   ];
 
-  let sampleData = [];
+  let habitatProperties = [];
 
   for (var i = 0; i < habitatData.length; i++) {
-    sampleData.push({
+    habitatProperties.push({
       y: habitatData[i][0],
       x: habitatData[i][1].toFixed(2),
       fill:
@@ -29,8 +29,6 @@ export default function Habitat({ habitatData }) {
           : colors[i % (colors.length - 1)],
     });
   }
-
-  console.log(sampleData);
 
   return (
     <div className="innpv-memory innpv-subpanel">
@@ -48,23 +46,9 @@ export default function Habitat({ habitatData }) {
             </Row>
           </Container>
         )}
-
-        {/* { habitatData !== [] && 
-                <FlexibleXYPlot 
-                    height={225}
-                    yType='ordinal'
-                    colorType="literal" colorRange={colors}
-                    margin={{left: 100}}>
-
-                    <XAxis title="Predicted Runtime (ms)" style={{ fontSize: 15 }}/>
-                    <YAxis style={{fontSize: 12}}/>
-                    <HorizontalBarSeries data={sampleData} />
-                </FlexibleXYPlot>
-                } */}
-
         {habitatData !== [] && (
           <BarGraph
-            data={sampleData}
+            data={habitatProperties}
             height={350}
             xlabel={"Predicted Runtime (ms)"}
             ylabel={""}
