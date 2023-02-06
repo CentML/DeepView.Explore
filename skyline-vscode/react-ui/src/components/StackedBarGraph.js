@@ -22,6 +22,18 @@ const renderCustomizedLabel = (props) => {
       <g>
         <text
           x={x + width / 2}
+          y={y - Y_OFFSET - 15}
+          fill="#1c2833"
+          fontSize={12}
+          fontWeight={900}
+          fontFamily="sans-serif"
+          textAnchor="middle"
+          dominantBaseline="middle"
+        >
+          {"Current"}
+        </text>
+        <text
+          x={x + width / 2}
           y={y - Y_OFFSET}
           fill="#1c2833"
           fontSize={12}
@@ -30,7 +42,7 @@ const renderCustomizedLabel = (props) => {
           textAnchor="middle"
           dominantBaseline="middle"
         >
-          {"Current Profiling"}
+          {"Profiling"}
         </text>
       </g>
     )
@@ -47,9 +59,9 @@ const StackedBarGraph = ({ data, height, xlabel, ylabel, bar1_color, bar2_color 
         <CartesianGrid horizontal={false} vertical={false} />
         <XAxis
           dataKey="name"
-          label={{ value: xlabel, position: "insideBottom", offset: -45 }}
+          label={{ value: xlabel, position: "insideBottom", offset: -25 }}
         />
-        <YAxis width={150}>
+        <YAxis width={120}>
           <Label value={ylabel} angle={-90} position="outside" />
         </YAxis>
         <Tooltip />
@@ -78,7 +90,7 @@ const StackedBarGraph = ({ data, height, xlabel, ylabel, bar1_color, bar2_color 
             content={renderCustomizedLabel}
           />
         </Bar>
-        <Legend align="center" />
+        <Legend align="center" verticalAlign="top" height={50}/>
       </BarChart>
     </ResponsiveContainer>
   );

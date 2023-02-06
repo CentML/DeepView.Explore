@@ -883,28 +883,28 @@ export const profiling_data = {
   ],
   energy: {
     current: {
-      total_consumption: 4.8,
-      components: [
-        { type: "ENERGY_UNSPECIFIED", consumption: 0 },
-        { type: "ENERGY_CPU_DRAM", consumption: 2.1 },
-        { type: "ENERGY_GPU", consumption: 2.7 },
-      ],
+      total_consumption: 2.30,
+        components: [
+          { type: "ENERGY_UNSPECIFIED", consumption: 0 },
+          { type: "ENERGY_CPU_DRAM", consumption: 1.15 },
+          { type: "ENERGY_GPU", consumption: 1.15 },
+        ],
     },
     past_measurements: [
       {
-        total_consumption: 5.10,
+        total_consumption: 8.10,
         components: [
           { type: "ENERGY_UNSPECIFIED", consumption: 0 },
-          { type: "ENERGY_CPU_DRAM", consumption: 3.05 },
-          { type: "ENERGY_GPU", consumption: 2.05 },
+          { type: "ENERGY_CPU_DRAM", consumption: 7.05 },
+          { type: "ENERGY_GPU", consumption: 1.05 },
         ],
       },
       {
-        total_consumption: 7.30,
+        total_consumption: 9.30,
         components: [
           { type: "ENERGY_UNSPECIFIED", consumption: 0 },
-          { type: "ENERGY_CPU_DRAM", consumption: 2.15 },
-          { type: "ENERGY_GPU", consumption: 5.15 },
+          { type: "ENERGY_CPU_DRAM", consumption: 1.15 },
+          { type: "ENERGY_GPU", consumption: 8.15 },
         ],
       },
       {

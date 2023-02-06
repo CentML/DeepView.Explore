@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Row, Col, Spinner, Card } from "react-bootstrap";
+import { Container, Row, Col, Spinner, Card, Badge } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faGlobeAmericas,
@@ -11,11 +11,9 @@ import styled from "styled-components";
 import Subheader from "../Subheader";
 import PieGraph from "../components/PieGraph";
 import StackedBarGraph from "../components/StackedBarGraph";
-import { energy_data, unitScale } from "../utils";
+import { energy_data, unitScale,numberFormat } from "../utils";
 
-const EnergyConsumption = ({ energyData }) => {
-  const numIterations = 10000; 
-
+const EnergyConsumption = ({ energyData, numIterations }) => {
   const cpu_color = "#5499c7";
   const cpu_color_opacity = "rgba(84,153,199,0.55)";
   const gpu_color = "#17a589";
@@ -34,21 +32,43 @@ const EnergyConsumption = ({ energyData }) => {
       (item) => item.type === "ENERGY_CPU_DRAM"
     );
     curr_gpu = current.components.find((item) => item.type === "ENERGY_GPU");
-    total = unitScale(current.total_consumption*numIterations, "energy");
-    conversions = energy_data(current.total_consumption*numIterations);
+    total = unitScale(current.total_consumption * numIterations, "energy");
+    const scaling_factor = 10 ** (total.scale_index * 3);
+    conversions = energy_data(current.total_consumption * numIterations);
     if (curr_cpu_dram && curr_gpu) {
-      const cpu_scale = unitScale(curr_cpu_dram.consumption*numIterations, "energy");
-      const gpu_scale = unitScale(curr_gpu.consumption*numIterations, "energy");
+      const cpu_scale = parseFloat(
+        Number(
+          (curr_cpu_dram.consumption * numIterations) / scaling_factor
+        ).toFixed(2)
+      );
+      const gpu_scale = parseFloat(
+        Number((curr_gpu.consumption * numIterations) / scaling_factor).toFixed(
+          2
+        )
+      );
       piegraph_data = [
         {
-          name: `CPU & DRAM Consumption (${cpu_scale.scale})`,
-          value: cpu_scale.val,
+          name: `CPU & DRAM Consumption (${total.scale})`,
+          value: cpu_scale,
           fill: "#b77032",
         },
         {
-          name: `GPU Consumption (${gpu_scale.scale})`,
-          value: gpu_scale.val,
+          name: `GPU Consumption (${total.scale})`,
+          value: gpu_scale,
           fill: "#215d6e",
+        },
+      ];
+      // add current experiment
+      bargraph_data = [
+        {
+          name: "current",
+          total: current.total_consumption * numIterations,
+          cpu: curr_cpu_dram.consumption * numIterations,
+          gpu: curr_gpu.consumption * numIterations,
+          cpu_color,
+          cpu_color_opacity,
+          gpu_color,
+          gpu_color_opacity,
         },
       ];
     }
@@ -66,10 +86,10 @@ const EnergyConsumption = ({ energyData }) => {
         );
         if (cpu_dram && gpu) {
           return {
-            name: `exp_${(idx += 1)}`,
-            total: parseFloat(Number(current?.total_consumption*numIterations)).toFixed(2),
-            cpu: parseFloat(Number(cpu_dram.consumption*numIterations).toFixed(2)),
-            gpu: parseFloat(Number(gpu.consumption*numIterations).toFixed(2)),
+            name: `exp${(idx += 1)}`,
+            total: item.total_consumption * numIterations,
+            cpu: cpu_dram.consumption * numIterations,
+            gpu: gpu.consumption * numIterations,
             cpu_color,
             cpu_color_opacity,
             gpu_color,
@@ -79,33 +99,41 @@ const EnergyConsumption = ({ energyData }) => {
       }
       return [];
     });
-    bargraph_data = arr_past_mesurements;
+    bargraph_data = bargraph_data.concat(arr_past_mesurements);
   }
 
-  // add current experiment
-  if (piegraph_data) {
-    bargraph_data = [
-      ...bargraph_data,
-      {
-        name: "current",
-        total: parseFloat(Number(current.total_consumption*numIterations)).toFixed(2),
-        cpu: parseFloat(Number(curr_cpu_dram.consumption*numIterations)).toFixed(2),
-        gpu: parseFloat(Number(curr_gpu.consumption*numIterations)).toFixed(2),
-        cpu_color,
-        cpu_color_opacity,
-        gpu_color,
-        gpu_color_opacity,
-      },
-    ];
+  if (bargraph_data.length > 0) {
+    bargraph_data.sort((a, b) => a.total - b.total);
+    const max_element = bargraph_data.slice(-1);
+    const max_scaling = unitScale(max_element[0].total, "energy");
+    const bargraph_scaling_factor = 10 ** (max_scaling.scale_index * 3);
+    bargraph_data = bargraph_data.map((measurement) => {
+      return {
+        ...measurement,
+        total: parseFloat(
+          Number(measurement.total / bargraph_scaling_factor).toFixed(2)
+        ),
+        cpu: parseFloat(
+          Number(measurement.cpu / bargraph_scaling_factor).toFixed(2)
+        ),
+        gpu: parseFloat(
+          Number(measurement.gpu / bargraph_scaling_factor).toFixed(2)
+        ),
+      };
+    });
   }
-
-  if (bargraph_data.length > 0) bargraph_data.sort((a, b) => a.total - b.total);
 
   return (
     <>
       <Wrapper>
         <div className="innpv-memory innpv-subpanel">
           <Subheader icon="database">Energy and Environmental Impact</Subheader>
+          {(piegraph_data || bargraph_data.length > 0) && (
+            <h6>
+              Estimation for <Badge bg="secondary">{numberFormat(numIterations)}</Badge> total
+              iterations
+            </h6>
+          )}
           <div className="innpv-subpanel-content">
             {Object.keys(energyData).length === 0 ? (
               <Container fluid>
@@ -122,7 +150,7 @@ const EnergyConsumption = ({ energyData }) => {
               <Container fluid>
                 <Row>
                   {piegraph_data ? (
-                    <Col xxl={6}>
+                    <Col xxl={6} className="pb-4">
                       <div>
                         <h5>
                           Total Consumption:
@@ -171,7 +199,7 @@ const EnergyConsumption = ({ energyData }) => {
                             />{" "}
                           </div>
                           <p>
-                            <strong>{conversions?.phone}</strong> of smartphones
+                            <strong>{conversions?.phone}</strong> smartphones
                             charged
                           </p>
                         </Col>
@@ -184,13 +212,22 @@ const EnergyConsumption = ({ energyData }) => {
                             />{" "}
                           </div>
                           <p>
-                            <strong>{conversions?.household} x</strong> homes'
-                            energy use for one year
+                            <strong>{conversions?.household[0]} x</strong> homes'
+                            energy use for one {conversions?.household[1]}
                           </p>
                         </Col>
                         <small>
-                          ref:
-                          https://www.epa.gov/energy/greenhouse-gas-equivalencies-calculator
+                          <p>
+                          {`Greenhouse gas equivalencies are based on calculations provided by `}
+                          <a
+                            href="
+                          https://www.epa.gov/energy/greenhouse-gas-equivalencies-calculator"
+                            target="_blank"
+                          >
+                            the EPA
+                          </a>
+                          </p>
+                          
                         </small>
                       </Row>
                     </Col>
