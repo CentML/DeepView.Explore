@@ -1,5 +1,7 @@
 'use babel';
 
+import { ContinuousSizeLegend } from "react-vis";
+
 // import path from 'path';
 
 const BYTE_UNITS = [
@@ -14,14 +16,26 @@ const ENERGY_UNITS = [
   'KJ',
   'MJ',
   'GJ',
-  'PJ'
+  'TJ',
+  'PJ',
+  'EJ'
 ]
 
 const GENERIC_UNITS = [
   '',
   'Thousands',
   'Millions',
-  "Billions"
+  "Billions",
+  'Trillion',
+  'Quadrillion'
+]
+
+const formatTimeUnits = [
+  [365,'day'],
+  [24, 'hour'],
+  [60, 'minute'],
+  [60, 'second'],
+  [1000,'msec']
 ]
 
 // reference : https://www.epa.gov/energy/greenhouse-gas-equivalencies-calculator
@@ -42,13 +56,27 @@ export function unitScale(quantity, unit){
 
   switch(unit){
     case 'energy':
-      return {val:parseFloat(Number(quantity).toFixed(2)),scale:ENERGY_UNITS[idx]}
+      return {val:parseFloat(Number(quantity).toFixed(2)),scale:ENERGY_UNITS[idx],scale_index:idx}
     case 'generic':
-      return {val:parseFloat(Number(quantity).toFixed(2)),scale:GENERIC_UNITS[idx]}
+      return {val:parseFloat(Number(quantity).toFixed(2)),scale:GENERIC_UNITS[idx],scale_index:idx}
     default:
       return null
   }
 
+}
+
+export function timeFormatter(quantity){
+  if (quantity >= 1){
+    return `${quantity} homes' energy use for one year`
+  }
+  let idx = 0;
+  let converter = [];
+  while(quantity < 1){
+    converter = formatTimeUnits[idx];
+    quantity *= converter[0];
+    idx+=1;
+  }
+  return [parseFloat(Number(quantity).toFixed(2)),converter[1]];
 }
 
 
@@ -159,15 +187,40 @@ export function energy_data(currentTotal){
       `${parseFloat(Number(carbon_emission_tons*1000).toFixed(2))} kg`: 
       `${parseFloat(Number(carbon_emission_tons).toFixed(2))} Metric Tons`;
   const miles = unitScale(carbon_emission_tons * ENERGY_CONVERSION_UNITS['miles'],'generic');
-  const household = carbon_emission_tons * ENERGY_CONVERSION_UNITS['household'];
+  const household = timeFormatter(carbon_emission_tons * ENERGY_CONVERSION_UNITS['household']);
   const phone = unitScale(carbon_emission_tons * ENERGY_CONVERSION_UNITS['phone'],'generic');
 
   return {
     kwh: parseFloat(Number(kwh).toFixed(2)),
     carbon: carbon_unit,
     miles: `${miles.val} ${miles.scale}`,
-    household: parseFloat(Number(household).toFixed(2)),
+    household: household,
     phone: `${phone.val} ${phone.scale}`
   }
 
+}
+
+export function calculate_training_time(numIterations, instance){
+  // instance.x is the time for 1 iterations in msec
+  // 3.6e6 to convert total training time from msec to hours, divided by the total number of GPUS
+  // output is in hours
+  return numIterations * instance.x / 3.6e6 / instance.info.ngpus;
+}
+
+export function numberFormat(num){
+  const formatter = new Intl.NumberFormat("en-US", {
+    notation: "compact",
+    compactDisplay: "long",
+  });
+  return formatter.format(num);
+}
+
+export function currencyFormat(cost){
+  const scientificFormater = new Intl.NumberFormat("en-US", {
+    style: 'currency', 
+    currency: 'USD',
+    notation: "compact",
+    compactDisplay: "short",
+  });
+  return scientificFormater.format(cost);
 }

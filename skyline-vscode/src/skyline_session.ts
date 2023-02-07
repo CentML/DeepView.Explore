@@ -226,9 +226,9 @@ export class SkylineSession {
                     this.msg_initialize = msg.getInitialize();
                     break;
                 case pb.FromServer.PayloadCase.ANALYSIS_ERROR:
-                    let errMessage = msg.getAnalysisError()?.getErrorMessage();
-                    if (errMessage) {
-                        this.report_error(errMessage);
+                    let error_message = msg.getAnalysisError()?.getErrorMessage()
+                    if (error_message) {
+                        this.report_error(error_message);
                     }
                     break;
                 case pb.FromServer.PayloadCase.THROUGHPUT:

@@ -1,53 +1,46 @@
+import ProviderPanel from "./ProviderPanel";
+import {
+  Row,
+  Container,
+  Card,
+  Spinner,
+  Badge
+} from "react-bootstrap";
+import React from "react";
+import { numberFormat } from "./utils";
 
-import Subheader from './Subheader';
-import ProviderPanel from './ProviderPanel';
-import TrainingPanel from './TrainingPanel';
-import { Alert, Accordion, Button, Card, Col, Tab, Tabs, Row, Container } from 'react-bootstrap';
-import React from 'react';
-import { useState } from 'react';
+const DeploymentTab = ({ numIterations, habitatData }) => {
+  
 
-export default class DeploymentTab extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = { activeTab: "0", btnDeployVariant: 'secondary', btnDeployLabel: 'Deploy and Run Model'}; 
-        this.deployOnClick = this.deployOnClick.bind(this);
-    }
+  return (
+    <>
+      {habitatData.length === 0 ? (
+        <Container fluid>
+          <Row className="justify-content-md-center">
+            <Card>
+              <Card.Body>
+                <Spinner animation="border" size="sm" /> Loading Information.
+              </Card.Body>
+            </Card>
+          </Row>
+        </Container>
+      ) : (
+        <Container fluid>
+          <Row>
+            <h1>Deployment Target</h1>
+            <h6>
+                    Estimation for <Badge bg="secondary">{numberFormat(numIterations)}</Badge>{" "}
+                    total iterations
+                  </h6>
+                <ProviderPanel
+                numIterations={numIterations}
+                habitatData={habitatData}
+              />
+          </Row>
+        </Container>
+      )}
+    </>
+  );
+};
 
-
-    deployOnClick() {
-        const sleep = (milliseconds) => {
-            return new Promise(resolve => setTimeout(resolve, milliseconds))
-        }
-
-        setTimeout(async () => {
-            this.setState({ btnDeployVariant: 'secondary', btnDeployLabel: 'Deploying Model....'});
-            await sleep(1000);
-
-            this.setState({ activeTab: "1" });
-        }, 100);
-    }
-
-    render() {
-        return (
-            <>
-                <Accordion defaultActiveKey="0" activeKey={this.state.activeTab}>
-                    <Accordion.Item eventKey="0">
-                        <Accordion.Header>Deployment Target</Accordion.Header>
-                        <Accordion.Body>
-                            <ProviderPanel setParentState={this.setState.bind(this)} />
-                            <Row>
-                                <Col><Button variant={this.state.btnDeployVariant} disabled={true || this.state.btnDeployVariant=='secondary'} onClick={this.deployOnClick}>{this.state.btnDeployLabel}</Button></Col>
-                            </Row>
-                        </Accordion.Body>
-                    </Accordion.Item>
-                    <Accordion.Item eventKey="1">
-                        <Accordion.Header>Training</Accordion.Header>
-                        <Accordion.Body>
-                            <TrainingPanel></TrainingPanel>
-                        </Accordion.Body>
-                    </Accordion.Item>
-                </Accordion>
-            </>
-        );
-    }
-}
+export default DeploymentTab;

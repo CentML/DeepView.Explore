@@ -20,6 +20,7 @@ import ReactTooltip from 'react-tooltip';
 import { computePercentage, getTraceByLevel } from './utils';
 import { profiling_data } from './data/mock_data';
 import EnergyConsumption from './sections/EnergyConsumption';
+import Iterations from './sections/Iterations';
 
 /**
  * Returns information required to draw memory and throughput information
@@ -105,6 +106,7 @@ function App() {
     const [vscodeApi, setVscodeApi] = useState(acquireApi());
     const [errorText, setErrorText] = useState();
     const [connectionStatus, setConnectionStatus] = useState(false);
+    const [numIterations,setNumIterations] = useState(100000);
 
     App.vscodeApi = vscodeApi;
 
@@ -114,7 +116,7 @@ function App() {
     }
 
     const connect = function() {
-        resetApp();
+        resetApp();Created a 
         let vscode = App.vscodeApi;
         vscode.postMessage({
             command: "connect"
@@ -159,7 +161,6 @@ function App() {
                 processAnalysisState(event.data);
                 updateSliders(event.data, null, null, setSliderMemory, setSliderThroughput, event.data["breakdown"]["batch_size"]);
             } else if (event.data['message_type'] === "text_change") {
-                console.log("Text change!");
                 setTextChanged(true);
             } else if (event.data['message_type'] === 'error') {
                 setErrorText(event.data['error_text']);
@@ -171,10 +172,13 @@ function App() {
         if (sendMock) {
             setTimeout(() => {
                 const mockResponse = profiling_data;
-                console.log("mock response", mockResponse);
                 processAnalysisState(mockResponse);
                 updateSliders(mockResponse, 0.5, null, setSliderMemory, setSliderThroughput);
             }, 1000);
+        }
+
+        return() => {
+            window.removeEventListener("message",()=>{}) //remove event listener before re-render to avoid memory leaks
         }
     }, []);
 
@@ -232,6 +236,7 @@ function App() {
                         }
                     </Card.Body>
                 </Card>
+                <Iterations setNumIterations={setNumIterations}/>
                 <br></br>
                 <Tabs defaultActiveKey="profiling" className="mb-3">
                     <Tab eventKey="profiling" title="Profiling">
@@ -325,12 +330,12 @@ function App() {
                         </div>
                     </div>
                     <Habitat habitatData={analysisState['habitat']}/>
-                    <EnergyConsumption energyData={analysisState['energy']}/>
+                    <EnergyConsumption energyData={analysisState['energy']} numIterations={numIterations}/>
                     </div>
                     </div>
                     </Tab>
                     <Tab eventKey="deploy" title="Deployment">
-                        <DeploymentTab></DeploymentTab>
+                        <DeploymentTab numIterations={numIterations} habitatData={analysisState['habitat']}/>
                     </Tab>
                 </Tabs>
                 </Container>
