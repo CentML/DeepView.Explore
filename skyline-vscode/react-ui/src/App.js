@@ -116,7 +116,7 @@ function App() {
     }
 
     const connect = function() {
-        resetApp();Created a 
+        resetApp();
         let vscode = App.vscodeApi;
         vscode.postMessage({
             command: "connect"
