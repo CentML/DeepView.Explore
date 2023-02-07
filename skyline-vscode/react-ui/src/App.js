@@ -92,12 +92,7 @@ function restartProfiling() {
     });
 }
 
-function connect(){
-    let vscode = App.vscodeApi;
-    vscode.postMessage({
-        command: "connect"
-    });
-}
+
 
 function App() {
     const [sliderMemory, setSliderMemory] = useState([50, 69, 420]);
@@ -112,6 +107,20 @@ function App() {
     const [connectionStatus, setConnectionStatus] = useState(false);
 
     App.vscodeApi = vscodeApi;
+
+    const resetApp =  function() {
+        setErrorText("");
+        setAnalysisState(undefined);
+    }
+
+    const connect = function() {
+        resetApp();
+        let vscode = App.vscodeApi;
+        vscode.postMessage({
+            command: "connect"
+        });
+    }
+
     const onMemoryResize = function (change) {
         let newHeight = sliderMemory[0] * (1 + change / 100);
         newHeight = Math.min(100, Math.max(0, newHeight));
@@ -169,6 +178,19 @@ function App() {
         }
     }, []);
 
+    if (!connectionStatus) {
+        return (
+            <>
+            <Alert variant="danger">
+            <Alert.Heading>Connection Error</Alert.Heading>
+            <p>
+                Connection has been lost to the profiler. Please reconnect the profiler and double check your ports then click connect
+            </p>
+            <Button onClick={connect}>Reconnect</Button>
+            </Alert>
+            </>
+        )
+    }
     if (errorText) {
         return (
             <>
@@ -189,21 +211,8 @@ function App() {
             </>
         )
     }
-    if (!connectionStatus) {
-        return (
-            <>
-            <Alert variant="danger">
-            <Alert.Heading>Connection Error</Alert.Heading>
-            <p>
-                Connection has been lost to the profiler. Please reconnect the profiler and double check your ports then click connect
-            </p>
-            <Button onClick={connect}>Reconnect</Button>
-            </Alert>
-            </>
-        )
-    }
-    else {
-        if (analysisState && analysisState['throughput'] && Object.keys(analysisState['throughput']).length > 0)
+    else if (analysisState && analysisState['throughput'] && Object.keys(analysisState['throughput']).length > 0)
+    {
         return (
             <>
                 <Container fluid>
@@ -327,14 +336,14 @@ function App() {
                 </Container>
             </>
         );
-
-    return (
-        <>
-            <WelcomeScreen analysisState={analysisState} vscodeApi={vscodeApi}></WelcomeScreen>
-        </>
-    );
     }
-
+    else {
+        return (
+            <>
+                <WelcomeScreen analysisState={analysisState} vscodeApi={vscodeApi}></WelcomeScreen>
+            </>
+        );
+    }
 }
 
 export default App;

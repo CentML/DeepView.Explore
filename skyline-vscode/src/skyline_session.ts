@@ -61,7 +61,7 @@ export class SkylineSession {
         this.connection = new Socket();
         this.connection.on('connect', this.on_connect.bind(this));
         this.connection.on('data', this.on_data.bind(this));
-        this.connection.on('close', this.on_close.bind(this));
+        this.connection.on('close', this.on_close_connection.bind(this));
         this.port = options.port
         this.addr = options.addr
 
@@ -134,16 +134,7 @@ export class SkylineSession {
     }
 
     disconnect() {
-        let connectionMessage = {
-            "message_type": "connection",
-            "status": false
-        };
-        this.webviewPanel.webview.postMessage(connectionMessage);
         this.connection.destroy()
-        this.connection = new Socket()
-        this.connection.on('connect', this.on_connect.bind(this));
-        this.connection.on('data', this.on_data.bind(this));
-        this.connection.on('close', this.on_close.bind(this));
     }
 
     restart_profiling() {
@@ -245,7 +236,6 @@ export class SkylineSession {
                     break;
                 case pb.FromServer.PayloadCase.BREAKDOWN:
                     this.msg_breakdown = msg.getBreakdown();
-                    // this.highlight_breakdown();
                     break;
                 case pb.FromServer.PayloadCase.HABITAT:
                     this.msg_habitat = msg.getHabitat();
@@ -326,7 +316,7 @@ export class SkylineSession {
         editor.setDecorations(simpleDecoration, Array.from(decorations.values()));
     }
 
-    on_close() {
+    on_close_connection() {
         if (this.resetBackendConnection)
         {
             this.startSkyline?.();
@@ -335,7 +325,14 @@ export class SkylineSession {
             "message_type": "connection",
             "status": false
         };
-        this.webviewPanel.webview.postMessage(connectionMessage);
+        this.msg_initialize = undefined;
+        this.msg_throughput = undefined;
+        this.msg_breakdown = undefined;
+        this.msg_habitat = undefined;
+        this.msg_energy = undefined;
+        if (this.webviewPanel.active) {
+            this.webviewPanel.webview.postMessage(connectionMessage);
+        }        
     }
 
     private _getHtmlForWebview() {
