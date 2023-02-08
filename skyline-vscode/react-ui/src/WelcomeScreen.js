@@ -82,6 +82,7 @@ export default class WelcomeScreen extends React.Component {
                   }
                   size="lg"
                   onClick={this.onClickBeginAnalysis}
+                  disabled={this.state.btn_clicked}
                 >
                   {this.state != null && this.state.btn_clicked
                     ? "Analyzing Project ..."

@@ -55,7 +55,7 @@ export const cloudInstances = [
     id: 4,
     provider: "google",
     ngpus: 1,
-    instance: "nvidia-tesla-p100",
+    instance: "n1-standard-1",
     gpu: "p100",
     cost: 1.46 + 0.05,
   },
