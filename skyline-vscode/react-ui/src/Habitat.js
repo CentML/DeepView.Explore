@@ -49,7 +49,7 @@ export default function Habitat({ habitatData }) {
         {habitatData !== [] && (
           <BarGraph
             data={habitatProperties}
-            height={350}
+            height={50*habitatProperties.length}
             xlabel={"Predicted Runtime (ms)"}
             ylabel={""}
           />
