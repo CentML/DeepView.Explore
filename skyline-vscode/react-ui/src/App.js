@@ -93,6 +93,8 @@ function restartProfiling() {
     });
 }
 
+
+
 function App() {
     const [sliderMemory, setSliderMemory] = useState([50, 69, 420]);
     const [sliderThroughput, setSliderThroughput] = useState([50, 69, 420]);
@@ -103,14 +105,27 @@ function App() {
 
     const [vscodeApi, setVscodeApi] = useState(acquireApi());
     const [errorText, setErrorText] = useState();
+    const [connectionStatus, setConnectionStatus] = useState(false);
     const [numIterations,setNumIterations] = useState(100000);
 
     App.vscodeApi = vscodeApi;
 
+    const resetApp =  function() {
+        setErrorText("");
+        setAnalysisState(undefined);
+    }
+
+    const connect = function() {
+        resetApp();
+        let vscode = App.vscodeApi;
+        vscode.postMessage({
+            command: "connect"
+        });
+    }
+
     const onMemoryResize = function (change) {
         let newHeight = sliderMemory[0] * (1 + change / 100);
         newHeight = Math.min(100, Math.max(0, newHeight));
-        // setSliderMemoryPerc(newHeight);
 
         let bs = updateSliders(analysisState, newHeight, null, setSliderMemory, setSliderThroughput, null);
         setCurBatchSize(bs);
@@ -139,7 +154,10 @@ function App() {
 
     useEffect(function () {
         window.addEventListener('message', event => {
-            if (event.data['message_type'] === "analysis") {
+            console.log("Message:", JSON.stringify(event.data));
+            if (event.data['message_type'] === "connection") {
+                setConnectionStatus(event.data['status']);
+            } else if (event.data['message_type'] === "analysis") {
                 processAnalysisState(event.data);
                 updateSliders(event.data, null, null, setSliderMemory, setSliderThroughput, event.data["breakdown"]["batch_size"]);
             } else if (event.data['message_type'] === "text_change") {
@@ -164,6 +182,19 @@ function App() {
         }
     }, []);
 
+    if (!connectionStatus) {
+        return (
+            <>
+            <Alert variant="danger">
+            <Alert.Heading>Connection Error</Alert.Heading>
+            <p>
+                Connection has been lost to the profiler. Please reconnect the profiler and double check your ports then click connect
+            </p>
+            <Button onClick={connect}>Reconnect</Button>
+            </Alert>
+            </>
+        )
+    }
     if (errorText) {
         return (
             <>
@@ -184,8 +215,8 @@ function App() {
             </>
         )
     }
-
-    if (analysisState && analysisState['throughput'] && Object.keys(analysisState['throughput']).length > 0)
+    else if (analysisState && analysisState['throughput'] && Object.keys(analysisState['throughput']).length > 0)
+    {
         return (
             <>
                 <Container fluid>
@@ -310,12 +341,14 @@ function App() {
                 </Container>
             </>
         );
-
-    return (
-        <>
-            <WelcomeScreen analysisState={analysisState} vscodeApi={vscodeApi}></WelcomeScreen>
-        </>
-    );
+    }
+    else {
+        return (
+            <>
+                <WelcomeScreen analysisState={analysisState} vscodeApi={vscodeApi}></WelcomeScreen>
+            </>
+        );
+    }
 }
 
 export default App;
