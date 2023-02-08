@@ -92,7 +92,7 @@ function restartProfiling() {
     });
 }
 
-
+const SENDMOCK = false;
 
 function App() {
     const [sliderMemory, setSliderMemory] = useState([50, 69, 420]);
@@ -166,9 +166,9 @@ function App() {
             }
         });
 
-        const sendMock = false;
+        
 
-        if (sendMock) {
+        if (SENDMOCK) {
             setTimeout(() => {
                 const mockResponse = profiling_data;
                 processAnalysisState(mockResponse);
@@ -181,7 +181,7 @@ function App() {
         }
     }, []);
 
-    if (!connectionStatus) {
+    if (!connectionStatus && !SENDMOCK) {
         return (
             <>
             <Alert variant="danger">
