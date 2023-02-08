@@ -1,6 +1,7 @@
-'use babel';
+"use babel";
 
-import React from 'react';
+import React from "react";
+import MemoryPerfBar from "./MemoryPerfBar";
 
 class PerfBarContainer extends React.Component {
   constructor(props) {
@@ -12,39 +13,71 @@ class PerfBarContainer extends React.Component {
   }
 
   _onLabelClick(label) {
-    const {expanded} = this.state;
-    const {labels} = this.props;
+    const { expanded } = this.state;
+    const { labels } = this.props;
 
-    if (expanded == null &&
-        labels.some((labelInfo) => labelInfo.clickable && labelInfo.label === label)) {
-      this.setState({expanded: label});
+    if (
+      expanded == null &&
+      labels.some(
+        (labelInfo) => labelInfo.clickable && labelInfo.label === label
+      )
+    ) {
+      this.setState({ expanded: label });
     } else if (expanded === label) {
-      this.setState({expanded: null});
+      this.setState({ expanded: null });
     }
   }
 
   _classes() {
-    let mainClass = 'innpv-perfbarcontainer-wrap';
+    let mainClass = "innpv-perfbarcontainer-wrap";
     if (this.props.disabled) {
-      mainClass += ' innpv-no-events';
+      mainClass += " innpv-no-events";
     }
     if (this.props.focusing) {
-      mainClass += ' innpv-perfbarcontainer-focusing';
+      mainClass += " innpv-perfbarcontainer-focusing";
     }
     return mainClass;
   }
 
   render() {
-    const {renderPerfBars, marginTop, labels} = this.props;
-    const {expanded} = this.state;
+    const { renderPerfBars, marginTop, labels } = this.props;
+    const { expanded } = this.state;
     return (
       <div className={this._classes()}>
         <div className="innpv-perfbarcontainer">
           <div
             className="innpv-perfbarcontainer-inner"
-            style={{marginTop: `-${marginTop}px`}}
+            style={{ marginTop: `-${marginTop}px` }}
           >
-            {renderPerfBars(expanded)}
+            {renderPerfBars?.map((elem, idx) => {
+              return (
+                <MemoryPerfBar
+                  key={`${elem["name"]}_${idx}`}
+                  elem={elem}
+                  isActive={true}
+                  label={elem["name"]}
+                  overallPct={elem["percentage"]}
+                  percentage={elem["percentage"]}
+                  resizable={false}
+                  colorClass={
+                    elem["name"] === "untracked"
+                      ? "innpv-untracked-color"
+                      : "innpv-blue-color-" + ((idx % 5) + 1)
+                  }
+                  tooltipHTML={
+                    elem["name"] === "untracked"
+                      ? `<b>Untracked</b><br>Time: ${
+                          Math.round(elem["total_time"] * 100) / 100
+                        }ms`
+                      : `<b>${elem["name"]}</b><br>Forward: ${
+                          Math.round(elem["forward_ms"] * 100) / 100
+                        }ms<br>Backward: ${
+                          Math.round(elem["backward_ms"] * 100) / 100
+                        }ms`
+                  }
+                />
+              );
+            })}
           </div>
         </div>
         <LabelContainer
@@ -62,7 +95,7 @@ PerfBarContainer.defaultProps = {
   disabled: false,
   labels: [],
   marginTop: 0,
-  renderPerfBars: (expanded) => null,
+  renderPerfBars: [],
 };
 
 function LabelContainer(props) {
@@ -72,28 +105,30 @@ function LabelContainer(props) {
 
   return (
     <div className="innpv-perfbarcontainer-labelcontainer">
-      {props.labels.filter(({percentage}) => percentage > 0).map(({label, percentage, clickable}) => {
-        let displayPct = percentage;
-        if (props.expanded != null) {
-          if (label === props.expanded) {
-            displayPct = 100;
-          } else {
-            displayPct = 0.001;
-          }
-        }
-        return (
-          <div
-            className={
-              `innpv-perfbarcontainer-labelwrap ${clickable ? 'innpv-perfbarcontainer-clickable' : ''}`
+      {props.labels
+        .filter(({ percentage }) => percentage > 0)
+        .map(({ label, percentage, clickable }, index) => {
+          let displayPct = percentage;
+          if (props.expanded != null) {
+            if (label === props.expanded) {
+              displayPct = 100;
+            } else {
+              displayPct = 0.001;
             }
-            key={label}
-            style={{height: `${displayPct}%`}}
-            onClick={() => props.onLabelClick(label)}
-          >
-            <div className="innpv-perfbarcontainer-label">{label}</div>
-          </div>
-        );
-      })}
+          }
+          return (
+            <div
+              className={`innpv-perfbarcontainer-labelwrap ${
+                clickable ? "innpv-perfbarcontainer-clickable" : ""
+              }`}
+              key={`${label}-${index}`}
+              style={{ height: `${displayPct}%` }}
+              onClick={() => props.onLabelClick(label)}
+            >
+              <div className="innpv-perfbarcontainer-label">{label}</div>
+            </div>
+          );
+        })}
     </div>
   );
 }

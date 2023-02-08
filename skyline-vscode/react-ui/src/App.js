@@ -12,7 +12,6 @@ import Habitat from './Habitat'
 import DeploymentTab from './DeploymentTab'
 import WelcomeScreen from './WelcomeScreen';
 import PerfBarContainer from './PerfBarContainer';
-import MemoryPerfBar from './MemoryPerfBar';
 
 import ReactTooltip from 'react-tooltip';
 
@@ -223,12 +222,10 @@ function App() {
                 <Card>
                     <Card.Header>Project Information</Card.Header>
                     <Card.Body>
-                        <Card.Text>
                             <ProjectInfo
                                 projectRoot={analysisState['project_root']}
                                 entryPoint={analysisState['project_entry_point']}
                             />
-                        </Card.Text>
                         { textChanged && 
                         <Alert key='info' variant='info'>
                             Change is detected in the project. <Button size='sm' onClick={restartProfiling}>Restart Profiling</Button>
@@ -250,21 +247,7 @@ function App() {
                                     clickable: false
                                 }
                             }) : []}
-                            renderPerfBars={() => {
-                                return timeBreakDown.fine ? timeBreakDown.fine.map((elem, idx) => {
-                                    return <MemoryPerfBar 
-                                        key={`${elem["name"]}_${idx}`}
-                                        elem={elem}
-                                        isActive={true}
-                                        label={elem["name"]}
-                                        overallPct={elem["percentage"]}
-                                        percentage={elem["percentage"]}
-                                        resizable={false}
-                                        colorClass={elem["name"] === "untracked" ?  "innpv-untracked-color" : "innpv-blue-color-" + ((idx % 5)+1)} 
-                                        tooltipHTML={elem["name"] === "untracked" ? `<b>Untracked</b><br>Time: ${Math.round(elem["total_time"] * 100)/100}ms` : `<b>${elem["name"]}</b><br>Forward: ${Math.round(elem["forward_ms"]*100)/100}ms<br>Backward: ${Math.round(elem["backward_ms"]*100)/100}ms`}
-                                    />
-                                }) : () => { return []; }
-                            }}
+                            renderPerfBars={timeBreakDown.fine}
                         />
                         <ReactTooltip type="info" effect="float" html={true}/>
                     </div>
