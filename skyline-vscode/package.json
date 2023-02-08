@@ -25,28 +25,15 @@
     "configuration": {
       "title": "Skyline",
       "properties": {
-        "skyline.profile_locally": {
-          "type": "boolean",
-          "default": true,
-          "description": "Specifies whether profiling is done on the local workstation."
-        },
-        "skyline.write_logs": {
-          "type": "boolean",
-          "default": true,
-          "description": "If enabled, skyline profiler logs will be written to /tmp/skyline.log"
-        },
-        "skyline.profile_remote_ip": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "default": null,
-          "description": "Specifies the address of the remote profiler."
-        },
-        "skyline.skyline_bin_location": {
+        "skyline.address": {
           "type": "string",
-          "default": "/usr/bin/skyline",
-          "description": "Specifies the location of the Skyline profiler binary."
+          "default": "localhost",
+          "description": "Specifies the address of the profiler."
+        },
+        "skyline.port": {
+          "type": "number",
+          "default": 60120,
+          "description": "Specifies the port of the profiler."
         }
       }
     }

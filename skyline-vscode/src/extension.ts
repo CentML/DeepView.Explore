@@ -42,9 +42,8 @@ export function activate(context: vscode.ExtensionContext) {
 				let sess_options: SkylineSessionOptions = {
 					context: 		context,
 					projectRoot: 	uri[0].fsPath,
-					// TODO mshin: make the address and port user configurable
-					addr: 			"localhost",
-					port: 			60120,
+					addr: 			vsconfig.address,
+					port: 			vsconfig.port,
 					webviewPanel: 	panel
 				};
 
