@@ -254,17 +254,17 @@ export const cloudProviders = {
   google: {
     name: "Google Cloud Platform",
     logo: "resources/google.png",
-    color: "#f1c40f",
+    color: "#ea4335",
   },
   azure: {
     name: "Microsoft Azure",
     logo: "resources/azure.jpg",
-    color: "#3498db",
+    color: "#008AD7",
   },
   aws: {
     name: "Amazon Web Services",
     logo: "resources/aws.png",
-    color: "#e67e22",
+    color: "#ff9900",
   },
 }
 
