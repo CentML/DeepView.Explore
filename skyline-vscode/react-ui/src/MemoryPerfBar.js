@@ -24,13 +24,15 @@ class MemoryPerfBar extends React.Component {
   // }
 
   _onDoubleClick() {
-    let file_context = this.props.elem.file_refs[0];
+    if(this.props.elem.file_refs && this.props.elem.file_refs.length > 0 && App.vscodeApi){
+      let file_context = this.props.elem.file_refs[0];
 
-    App.vscodeApi.postMessage({
-      command: "highlight_source_line",
-      file: file_context.path,
-      lineno: file_context.line_no
-    });
+      App.vscodeApi.postMessage({
+        command: "highlight_source_line",
+        file: file_context.path,
+        lineno: file_context.line_no
+      });
+    }
   }
 
   render() {

@@ -5,7 +5,7 @@ import React from 'react';
 import Elastic from './Elastic';
 import PerfHintState from './PerfHintState';
 
-import ReactTooltip from 'react-tooltip';
+// import ReactTooltip from 'react-tooltip';
 
 const DOUBLE_CLICK_DELAY_MS = 500;
 
@@ -31,51 +31,51 @@ class PerfBar extends React.Component {
     this._handleClick = this._handleClick.bind(this);
   }
 
-  componentDidMount() {
-    // this._registerTooltip();
-  }
-
-  componentDidUpdate(prevProps) {
-    // this._reconcileTooltip(prevProps);
-  }
-
-  componentWillUnmount() {
-    // this._clearTooltip();
-  }
-
-  _reconcileTooltip(prevProps) {
-    const {tooltipHTML} = this.props;
-    const prevTooltipHTML = prevProps.tooltipHTML;
-    if (tooltipHTML === prevTooltipHTML) {
-      return;
-    }
-    this._clearTooltip();
-    // this._registerTooltip();
-  }
-
-  // _registerTooltip() {
-  //   const {tooltipHTML} = this.props;
-  //   if (tooltipHTML == null) {
-  //     return;
-  //   }
-
-  //   this._tooltip = atom.tooltips.add(
-  //     this._barRef.current,
-  //     {
-  //       title: tooltipHTML,
-  //       placement: 'right',
-  //       html: true,
-  //     },
-  //   )
+  // componentDidMount() {
+  //   // this._registerTooltip();
   // }
 
-  _clearTooltip() {
-    if (this._tooltip == null) {
-      return;
-    }
-    this._tooltip.dispose();
-    this._tooltip = null;
-  }
+  // componentDidUpdate(prevProps) {
+  //   // this._reconcileTooltip(prevProps);
+  // }
+
+  // componentWillUnmount() {
+  //   // this._clearTooltip();
+  // }
+
+  // _reconcileTooltip(prevProps) {
+  //   const {tooltipHTML} = this.props;
+  //   const prevTooltipHTML = prevProps.tooltipHTML;
+  //   if (tooltipHTML === prevTooltipHTML) {
+  //     return;
+  //   }
+  //   this._clearTooltip();
+  //   // this._registerTooltip();
+  // }
+
+  // // _registerTooltip() {
+  // //   const {tooltipHTML} = this.props;
+  // //   if (tooltipHTML == null) {
+  // //     return;
+  // //   }
+
+  // //   this._tooltip = atom.tooltips.add(
+  // //     this._barRef.current,
+  // //     {
+  // //       title: tooltipHTML,
+  // //       placement: 'right',
+  // //       html: true,
+  // //     },
+  // //   )
+  // // }
+
+  // _clearTooltip() {
+  //   if (this._tooltip == null) {
+  //     return;
+  //   }
+  //   this._tooltip.dispose();
+  //   this._tooltip = null;
+  // }
 
   _handleHoverEnter() {
     this.props.onActiveChange(true);
