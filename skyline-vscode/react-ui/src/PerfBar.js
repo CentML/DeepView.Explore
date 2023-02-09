@@ -1,184 +1,283 @@
-'use babel';
+// "use babel";
 
-import React from 'react';
+import React,{useState} from "react";
 
-import Elastic from './Elastic';
-import PerfHintState from './PerfHintState';
+import Elastic from "./Elastic";
+import PerfHintState from "./PerfHintState";
 
 // import ReactTooltip from 'react-tooltip';
 
 const DOUBLE_CLICK_DELAY_MS = 500;
 
-class PerfBar extends React.Component {
-  constructor(props) {
-    super(props);
-    this._tooltip = null;
-    this._barRef = React.createRef();
-    this._lastClick = 0;
+// class PerfBar extends React.Component {
+//   constructor(props) {
+//     super(props);
+//     // this._tooltip = null;
+//     // this._barRef = React.createRef();
+//     this._lastClick = 0;
 
-    this.state = {
-      // Keeps track of how this PerfBar is being manipulated.
-      perfHintState: PerfHintState.NONE,
-    };
+//     this.state = {
+//       // Keeps track of how this PerfBar is being manipulated.
+//       perfHintState: PerfHintState.NONE,
+//     };
 
-    this._handleHoverEnter = this._handleHoverEnter.bind(this);
-    this._handleHoverExit = this._handleHoverExit.bind(this);
+//     this._handleHoverEnter = this._handleHoverEnter.bind(this);
+//     this._handleHoverExit = this._handleHoverExit.bind(this);
 
-    this._handleIncrease = this._handleIncrease.bind(this);
-    this._handleDecrease = this._handleDecrease.bind(this);
-    this._handleRestore = this._handleRestore.bind(this);
+//     this._handleIncrease = this._handleIncrease.bind(this);
+//     this._handleDecrease = this._handleDecrease.bind(this);
+//     this._handleRestore = this._handleRestore.bind(this);
 
-    this._handleClick = this._handleClick.bind(this);
+//     this._handleClick = this._handleClick.bind(this);
+//   }
+
+//   // componentDidMount() {
+//   //   // this._registerTooltip();
+//   // }
+
+//   // componentDidUpdate(prevProps) {
+//   //   // this._reconcileTooltip(prevProps);
+//   // }
+
+//   // componentWillUnmount() {
+//   //   // this._clearTooltip();
+//   // }
+
+//   // _reconcileTooltip(prevProps) {
+//   //   const {tooltipHTML} = this.props;
+//   //   const prevTooltipHTML = prevProps.tooltipHTML;
+//   //   if (tooltipHTML === prevTooltipHTML) {
+//   //     return;
+//   //   }
+//   //   this._clearTooltip();
+//   //   // this._registerTooltip();
+//   // }
+
+//   // // _registerTooltip() {
+//   // //   const {tooltipHTML} = this.props;
+//   // //   if (tooltipHTML == null) {
+//   // //     return;
+//   // //   }
+
+//   // //   this._tooltip = atom.tooltips.add(
+//   // //     this._barRef.current,
+//   // //     {
+//   // //       title: tooltipHTML,
+//   // //       placement: 'right',
+//   // //       html: true,
+//   // //     },
+//   // //   )
+//   // // }
+
+//   // _clearTooltip() {
+//   //   if (this._tooltip == null) {
+//   //     return;
+//   //   }
+//   //   this._tooltip.dispose();
+//   //   this._tooltip = null;
+//   // }
+
+//   _handleHoverEnter() {
+//     this.props.onActiveChange(true);
+//   }
+
+//   _handleHoverExit() {
+//     this.props.onActiveChange(false);
+//   }
+
+//   _handleIncrease() {
+//     if (this.state.perfHintState === PerfHintState.INCREASING) {
+//       return;
+//     }
+//     this.setState({ perfHintState: PerfHintState.INCREASING });
+//   }
+
+//   _handleDecrease() {
+//     if (this.state.perfHintState === PerfHintState.DECREASING) {
+//       return;
+//     }
+//     this.setState({ perfHintState: PerfHintState.DECREASING });
+//   }
+
+//   _handleRestore() {
+//     if (this.state.perfHintState === PerfHintState.NONE) {
+//       return;
+//     }
+//     this.setState({ perfHintState: PerfHintState.NONE });
+//   }
+
+//   _handleClick(event) {
+//     const now = Date.now();
+//     const diff = now - this._lastClick;
+//     if (diff <= DOUBLE_CLICK_DELAY_MS) {
+//       this._lastClick = 0;
+//       this.props.onDoubleClick(event);
+//     } else {
+//       this._lastClick = now;
+//       this.props.onClick(event);
+//     }
+//   }
+
+//   _className() {
+//     const { resizable, clickable, isActive } = this.props;
+//     let mainClass = "innpv-perfbar-wrap";
+
+//     if (isActive) {
+//       mainClass += " innpv-perfbar-active";
+//     }
+
+//     if (resizable) {
+//       return mainClass + " innpv-perfbar-resizable";
+//     } else if (clickable) {
+//       return mainClass + " innpv-perfbar-clickable";
+//     } else {
+//       return mainClass;
+//     }
+//   }
+
+//   render() {
+//     const {
+//       renderPerfHints,
+//       resizable,
+//       percentage,
+//       updateMarginTop,
+//       colorClass,
+//       tooltipHTML,
+//     } = this.props;
+//     const { perfHintState } = this.state;
+
+//     return (
+//       <Elastic
+//         className={this._className()}
+//         disabled={!resizable}
+//         heightPct={percentage}
+//         updateMarginTop={updateMarginTop}
+//         handleShrink={this._handleDecrease}
+//         handleGrow={this._handleIncrease}
+//         handleSnapBack={this._handleRestore}
+//         tooltipHTML={tooltipHTML}
+//       >
+//         <div
+//           // ref={this._barRef}
+//           className={`innpv-perfbar ${colorClass}`}
+//           onMouseEnter={this._handleHoverEnter}
+//           onMouseLeave={this._handleHoverExit}
+//           onClick={this._handleClick}
+//         />
+//         {renderPerfHints(perfHintState)}
+//       </Elastic>
+//     );
+//   }
+// }
+
+// PerfBar.defaultProps = {
+//   isActive: false,
+//   resizable: false,
+//   clickable: false,
+//   renderPerfHints: (perfHintState) => null,
+//   tooltipHTML: null,
+//   onClick: (event) => {},
+//   onDoubleClick: (event) => {},
+//   onActiveChange: (isActive) => {},
+// };
+
+/** */
+const PerfBar = (
+  {isActive = false,
+  resizable = false,
+  clickable = false,
+  renderPerfHints = (perfHintState) => null,
+  tooltipHTML = null,
+  onClick = (event) => {},
+  onDoubleClick = (event) => {},
+  onActiveChange = (isActive) => {},
+  percentage,
+  updateMarginTop,
+  colorClass}
+) => {
+
+  const [lastClick, setLastClick] = useState(0);
+  const [perfHintState, setPerfHintState] = useState(PerfHintState.NONE);
+
+  const handleHoverEnter = () => {
+    onActiveChange(true);
   }
 
-  // componentDidMount() {
-  //   // this._registerTooltip();
-  // }
-
-  // componentDidUpdate(prevProps) {
-  //   // this._reconcileTooltip(prevProps);
-  // }
-
-  // componentWillUnmount() {
-  //   // this._clearTooltip();
-  // }
-
-  // _reconcileTooltip(prevProps) {
-  //   const {tooltipHTML} = this.props;
-  //   const prevTooltipHTML = prevProps.tooltipHTML;
-  //   if (tooltipHTML === prevTooltipHTML) {
-  //     return;
-  //   }
-  //   this._clearTooltip();
-  //   // this._registerTooltip();
-  // }
-
-  // // _registerTooltip() {
-  // //   const {tooltipHTML} = this.props;
-  // //   if (tooltipHTML == null) {
-  // //     return;
-  // //   }
-
-  // //   this._tooltip = atom.tooltips.add(
-  // //     this._barRef.current,
-  // //     {
-  // //       title: tooltipHTML,
-  // //       placement: 'right',
-  // //       html: true,
-  // //     },
-  // //   )
-  // // }
-
-  // _clearTooltip() {
-  //   if (this._tooltip == null) {
-  //     return;
-  //   }
-  //   this._tooltip.dispose();
-  //   this._tooltip = null;
-  // }
-
-  _handleHoverEnter() {
-    this.props.onActiveChange(true);
+  const handleHoverExit = () => {
+    onActiveChange(false);
   }
 
-  _handleHoverExit() {
-    this.props.onActiveChange(false);
-  }
-
-  _handleIncrease() {
-    if (this.state.perfHintState === PerfHintState.INCREASING) {
+  const handleIncrease = () => {
+    if (perfHintState === PerfHintState.INCREASING) {
       return;
     }
-    this.setState({perfHintState: PerfHintState.INCREASING});
+    setPerfHintState(PerfHintState.INCREASING);
   }
 
-  _handleDecrease() {
-    if (this.state.perfHintState === PerfHintState.DECREASING) {
+  const handleDecrease = () => {
+    if (perfHintState === PerfHintState.DECREASING) {
       return;
     }
-    this.setState({perfHintState: PerfHintState.DECREASING});
+    setPerfHintState(PerfHintState.DECREASING);
   }
 
-  _handleRestore() {
-    if (this.state.perfHintState === PerfHintState.NONE) {
+  const handleRestore = () => {
+    if (perfHintState === PerfHintState.NONE) {
       return;
     }
-    this.setState({perfHintState: PerfHintState.NONE});
+    setPerfHintState(PerfHintState.NONE);
   }
 
-  _handleClick(event) {
+  const handleClick = (event) => {
     const now = Date.now();
-    const diff = now - this._lastClick;
+    const diff = now - lastClick;
     if (diff <= DOUBLE_CLICK_DELAY_MS) {
-      this._lastClick = 0;
-      this.props.onDoubleClick(event);
+      setLastClick(0);
+      onDoubleClick(event);
     } else {
-      this._lastClick = now;
-      this.props.onClick(event);
+      setLastClick(now);
+      onClick(event);
     }
   }
 
-  _className() {
-    const {resizable, clickable, isActive} = this.props;
-    let mainClass = 'innpv-perfbar-wrap';
+  const className = () => {
+    let mainClass = "innpv-perfbar-wrap";
 
     if (isActive) {
-      mainClass += ' innpv-perfbar-active';
+      mainClass += " innpv-perfbar-active";
     }
 
     if (resizable) {
-      return mainClass + ' innpv-perfbar-resizable';
+      return mainClass + " innpv-perfbar-resizable";
     } else if (clickable) {
-      return mainClass + ' innpv-perfbar-clickable';
+      return mainClass + " innpv-perfbar-clickable";
     } else {
       return mainClass;
     }
   }
 
-  render() {
-    const {
-      renderPerfHints,
-      resizable,
-      percentage,
-      updateMarginTop,
-      colorClass,
-      tooltipHTML
-    } = this.props;
-    const {perfHintState} = this.state;
+  return (
+    <Elastic
+      className={className()}
+      disabled={!resizable}
+      heightPct={percentage}
+      updateMarginTop={updateMarginTop}
+      handleShrink={handleDecrease}
+      handleGrow={handleIncrease}
+      handleSnapBack={handleRestore}
+      tooltipHTML={tooltipHTML}
+    >
+      <div
+        className={`innpv-perfbar ${colorClass}`}
+        onMouseEnter={handleHoverEnter}
+        onMouseLeave={handleHoverExit}
+        onClick={handleClick}
+      />
+      {renderPerfHints(perfHintState)}
+    </Elastic>
+  );
 
-    return (
-      <Elastic
-        className={this._className()}
-        disabled={!resizable}
-        heightPct={percentage}
-        updateMarginTop={updateMarginTop}
-        handleShrink={this._handleDecrease}
-        handleGrow={this._handleIncrease}
-        handleSnapBack={this._handleRestore}
-        tooltipHTML={tooltipHTML}
-      >
-        <div
-          ref={this._barRef}
-          className={`innpv-perfbar ${colorClass}`}
-          onMouseEnter={this._handleHoverEnter}
-          onMouseLeave={this._handleHoverExit}
-          onClick={this._handleClick}
-        />
-        {renderPerfHints(perfHintState)}
-      </Elastic>
-    );
-  }
-}
 
-PerfBar.defaultProps = {
-  isActive: false,
-  resizable: false,
-  clickable: false,
-  renderPerfHints: (perfHintState) => null,
-  tooltipHTML: null,
-  onClick: (event) => {},
-  onDoubleClick: (event) => {},
-  onActiveChange: (isActive) => {},
 };
 
 export default PerfBar;
