@@ -1,14 +1,11 @@
-'use babel';
-
 import React from 'react';
 
 function isNumeric(candidate) {
   return !isNaN(parseFloat(candidate));
 }
 
-class NumericDisplay extends React.Component {
-  _numberToDisplay() {
-    const {number, precision} = this.props;
+const NumericDisplay = ({precision=0,number,top,bottom}) => {
+  const numberToDisplay = () => {
     if (!isNumeric(number)) {
       return number;
     }
@@ -22,22 +19,15 @@ class NumericDisplay extends React.Component {
     return fixed;
   }
 
-  render() {
-    const {top, bottom} = this.props;
-    return (
-      <div className="innpv-numericdisplay">
+  return (
+    <div className="innpv-numericdisplay">
         <div className="innpv-numericdisplay-top">{top}</div>
         <div className="innpv-numericdisplay-number">
-          {this._numberToDisplay()}
+          {numberToDisplay()}
         </div>
         <div className="innpv-numericdisplay-bottom">{bottom}</div>
       </div>
-    );
-  }
+  )
 }
-
-NumericDisplay.defaultProps = {
-  precision: 0,
-};
 
 export default NumericDisplay;
