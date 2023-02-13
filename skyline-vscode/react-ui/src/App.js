@@ -153,7 +153,7 @@ function App() {
 
     useEffect(function () {
         window.addEventListener('message', event => {
-            console.log("Message:", JSON.stringify(event.data));
+            // console.log("Message:", JSON.stringify(event.data));
             if (event.data['message_type'] === "connection") {
                 setConnectionStatus(event.data['status']);
             } else if (event.data['message_type'] === "analysis") {

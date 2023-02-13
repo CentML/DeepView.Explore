@@ -1,15 +1,12 @@
-'use babel';
-
 import React from 'react';
 
-export default class Subheader extends React.Component {
-  render() {
-    const {icon, children} = this.props;
-    return (
-      <div className="innpv-subheader">
+const Subheader = ({icon, children}) => {
+  return (
+    <div className="innpv-subheader">
         <span className={`icon icon-${icon}`} />
-        {this.props.children}
+        {children}
       </div>
-    );
-  }
+  )
 }
+
+export default Subheader;

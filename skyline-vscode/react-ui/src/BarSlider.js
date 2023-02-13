@@ -1,21 +1,18 @@
-'use babel';
-
 import React from 'react';
 
 import Resizable from './Resizable';
 
-class BarSlider extends React.Component {
-  render() {
-    const {
-      percentage,
-      limitPercentage,
-      onMouseEnter,
-      onMouseLeave,
-      onClick,
-    } = this.props;
-    const limitBarHeight = 100 - limitPercentage;
-    return (
-      <div
+const BarSlider = ({
+  percentage,
+  limitPercentage = 100,
+  handleResize = () => {},
+  onClick = () => {},
+  onMouseEnter = () => {},
+  onMouseLeave = () => {},
+}) => {
+  const limitBarHeight = 100 - limitPercentage;
+  return (
+    <div
         className="innpv-barslider"
         onClick={onClick}
         onMouseEnter={onMouseEnter}
@@ -25,7 +22,7 @@ class BarSlider extends React.Component {
           <Resizable
             className="innpv-resizable-barslider"
             heightPct={percentage}
-            handleResize={this.props.handleResize}
+            handleResize={handleResize}
           >
             <div className="innpv-barslider-bar" />
           </Resizable>
@@ -33,16 +30,7 @@ class BarSlider extends React.Component {
             <div className="innpv-barslider-limit" style={{height: `${limitBarHeight}%`}} /> : null}
         </div>
       </div>
-    );
-  }
+  )
 }
-
-BarSlider.defaultProps = {
-  limitPercentage: 100,
-  handleResize: () => {},
-  onClick: () => {},
-  onMouseEnter: () => {},
-  onMouseLeave: () => {},
-};
 
 export default BarSlider;

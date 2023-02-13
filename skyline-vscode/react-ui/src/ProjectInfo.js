@@ -2,7 +2,7 @@
 import React from "react";
 import styled from "styled-components";
 
-export default function ProjectInfo({ projectRoot, entryPoint }) {
+const ProjectInfo = ({ projectRoot, entryPoint }) => {
   return (
     <>
       <Wrapper>
@@ -23,16 +23,18 @@ export default function ProjectInfo({ projectRoot, entryPoint }) {
   );
 }
 
+
 const Wrapper = styled.div`
-  .info-main {
-    display: flex;
-    flex-direction: column;
+.info-main {
+  display: flex;
+  flex-direction: column;
+}
+.info-body {
+  display: flex;
+  flex-direction: row;
+  h6 {
+    margin-right: 1rem;
   }
-  .info-body {
-    display: flex;
-    flex-direction: row;
-    h6 {
-        margin-right: 1rem;
-    }
-  }
+}
 `;
+export default ProjectInfo;

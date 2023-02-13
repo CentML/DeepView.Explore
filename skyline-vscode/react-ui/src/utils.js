@@ -1,9 +1,3 @@
-'use babel';
-
-import { ContinuousSizeLegend } from "react-vis";
-
-// import path from 'path';
-
 const BYTE_UNITS = [
   'B',
   'KB',

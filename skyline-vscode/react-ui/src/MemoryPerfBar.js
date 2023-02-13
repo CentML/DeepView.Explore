@@ -1,57 +1,34 @@
-'use babel';
-
-// import path from 'path';
 import React from 'react';
 
 import PerfBar from './PerfBar';
 import App from './App';
-import {toReadableByteSize} from './utils';
 
-class MemoryPerfBar extends React.Component {
-  constructor(props) {
-    super(props);
-    // this._renderPerfHints = this._renderPerfHints.bind(this);
-    // this._onClick = this._onClick.bind(this);
-    this._onDoubleClick = this._onDoubleClick.bind(this);
-    // this._onActiveChange = this._onActiveChange.bind(this);
+const MemoryPerfBar = (props) => {
+
+  const onDoubleClick = () => {
+    if(props.elem.file_refs && props.elem.file_refs.length > 0 && App.vscodeApi){
+      let file_context = props.elem.file_refs[0];
+
+      App.vscodeApi.postMessage({
+        command: "highlight_source_line",
+        file: file_context.path,
+        lineno: file_context.line_no
+      });
+    }
   }
 
-  // _generateTooltipHTML() {
-  //   const {memoryNode, overallPct} = this.props;
-  //   return `<strong>${memoryNode.name}</strong><br/>` +
-  //     `${toReadableByteSize(memoryNode.sizeBytes)}<br/>` +
-  //     `${overallPct.toFixed(2)}%`;
-  // }
+  const {tooltipHTML, ...rest} = props;
 
-  _onDoubleClick() {
-    let file_context = this.props.elem.file_refs[0];
+  return (
+    <PerfBar
+      clickable={true}
+      renderPerfHints={()=>{}}
+      tooltipHTML={tooltipHTML}
+      onDoubleClick={onDoubleClick}
+      {...rest}
+    />
+  );
 
-    App.vscodeApi.postMessage({
-      command: "highlight_source_line",
-      file: file_context.path,
-      lineno: file_context.line_no
-    });
-  }
-
-  render() {
-    // const {memoryNode, editorsByPath, ...rest} = this.props;
-    const {tooltipHTML, ...rest} = this.props;
-    return (
-      <PerfBar
-        clickable={true}
-        renderPerfHints={()=>{}}
-        tooltipHTML={tooltipHTML}
-        // onClick={this._onClick}
-        onDoubleClick={this._onDoubleClick}
-        // onActiveChange={this._onActiveChange}
-        {...rest}
-      />
-    );
-  }
 }
-
-MemoryPerfBar.defaultProps = {
-  editors: [],
-};
 
 export default MemoryPerfBar;
