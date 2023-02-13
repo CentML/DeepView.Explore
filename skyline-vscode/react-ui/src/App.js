@@ -92,7 +92,7 @@ function restartProfiling() {
     });
 }
 
-const SENDMOCK = false;
+const SENDMOCK = true;
 
 function App() {
     const [sliderMemory, setSliderMemory] = useState([50, 69, 420]);

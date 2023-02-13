@@ -288,7 +288,6 @@ const ProviderPanel = ({ numIterations, habitatData }) => {
                             </Col>
                           </Row>
                         </Card.Title>
-                        <Card.Text>
                           <Table bordered hover>
                             <thead>
                               <tr>
@@ -312,7 +311,6 @@ const ProviderPanel = ({ numIterations, habitatData }) => {
                               </tr>
                             </tbody>
                           </Table>
-                        </Card.Text>
                       </Card.Body>
                     </Card>
                   </CardGroup>
