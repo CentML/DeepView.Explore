@@ -1,6 +1,6 @@
-import Subheader from "./Subheader";
+import Subheader from "../components/Subheader";
 import { Container, Row, Spinner, Card } from "react-bootstrap";
-import BarGraph from "./components/HorizontalBarGraph";
+import BarGraph from "../components/HorizontalBarGraph";
 
 export default function Habitat({ habitatData }) {
   // The colors used for the visualization

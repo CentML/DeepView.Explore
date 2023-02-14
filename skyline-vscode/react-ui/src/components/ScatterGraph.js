@@ -10,7 +10,7 @@ import {
   Label,
   Legend,
 } from "recharts";
-import { calculate_training_time,currencyFormat } from "../utils";
+import { calculate_training_time,currencyFormat } from "../utils/utils";
 
 const ScatterGraph = ({ data, onClickHandler, xlabel, ylabel, providers,numIterations }) => {
   const finalData = [];

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Alert, Badge, Container, Col, Row } from "react-bootstrap";
 import styled from "styled-components";
-import BarSlider from "../BarSlider";
-import Subheader from "../Subheader";
-import NumericDisplay from "../NumericDisplay";
+import BarSlider from "../components/BarSlider";
+import Subheader from "../components/Subheader";
+import NumericDisplay from "../components/NumericDisplay";
 import { profiling_data } from "../data/mock_data";
 /**
  * Returns information required to draw memory and throughput information

@@ -4,16 +4,16 @@ import './styles.css';
 import React, { useState, useEffect } from 'react';
 import { Alert, Button, Card, Tab, Tabs, Container } from 'react-bootstrap';
 
-import ProjectInfo from './ProjectInfo'
-import Habitat from './Habitat'
-import DeploymentTab from './DeploymentTab'
-import WelcomeScreen from './WelcomeScreen';
-import PerfBarContainer from './PerfBarContainer';
+import ProjectInfo from './components/ProjectInfo'
+import Habitat from './sections/Habitat'
+import DeploymentTab from './sections/DeploymentTab'
+import WelcomeScreen from './sections/WelcomeScreen';
+import PerfBarContainer from './sections/PerfBarContainer';
 
 import ReactTooltip from 'react-tooltip';
 
 
-import { computePercentage, getTraceByLevel } from './utils';
+import { computePercentage, getTraceByLevel } from './utils/utils';
 import { profiling_data } from './data/mock_data';
 import EnergyConsumption from './sections/EnergyConsumption';
 import Iterations from './sections/Iterations';
@@ -50,7 +50,7 @@ function restartProfiling() {
     });
 }
 
-const SENDMOCK = true;
+const SENDMOCK = false;
 
 function App() {
     const [analysisState, setAnalysisState] = useState();
@@ -92,7 +92,6 @@ function App() {
 
     useEffect(function () {
         window.addEventListener('message', event => {
-            // console.log("Message:", JSON.stringify(event.data));
             if (event.data['message_type'] === "connection") {
                 setConnectionStatus(event.data['status']);
             } else if (event.data['message_type'] === "analysis") {

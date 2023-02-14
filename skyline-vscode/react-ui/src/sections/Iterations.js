@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, Form, FloatingLabel } from "react-bootstrap";
 import styled from "styled-components";
-import { numberFormat } from "../utils";
+import { numberFormat } from "../utils/utils";
 
 const Iterations = ({ setNumIterations }) => {
   const [iterations, setIterations] = useState({
