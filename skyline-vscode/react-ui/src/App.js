@@ -50,7 +50,7 @@ function restartProfiling() {
     });
 }
 
-const SENDMOCK = false;
+const sendMock = false;
 
 function App() {
     const [analysisState, setAnalysisState] = useState();
@@ -105,7 +105,7 @@ function App() {
 
         
 
-        if (SENDMOCK) {
+        if (sendMock) {
             setTimeout(() => {
                 const mockResponse = profiling_data;
                 processAnalysisState(mockResponse);
@@ -117,7 +117,7 @@ function App() {
         }
     }, []);
 
-    if (!connectionStatus && !SENDMOCK) {
+    if (!connectionStatus && !sendMock) {
         return (
             <>
             <Alert variant="danger">
@@ -188,7 +188,7 @@ function App() {
                         <ReactTooltip type="info" effect="float" html={true}/>
                     </div>
                     <div className="innpv-contents-subrows">
-                    <MemThroughputContainer analysisState={analysisState} SENDMOCK={SENDMOCK} />
+                    <MemThroughputContainer analysisState={analysisState} SENDMOCK={sendMock} />
                     <Habitat habitatData={analysisState['habitat']}/>
                     <EnergyConsumption energyData={analysisState['energy']} numIterations={numIterations}/>
                     </div>
