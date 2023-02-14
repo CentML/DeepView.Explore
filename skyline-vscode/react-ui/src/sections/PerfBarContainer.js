@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import MemoryPerfBar from "./MemoryPerfBar";
+import MemoryPerfBar from "../components/ModelLayers/MemoryPerfBar";
 
 const PerfBarContainer = ({
   focusing = false,

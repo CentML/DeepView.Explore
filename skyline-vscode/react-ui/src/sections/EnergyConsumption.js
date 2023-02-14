@@ -8,10 +8,10 @@ import {
   faMobileAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
-import Subheader from "../Subheader";
+import Subheader from "../components/Subheader";
 import PieGraph from "../components/PieGraph";
 import StackedBarGraph from "../components/StackedBarGraph";
-import { energy_data, unitScale,numberFormat } from "../utils";
+import { energy_data, unitScale,numberFormat } from "../utils/utils";
 
 const EnergyConsumption = ({ energyData, numIterations }) => {
   const cpu_color = "#5499c7";

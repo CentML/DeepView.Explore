@@ -7,7 +7,7 @@ import {
   Badge
 } from "react-bootstrap";
 import React from "react";
-import { numberFormat } from "./utils";
+import { numberFormat } from "../utils/utils";
 
 const DeploymentTab = ({ numIterations, habitatData }) => {
   

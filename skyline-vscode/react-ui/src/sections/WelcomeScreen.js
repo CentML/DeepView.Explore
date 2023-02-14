@@ -1,5 +1,5 @@
 import React,{useState} from "react";
-import ProjectInfo from "./ProjectInfo";
+import ProjectInfo from "../components/ProjectInfo";
 import {Button, Card, Container, Image, Stack } from "react-bootstrap";
 
 const WelcomeScreen = ({analysisState, vscodeApi}) => {

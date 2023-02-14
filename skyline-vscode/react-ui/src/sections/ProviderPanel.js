@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import Subheader from "./Subheader";
-import ScatterGraph from "./components/ScatterGraph";
+import Subheader from "../components/Subheader";
+import ScatterGraph from "../components/ScatterGraph";
 import {
   Badge,
   ButtonGroup,
@@ -15,8 +15,8 @@ import {
   Form,
 } from "react-bootstrap";
 
-import { cloudInstances, gpuPropertyList, cloudProviders } from "./data/providers";
-import { calculate_training_time,numberFormat,currencyFormat } from "./utils";
+import { cloudInstances, gpuPropertyList, cloudProviders } from "../data/providers";
+import { calculate_training_time,numberFormat,currencyFormat } from "../utils/utils";
 
 const highlightColor = "#9b59b6";
 const normalSize = 200;

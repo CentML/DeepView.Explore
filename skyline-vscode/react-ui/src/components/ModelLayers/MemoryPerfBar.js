@@ -1,7 +1,7 @@
 import React from 'react';
 
 import PerfBar from './PerfBar';
-import App from './App';
+import App from '../../App';
 
 const MemoryPerfBar = (props) => {
 
