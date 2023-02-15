@@ -1,11 +1,12 @@
-import {render, screen } from '@testing-library/react';
-import Habitat from "./Habitat";
+import { render, screen } from "@testing-library/react";
+import ProviderPanel from "./ProviderPanel";
 
 const { ResizeObserver } = window;
+const numIterations = 10000;
 
 const data = [
   ["source", 22.029312],
-  ["P100",14.069682],
+  ["P100", 14.069682],
   ["P4000", 127.268085], // 27.268085
   ["RTX2070", 16.088268],
   ["RTX2080Ti", 11.826558],
@@ -32,32 +33,32 @@ afterEach(() => {
   jest.restoreAllMocks();
 });
 
-jest.mock('recharts', () => {
-  const OriginalRechartsModule = jest.requireActual('recharts');
+jest.mock("recharts", () => {
+  const OriginalRechartsModule = jest.requireActual("recharts");
 
   return {
     ...OriginalRechartsModule,
     ResponsiveContainer: ({ height, children }) => (
-      <div className="recharts-responsive-container" style={{ width: 800, height }}>
+      <div
+        className="recharts-responsive-container"
+        style={{ width: 800, height }}
+      >
         {children}
       </div>
     ),
   };
 });
 
-test("Shows loading spinner when there is no habitat data", () => {
+test("Shows a scatter chart", () => {
   // ARRANGE
-  render(<Habitat habitatData={[]}/>);
+  const { container } = render(
+    <ProviderPanel numIterations={numIterations} habitatData={data} />
+  );
 
   // ASSERT
-  expect(screen.getByText(/loading habitat predictions/i)).toBeTruthy();
-});
-
-test("Shows graph when habitat data is present", () => {
-  // ARRANGE
-  const { container } = render(<Habitat habitatData={data}/>);
-
-  // ASSERT
-  expect(container.querySelector('.recharts-responsive-container')).toBeTruthy();
-  
+  expect(screen.getByText(/Providers/i)).toBeTruthy();
+  expect(
+    container.querySelector(".recharts-responsive-container")
+  ).toBeTruthy();
+  expect(screen.getByText(/select a configuration/i)).toBeTruthy();
 });

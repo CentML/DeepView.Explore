@@ -29,7 +29,6 @@ import MemThroughputContainer from './sections/MemThroughputContainer';
 function acquireApi() {
     // if (typeof this.acquireApi.api == 'undefined') {
     if (typeof acquireApi.api === 'undefined') {
-        console.log("Calling acquire function");
         if (typeof acquireVsCodeApi === "function") {
             let f = window['acquireVsCodeApi'];
             let a = f();
@@ -50,7 +49,7 @@ function restartProfiling() {
     });
 }
 
-const sendMock = false;
+const sendMock = true;
 
 function App() {
     const [analysisState, setAnalysisState] = useState();
