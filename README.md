@@ -72,7 +72,15 @@ Press `F5` to compile and run the extension. When the extension window appears, 
 To debug the React UI without extension code, set `const sendMock = true;` in the `react-ui/App.js`, then start the project as any other React.app.
 
 ## Release process
-In the development environment, run `vsce package` to generate the `.vsix` file.
+1. Make sure you're on main branch and it is clean
+2. Run [scripts/prepare-release.sh](tools/prepare-release.sh) which will:
+    * Increment the version
+    * Create a release branch
+    * Create a release PR
+1. After the PR is merged, the [build-vsix.yaml](.github/workflows/build-vsix.yaml) GitHub action will:
+    * Build the VSIX file
+    * GitHub release
+    * Upload the VSIX file to S3
 
 ## Release history
 See [Releases](https://github.com/CentML/mltools-vscode/releases).
