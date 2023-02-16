@@ -58,6 +58,6 @@ test("Shows graph when habitat data is present", () => {
   const { container } = render(<Habitat habitatData={data}/>);
 
   // ASSERT
-  expect(container.querySelector('.recharts-responsive-container')).toBeTruthy();
+  expect(container.querySelector('.recharts-responsive-container')).toBeTruthy();  // eslint-disable-line
   
 });

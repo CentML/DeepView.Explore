@@ -305,7 +305,6 @@ const ProviderPanel = ({ numIterations, habitatData }) => {
                                   {providerPanelSettings.clicked.info.ngpus}
                                 </th>
                                 <th>
-                                  {/* {gpus[providerPanelSettings.clicked.info.gpu].vmem} GB */}
                                   {providerPanelSettings.clicked.vmem} GB
                                 </th>
                               </tr>

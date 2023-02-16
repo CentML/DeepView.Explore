@@ -70,6 +70,6 @@ test("Shows deployment target when there is habitat data", () => {
   const deploymentSection = screen.queryByText(/loading information/i);
   expect(deploymentSection).toBeNull();
   expect(
-    container.querySelector(".recharts-responsive-container")
+    container.querySelector(".recharts-responsive-container")  // eslint-disable-line
   ).toBeTruthy();
 });

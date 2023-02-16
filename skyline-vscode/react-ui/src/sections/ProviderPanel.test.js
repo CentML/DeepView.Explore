@@ -58,7 +58,7 @@ test("Shows a scatter chart", () => {
   // ASSERT
   expect(screen.getByText(/Providers/i)).toBeTruthy();
   expect(
-    container.querySelector(".recharts-responsive-container")
+    container.querySelector(".recharts-responsive-container")  // eslint-disable-line
   ).toBeTruthy();
   expect(screen.getByText(/select a configuration/i)).toBeTruthy();
 });

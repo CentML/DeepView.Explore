@@ -125,7 +125,7 @@ test("Only current data: shows both pie and graph data", () => {
   expect(screen.getByText(/relative to your other experiments/i)).toBeTruthy();
 
   expect(
-    container.querySelector(".recharts-responsive-container")
+    container.querySelector(".recharts-responsive-container")  // eslint-disable-line
   ).toBeTruthy();
 });
 
@@ -143,7 +143,7 @@ test("Only past experiments: shows only graph data", () => {
   expect(screen.getByText(/relative to your other experiments/i)).toBeTruthy();
 
   expect(
-    container.querySelector(".recharts-responsive-container")
+    container.querySelector(".recharts-responsive-container")  // eslint-disable-line
   ).toBeTruthy();
 });
 
@@ -159,7 +159,7 @@ test("Empty data: shows could not load data", () => {
   // ASSERT
   expect(screen.getAllByText(/could not load the data/i)).toBeTruthy();
 
-  expect(container.querySelector(".recharts-responsive-container")).toBeFalsy();
+  expect(container.querySelector(".recharts-responsive-container")).toBeFalsy();  // eslint-disable-line
 });
 
 test("All information Complete: show both charts", () => {
@@ -175,10 +175,10 @@ test("All information Complete: show both charts", () => {
   expect(screen.getByText(/relative to your other experiments/i)).toBeTruthy();
 
   expect(
-    container.querySelector(".recharts-responsive-container")
+    container.querySelector(".recharts-responsive-container")  // eslint-disable-line
   ).toBeTruthy();
 
   expect(
-    container.querySelector(".bargraph-container")
+    container.querySelector(".bargraph-container")  // eslint-disable-line
   ).toBeTruthy();
 });
