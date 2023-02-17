@@ -29,7 +29,6 @@ import MemThroughputContainer from './sections/MemThroughputContainer';
 function acquireApi() {
     // if (typeof this.acquireApi.api == 'undefined') {
     if (typeof acquireApi.api === 'undefined') {
-        console.log("Calling acquire function");
         if (typeof acquireVsCodeApi === "function") {
             let f = window['acquireVsCodeApi'];
             let a = f();
@@ -72,9 +71,11 @@ function App() {
     const connect = function() {
         resetApp();
         let vscode = App.vscodeApi;
-        vscode.postMessage({
-            command: "connect"
-        });
+        if(vscode){
+            vscode.postMessage({
+                command: "connect"
+            });
+        }
     }
 
     const processAnalysisState = function (state) {

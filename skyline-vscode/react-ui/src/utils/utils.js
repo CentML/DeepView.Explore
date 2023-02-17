@@ -59,9 +59,9 @@ export function unitScale(quantity, unit){
 
 }
 
-export function timeFormatter(quantity){
+export function homeEnergyUsedFormat(quantity){
   if (quantity >= 1){
-    return `${quantity} homes' energy use for one year`
+    return [parseFloat(Number(quantity).toFixed(2)),'year']
   }
   let idx = 0;
   let converter = [];
@@ -181,7 +181,7 @@ export function energy_data(currentTotal){
       `${parseFloat(Number(carbon_emission_tons*1000).toFixed(2))} kg`: 
       `${parseFloat(Number(carbon_emission_tons).toFixed(2))} Metric Tons`;
   const miles = unitScale(carbon_emission_tons * ENERGY_CONVERSION_UNITS['miles'],'generic');
-  const household = timeFormatter(carbon_emission_tons * ENERGY_CONVERSION_UNITS['household']);
+  const household = homeEnergyUsedFormat(carbon_emission_tons * ENERGY_CONVERSION_UNITS['household']);
   const phone = unitScale(carbon_emission_tons * ENERGY_CONVERSION_UNITS['phone'],'generic');
 
   return {
