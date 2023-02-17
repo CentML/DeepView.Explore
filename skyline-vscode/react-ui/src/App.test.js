@@ -1,9 +1,11 @@
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import App from './App';
 
-test("Render App correctly, it must show begin analysis button", () => {
+// For testing there is no default socket connection. It will show the error screen
+test("Render App correctly, must show a connection error and button to reset it", async() => {
   render(<App />);
-  // For testing there is no default socket connection. It will show the warning screen
 
-  expect(screen.getByText(/connection has been lost to the profiler. please reconnect the profiler and double check your ports then click connect/i)).toBeTruthy();
+  expect(screen.getByText(/connection error/i)).toBeTruthy();
+  await userEvent.click(screen.getByText('Reconnect'));
 })

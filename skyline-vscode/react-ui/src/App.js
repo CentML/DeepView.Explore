@@ -71,9 +71,11 @@ function App() {
     const connect = function() {
         resetApp();
         let vscode = App.vscodeApi;
-        vscode.postMessage({
-            command: "connect"
-        });
+        if(vscode){
+            vscode.postMessage({
+                command: "connect"
+            });
+        }
     }
 
     const processAnalysisState = function (state) {
