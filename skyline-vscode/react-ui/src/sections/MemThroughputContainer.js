@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Alert, Badge, Container, Col, Row, Button } from "react-bootstrap";
+import { Alert, Badge, Container, Col, Row } from "react-bootstrap";
 import styled from "styled-components";
 import BarSlider from "../components/BarSlider";
 import Subheader from "../components/Subheader";
 import NumericDisplay from "../components/NumericDisplay";
-import { profiling_data } from "../data/mock_data";
 /**
  * Returns information required to draw memory and throughput information
  * @param {*} analysisState
@@ -73,24 +72,14 @@ const MemThroughputContainer = ({ analysisState, SENDMOCK }) => {
   const [curBatchSize, setCurBatchSize] = useState(0);
 
   const setInitialLoad = () => {
-    if (SENDMOCK) {
-      updateSliders(
-        profiling_data,
-        0.5,
-        null,
-        setSliderMemory,
-        setSliderThroughput
-      );
-    } else {
-      updateSliders(
-        analysisState,
-        null,
-        null,
-        setSliderMemory,
-        setSliderThroughput,
-        analysisState["breakdown"]["batch_size"]
-      );
-    }
+    updateSliders(
+      analysisState,
+      null,
+      null,
+      setSliderMemory,
+      setSliderThroughput,
+      analysisState["breakdown"]["batch_size"]
+    );
   };
 
   const onMemoryResize = function (change) {
@@ -223,15 +212,15 @@ const Wrapper = styled.main`
     justify-content: space-between;
     align-items: center;
     @media (max-width: 1000px) {
-      line-height:0.5;
+      line-height: 0.5;
       flex-direction: column;
       align-items: flex-start;
     }
   }
-  .memory-title{
+  .memory-title {
     @media (max-width: 1000px) {
-      margin-top:0.25rem;
-      margin-bottom:0.4rem;
+      margin-top: 0.25rem;
+      margin-bottom: 0.4rem;
     }
   }
 `;
