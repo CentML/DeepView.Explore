@@ -1,7 +1,7 @@
 import Subheader from "../components/Subheader";
 import { Container, Row, Spinner, Card } from "react-bootstrap";
-import BarGraph from "../components/HorizontalBarGraph";
-
+import {HorizontalBarGraph} from "../components/BarGraph";
+import {HabitatScatterGraph} from "../components/ScatterGraph";
 export default function Habitat({ habitatData }) {
   // The colors used for the visualization
   // The first n-1 colors should follow a blue gradient while the last
@@ -46,13 +46,14 @@ export default function Habitat({ habitatData }) {
             </Row>
           </Container>
         )}
-        {habitatData !== [] && (
-          <BarGraph
+        {/* {habitatData !== [] && <HorizontalBarGraph
             data={habitatProperties}
             height={50*habitatProperties.length}
             xlabel={"Predicted Runtime (ms)"}
             ylabel={""}
-          />
+          />} */}
+        {habitatData !== [] && (
+          <HabitatScatterGraph habitatData={habitatData} height={150} color={"#8884d8"}/>
         )}
       </div>
     </div>

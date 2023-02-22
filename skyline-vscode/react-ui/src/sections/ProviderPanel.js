@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Subheader from "../components/Subheader";
-import ScatterGraph from "../components/ScatterGraph";
+import {ProviderScatterGraph} from "../components/ScatterGraph";
 import {
   Badge,
   ButtonGroup,
@@ -243,7 +243,7 @@ const ProviderPanel = ({ numIterations, habitatData }) => {
                   </Col>
                 </Row>
                 <Row className="pb-4">
-                  <ScatterGraph
+                  <ProviderScatterGraph
                     data={providerPanelSettings.plotData}
                     onClickHandler={onClickConfig}
                     xlabel={"Total Training time (hrs)"}

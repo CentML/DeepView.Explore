@@ -314,6 +314,7 @@ atom-overlay.innpv-contexthighlight-overlay {
 .innpv-perfbarcontainer-wrap {
   display: flex;
   height: 70vh;
+  /* overflow: auto; */
 }
 .innpv-perfbarcontainer {
   height: 100%;
