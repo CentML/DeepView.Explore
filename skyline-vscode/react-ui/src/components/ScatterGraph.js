@@ -104,7 +104,7 @@ export const ProviderScatterGraph = ({
   );
 };
 
-export const HabitatScatterGraph = ({ habitatData, height, color }) => {
+export const HabitatScatterGraph = ({ habitatData, height }) => {
   const renderTooltip = (props) => {
     const { active, payload } = props;
 
@@ -137,159 +137,114 @@ export const HabitatScatterGraph = ({ habitatData, height, color }) => {
     console.log(x, y, width, height, value);
     const y_offset = 5;
     return (
-      <text x={x + width / 2} y={y - y_offset}>
+      <text x={x + width / 2} y={y - y_offset} fill="#1c2833"
+      fontSize={12}
+      fontWeight={650}
+      fontFamily="sans-serif">
         {value}
       </text>
     );
   };
 
+  const NUMBER_OF_COLUMNS = 5;
   const habitatConsumerCards = [];
   const habitatServerCards = [];
-  const sourceInHabitat = habitatData.find(
-    (item) => item[0].toLowerCase() === "source"
-  );
-  const sourceCard = [
-    {
-      time: parseFloat(Number(sourceInHabitat[1]).toFixed(2)),
-      card: "Local GPU",
-      index: 1,
-      size: 100,
-    },
-  ];
+  const sourceInHabitat = [];
 
-  gpuPropertyList.forEach((item) => {
-    const findInHabitat = habitatData.find(
-      (card) => card[0].toLowerCase() === item.name.toLowerCase()
+  habitatData.sort((a, b) => a[1] - b[1]);
+
+  habitatData.forEach((habitatItem,idx) => {
+    const findGPUProperty = gpuPropertyList.find(
+      (item) => item.name.toLowerCase() === habitatItem[0].toLowerCase()
     );
-    if (item.type === "server") {
-      habitatServerCards.push({
-        time: parseFloat(Number(findInHabitat[1]).toFixed(2)),
-        card: findInHabitat[0],
-        index: 1,
-        size: 100,
-      });
+    if (findGPUProperty) {
+      if (findGPUProperty.type === "server") {
+        habitatServerCards.push({
+          time: parseFloat(Number(habitatItem[1]).toFixed(2)),
+          card: habitatItem[0],
+          index: idx%NUMBER_OF_COLUMNS +0.5,
+          size: 100,
+        });
+      } else {
+        habitatConsumerCards.push({
+          time: parseFloat(Number(habitatItem[1]).toFixed(2)),
+          card: habitatItem[0],
+          index: idx%NUMBER_OF_COLUMNS+0.5,
+          size: 100,
+        });
+      }
     } else {
-      habitatConsumerCards.push({
-        time: parseFloat(Number(findInHabitat[1]).toFixed(2)),
-        card: findInHabitat[0],
-        index: 1,
+      sourceInHabitat.push({
+        time: parseFloat(Number(habitatItem[1]).toFixed(2)),
+        card: "Local GPU",
+        index: idx%NUMBER_OF_COLUMNS+0.5,
         size: 100,
       });
     }
   });
+  console.log(sourceInHabitat)
 
-  const LOWER_LIMIT =
-    0.8 * habitatData.reduce((a, b) => Math.min(a, b[1]), +Infinity);
   const UPPER_LIMIT =
     1.2 * habitatData.reduce((a, b) => Math.max(a, b[1]), -Infinity);
 
   return (
     <>
-      <div style={{ width: "100%" }}>
-        <ResponsiveContainer width="100%" height={height}>
-          <ScatterChart margin={{ top: 30, right: 30, left: 50, bottom: 10 }}>
-            <XAxis
-              type="number"
-              dataKey="time"
-              domain={[
-                parseFloat(Number(LOWER_LIMIT).toFixed(2)),
-                parseFloat(Number(UPPER_LIMIT).toFixed(2)),
-              ]}
-              tick={{ fontSize: 0 }}
-              tickLine={{ transform: "translate(0, -6)" }}
-            />
+      <ResponsiveContainer width="100%" height={height}>
+        <ScatterChart margin={{ top: 60, right: 30, left: 50, bottom: 30 }}>
+          <XAxis
+            type="number"
+            dataKey="time"
+            interval="preserveStartEnd"
+            domain={[0, parseFloat(Number(UPPER_LIMIT).toFixed(2))]}
+            tickLine={{ transform: "translate(0, -6)" }}
+            label={{
+              value: "Predicted Runtime (ms)",
+              position: "insideBottom",
+              offset: -15,
+            }}
+          />
 
-            <YAxis
-              type="number"
-              dataKey="index"
-              name="Source"
-              width={80}
-              tick={false}
-              tickLine={false}
-              axisLine={false}
-              label={{ value: "Source", position: "insideTopRight" }}
-            />
-            <ZAxis type="number" dataKey="size" range={[0, 250]} />
-            <Tooltip
-              cursor={{ strokeDasharray: "3 3" }}
-              wrapperStyle={{ zIndex: 100 }}
-              content={renderTooltip}
-            />
-            <Scatter data={sourceCard} fill="#ffc300" />
-          </ScatterChart>
-        </ResponsiveContainer>
-        <ResponsiveContainer width="100%" height={height}>
-          <ScatterChart margin={{ top: 30, right: 30, left: 50, bottom: 10 }}>
-            <XAxis
-              type="number"
-              dataKey="time"
-              domain={[
-                parseFloat(Number(LOWER_LIMIT).toFixed(2)),
-                parseFloat(Number(UPPER_LIMIT).toFixed(2)),
-              ]}
-              tick={{ fontSize: 0 }}
-              tickLine={{ transform: "translate(0, -6)" }}
-            />
-
-            <YAxis
-              type="number"
-              dataKey="index"
-              name="Consumer Grade"
-              width={80}
-              tick={false}
-              tickLine={false}
-              axisLine={false}
-              label={{ value: "Consumer Grade", position: "insideTopRight" }}
-            />
-            <ZAxis type="number" dataKey="size" range={[0, 250]} />
-            <Tooltip
-              cursor={{ strokeDasharray: "3 3" }}
-              wrapperStyle={{ zIndex: 100 }}
-              content={renderTooltip}
-            />
-            <Scatter data={habitatConsumerCards} fill={color} />
-          </ScatterChart>
-        </ResponsiveContainer>
-        <ResponsiveContainer width="100%" height={height}>
-          <ScatterChart margin={{ top: 40, right: 30, left: 50, bottom: 30 }}>
-            <XAxis
-              type="number"
-              dataKey="time"
-              interval="preserveStartEnd"
-              domain={[
-                parseFloat(Number(LOWER_LIMIT).toFixed(2)),
-                parseFloat(Number(UPPER_LIMIT).toFixed(2)),
-              ]}
-              tickLine={{ transform: "translate(0, -6)" }}
-              label={{
-                value: "Predicted Runtime (ms)",
-                position: "insideBottom",
-                offset: -15,
-              }}
-            />
-
-            <YAxis
-              type="number"
-              dataKey="index"
-              name="Server Grade"
-              width={80}
-              tick={false}
-              tickLine={false}
-              axisLine={false}
-              label={{ value: "Server Grade", position: "insideTopRight" }}
-            />
-            <ZAxis type="number" dataKey="size" range={[0, 250]} />
-            <Tooltip
-              cursor={{ strokeDasharray: "3 3" }}
-              wrapperStyle={{ zIndex: 100 }}
-              content={renderTooltip}
-            />
-            <Scatter data={habitatServerCards} fill={color}>
-              <LabelList dataKey="card" content={renderCustomizedLabel} />
-            </Scatter>
-          </ScatterChart>
-        </ResponsiveContainer>
-      </div>
+          <YAxis
+            type="number"
+            dataKey="index"
+            name="Server Grade"
+            domain={[0,NUMBER_OF_COLUMNS+1]}
+            width={80}
+            tick={false}
+            tickLine={false}
+            axisLine={false}
+            label={{ value: "GPU cards", position: "insideTopRight" }}
+          />
+          <ZAxis type="number" dataKey="size" range={[0, 250]} />
+          <Tooltip
+            cursor={{ strokeDasharray: "3 3" }}
+            wrapperStyle={{ zIndex: 100 }}
+            content={renderTooltip}
+          />
+          <Scatter
+            name="workstation card"
+            data={habitatConsumerCards}
+            fill="rgb(255, 99, 132)"
+          >
+            <LabelList dataKey="card" content={renderCustomizedLabel} />
+          </Scatter>
+          <Scatter
+            name="server card"
+            data={habitatServerCards}
+            fill="rgb(53, 162, 235)"
+          >
+            <LabelList dataKey="card" content={renderCustomizedLabel} />
+          </Scatter>
+          <Scatter
+            name="local card"
+            data={sourceInHabitat}
+            fill="rgb( 155, 89, 182)"
+          >
+            <LabelList dataKey="card" content={renderCustomizedLabel} />
+          </Scatter>
+          <Legend verticalAlign="top" align="left" height={60} />
+        </ScatterChart>
+      </ResponsiveContainer>
     </>
   );
 };
