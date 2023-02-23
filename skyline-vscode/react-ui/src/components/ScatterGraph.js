@@ -136,11 +136,10 @@ export const HabitatScatterGraph = ({ habitatData, height, color }) => {
     const { x, y, width, height, value } = props;
     console.log(x, y, width, height, value);
     const y_offset = 5;
-
     return (
-        <text x={x + width / 2} y={y - y_offset} fontSize={10}>
-          {value}
-        </text>
+      <text x={x + width / 2} y={y - y_offset}>
+        {value}
+      </text>
     );
   };
 
