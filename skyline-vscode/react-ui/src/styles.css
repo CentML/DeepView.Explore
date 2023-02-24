@@ -313,7 +313,8 @@ atom-overlay.innpv-contexthighlight-overlay {
 }
 .innpv-perfbarcontainer-wrap {
   display: flex;
-  height: 100%;
+  height: 70vh;
+  /* overflow: auto; */
 }
 .innpv-perfbarcontainer {
   height: 100%;
@@ -443,11 +444,12 @@ atom-overlay.innpv-contexthighlight-overlay {
 }
 .innpv-contents-subrows {
   display: flex;
-  height: 100%;
+  height: 70vh;
   width: 100%;
   flex-direction: column;
   transition-property: opacity;
   transition-duration: 0.3s;
+  overflow: auto;
 }
 .innpv-contents-subrows .innpv-subpanel:first-child {
   border-bottom: 1px solid #eee;

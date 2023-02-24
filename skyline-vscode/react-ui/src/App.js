@@ -2,7 +2,7 @@ import "./App.css";
 import "./styles.css";
 
 import React, { useState } from "react";
-import { Button, Stack, Tab, Tabs, Container, Row, Col } from "react-bootstrap";
+import { Button, Stack, Tab, Tabs, Container, Row, Col, Spinner } from "react-bootstrap";
 
 import Habitat from "./sections/Habitat";
 import DeploymentTab from "./sections/DeploymentTab";
@@ -24,6 +24,7 @@ function App() {
   const [timeBreakDown, setTimeBreakdown] = useState([]);
   const [numIterations, setNumIterations] = useState(100000);
   const [model, setModel] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const processAnalysisState = function (state) {
     setAnalysisState(state);
@@ -41,22 +42,33 @@ function App() {
     }
   };
 
+  const waitingTime = () => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, 800);
+  };
+
   const setData = (model) => {
     switch (model) {
       case "resnet":
         processAnalysisState(resnet_data);
+        waitingTime();
         setModel("resnet");
         break;
       case "transformer":
         processAnalysisState(transformer_data);
+        waitingTime();
         setModel("transformer");
         break;
       case "roberta":
         processAnalysisState(roberta_data);
+        waitingTime();
         setModel("roberta");
         break;
       case "gpt-j":
         processAnalysisState(gpt_j_data);
+        waitingTime();
         setModel("gpt-j");
         break;
       default:
@@ -107,7 +119,15 @@ function App() {
             </Stack>
           </Col>
         </Row>
-        {model && (
+        {loading && (
+          <Row className="mt-5">
+            <div style={{ display: "flex", flexDirection:'column', justifyContent: "center", alignItems:'center' }}>
+            <h6>Loading</h6>
+            <Spinner animation="border" variant="primary" style={{width:'5rem', height:'5rem', marginTop:'1.5rem'}}/>
+            </div>
+          </Row>
+        )}
+        {model && !loading && (
           <div>
             <Iterations setNumIterations={setNumIterations} />
             <br></br>
@@ -133,9 +153,7 @@ function App() {
                     <ReactTooltip type="info" effect="float" html={true} />
                   </div>
                   <div className="innpv-contents-subrows">
-                    <MemThroughputContainer
-                      analysisState={analysisState}
-                    />
+                    <MemThroughputContainer analysisState={analysisState} />
                     <Habitat habitatData={analysisState["habitat"]} />
                     <EnergyConsumption
                       energyData={analysisState["energy"]}
