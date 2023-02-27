@@ -1,21 +1,29 @@
 import React, { useState, useEffect } from "react";
 import Subheader from "../components/Subheader";
-import {ProviderScatterGraph} from "../components/ScatterGraph";
+import { ProviderScatterGraph } from "../components/ScatterGraph";
 
-import Badge from 'react-bootstrap/Badge';
-import ButtonGroup from 'react-bootstrap/ButtonGroup';
-import Card from 'react-bootstrap/Card';
-import CardGroup from 'react-bootstrap/CardGroup';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import ToggleButton from 'react-bootstrap/ToggleButton';
-import Col from 'react-bootstrap/Col';
-import Image from 'react-bootstrap/Image';
-import Table from 'react-bootstrap/Table';
-import Form from 'react-bootstrap/Form';
+import Badge from "react-bootstrap/Badge";
+import ButtonGroup from "react-bootstrap/ButtonGroup";
+import Card from "react-bootstrap/Card";
+import CardGroup from "react-bootstrap/CardGroup";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import ToggleButton from "react-bootstrap/ToggleButton";
+import Col from "react-bootstrap/Col";
+import Image from "react-bootstrap/Image";
+import Table from "react-bootstrap/Table";
+import Form from "react-bootstrap/Form";
 
-import { cloudInstances, gpuPropertyList, cloudProviders } from "../data/providers";
-import { calculate_training_time,numberFormat,currencyFormat } from "../utils/utils";
+import {
+  cloudInstances,
+  gpuPropertyList,
+  cloudProviders,
+} from "../data/providers";
+import {
+  calculate_training_time,
+  numberFormat,
+  currencyFormat,
+} from "../utils/utils";
 
 const highlightColor = "#9b59b6";
 const normalSize = 200;
@@ -277,38 +285,38 @@ const ProviderPanel = ({ numIterations, habitatData }) => {
                                 {providerPanelSettings.clicked.info.instance}
                               </h1>
                               <Badge>
-                                {`Estimated Cost: ${currencyFormat(providerPanelSettings.estimated_cost)}`}
+                                {`Estimated Cost: ${currencyFormat(
+                                  providerPanelSettings.estimated_cost
+                                )}`}
                               </Badge>
                               <p>
-                              <Badge bg="success">
-                                {`Estimated Training Time: ${numberFormat(providerPanelSettings.estimated_time)} Hours`}
-                              </Badge>
+                                <Badge bg="success">
+                                  {`Estimated Training Time: ${numberFormat(
+                                    providerPanelSettings.estimated_time
+                                  )} Hours`}
+                                </Badge>
                               </p>
                             </Col>
                           </Row>
                         </Card.Title>
-                          <Table bordered hover>
-                            <thead>
-                              <tr>
-                                <th>GPU</th>
-                                <th>Num. GPU</th>
-                                <th>VRAM</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <tr>
-                                <th>
-                                  {providerPanelSettings.clicked.info.gpu}
-                                </th>
-                                <th>
-                                  {providerPanelSettings.clicked.info.ngpus}
-                                </th>
-                                <th>
-                                  {providerPanelSettings.clicked.vmem} GB
-                                </th>
-                              </tr>
-                            </tbody>
-                          </Table>
+                        <Table bordered hover>
+                          <thead>
+                            <tr>
+                              <th>GPU</th>
+                              <th>Num. GPU</th>
+                              <th>VRAM</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <th>{providerPanelSettings.clicked.info.gpu}</th>
+                              <th>
+                                {providerPanelSettings.clicked.info.ngpus}
+                              </th>
+                              <th>{providerPanelSettings.clicked.vmem} GB</th>
+                            </tr>
+                          </tbody>
+                        </Table>
                       </Card.Body>
                     </Card>
                   </CardGroup>

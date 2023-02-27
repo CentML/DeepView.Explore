@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import Alert from 'react-bootstrap/Alert';
-import Badge from 'react-bootstrap/Badge';
-import Container from 'react-bootstrap/Container';
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
+import Alert from "react-bootstrap/Alert";
+import Badge from "react-bootstrap/Badge";
+import Container from "react-bootstrap/Container";
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
 import styled from "styled-components";
 import BarSlider from "../components/BarSlider";
 import Subheader from "../components/Subheader";
@@ -227,15 +227,15 @@ const Wrapper = styled.main`
     justify-content: space-between;
     align-items: center;
     @media (max-width: 1000px) {
-      line-height:0.5;
+      line-height: 0.5;
       flex-direction: column;
       align-items: flex-start;
     }
   }
-  .memory-title{
+  .memory-title {
     @media (max-width: 1000px) {
-      margin-top:0.25rem;
-      margin-bottom:0.4rem;
+      margin-top: 0.25rem;
+      margin-bottom: 0.4rem;
     }
   }
 `;
