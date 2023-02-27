@@ -6,8 +6,8 @@ import {
   YAxis,
   Tooltip,
   Bar,
-  Label,
 } from "recharts";
+
 
 export const HorizontalBarGraph = ({ data, height, xlabel, ylabel, color }) => {
   let upperLimit = 0;

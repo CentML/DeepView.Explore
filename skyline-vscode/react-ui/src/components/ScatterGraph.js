@@ -12,6 +12,7 @@ import {
   Tooltip,
   LabelList,
 } from "recharts";
+
 import { calculate_training_time, currencyFormat } from "../utils/utils";
 import { gpuPropertyList } from "../data/providers";
 
@@ -134,7 +135,6 @@ export const HabitatScatterGraph = ({ habitatData, height }) => {
 
   const renderCustomizedLabel = (props) => {
     const { x, y, width, height, value } = props;
-    console.log(x, y, width, height, value);
     const y_offset = 5;
     return (
       <text x={x + width / 2} y={y - y_offset} fill="#1c2833"
@@ -182,7 +182,6 @@ export const HabitatScatterGraph = ({ habitatData, height }) => {
       });
     }
   });
-  console.log(sourceInHabitat)
 
   const UPPER_LIMIT =
     1.2 * habitatData.reduce((a, b) => Math.max(a, b[1]), -Infinity);

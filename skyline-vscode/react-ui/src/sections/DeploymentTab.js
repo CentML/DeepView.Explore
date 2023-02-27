@@ -1,11 +1,9 @@
 import ProviderPanel from "./ProviderPanel";
-import {
-  Row,
-  Container,
-  Card,
-  Spinner,
-  Badge
-} from "react-bootstrap";
+import Row from 'react-bootstrap/Row'
+import Container from 'react-bootstrap/Container'
+import Card from 'react-bootstrap/Card'
+import Spinner from 'react-bootstrap/Spinner'
+import Badge from 'react-bootstrap/Badge'
 import React from "react";
 import { numberFormat } from "../utils/utils";
 

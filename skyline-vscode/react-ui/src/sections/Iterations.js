@@ -1,5 +1,9 @@
 import React, { useState } from "react";
-import { Row, Col, Button, Form, FloatingLabel } from "react-bootstrap";
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import styled from "styled-components";
 import { numberFormat } from "../utils/utils";
 

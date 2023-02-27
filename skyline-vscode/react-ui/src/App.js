@@ -2,7 +2,12 @@ import "./App.css";
 import "./styles.css";
 
 import React, { useState, useEffect } from "react";
-import { Alert, Button, Card, Tab, Tabs, Container } from "react-bootstrap";
+import Alert from 'react-bootstrap/Alert'
+import Button from 'react-bootstrap/Button'
+import Card from 'react-bootstrap/Card'
+import Tab from 'react-bootstrap/Tab'
+import Tabs from 'react-bootstrap/Tabs'
+import Container from 'react-bootstrap/Container'
 
 import ProjectInfo from "./components/ProjectInfo";
 import Habitat from "./sections/Habitat";

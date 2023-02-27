@@ -1,7 +1,9 @@
 import React from "react";
-
 import Subheader from "../components/Subheader";
-import { Container, Row,Spinner, Card } from "react-bootstrap";
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Spinner from 'react-bootstrap/Spinner';
+import Card from 'react-bootstrap/Card';
 import { HabitatScatterGraph } from "../components/ScatterGraph";
 
 export default function Habitat({ habitatData }) {

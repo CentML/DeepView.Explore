@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Alert, Badge, Container, Col, Row, Button } from "react-bootstrap";
+import Alert from 'react-bootstrap/Alert';
+import Badge from 'react-bootstrap/Badge';
+import Container from 'react-bootstrap/Container';
+import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';
 import styled from "styled-components";
 import BarSlider from "../components/BarSlider";
 import Subheader from "../components/Subheader";

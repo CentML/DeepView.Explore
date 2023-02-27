@@ -1,6 +1,10 @@
 import React,{useState} from "react";
 import ProjectInfo from "../components/ProjectInfo";
-import {Button, Card, Container, Image, Stack } from "react-bootstrap";
+import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
+import Container from 'react-bootstrap/Container';
+import Image from 'react-bootstrap/Image';
+import Stack from 'react-bootstrap/Stack';
 
 const WelcomeScreen = ({analysisState, vscodeApi}) => {
   const [btn_clicked,setBtn_clicked] = useState(false);

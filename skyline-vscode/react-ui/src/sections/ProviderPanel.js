@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from "react";
 import Subheader from "../components/Subheader";
 import {ProviderScatterGraph} from "../components/ScatterGraph";
-import {
-  Badge,
-  ButtonGroup,
-  Card,
-  CardGroup,
-  Container,
-  Row,
-  ToggleButton,
-  Col,
-  Image,
-  Table,
-  Form,
-} from "react-bootstrap";
+
+import Badge from 'react-bootstrap/Badge';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import Card from 'react-bootstrap/Card';
+import CardGroup from 'react-bootstrap/CardGroup';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import ToggleButton from 'react-bootstrap/ToggleButton';
+import Col from 'react-bootstrap/Col';
+import Image from 'react-bootstrap/Image';
+import Table from 'react-bootstrap/Table';
+import Form from 'react-bootstrap/Form';
 
 import { cloudInstances, gpuPropertyList, cloudProviders } from "../data/providers";
 import { calculate_training_time,numberFormat,currencyFormat } from "../utils/utils";
