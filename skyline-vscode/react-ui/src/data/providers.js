@@ -258,7 +258,7 @@ export const cloudProviders = {
   },
   azure: {
     name: "Microsoft Azure",
-    logo: "resources/azure.jpg",
+    logo: "resources/azure.png",
     color: "#008AD7",
   },
   aws: {

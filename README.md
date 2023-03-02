@@ -2,6 +2,9 @@
 
 ![Demo GIF](https://raw.githubusercontent.com/CentML/mltools-vscode/jun07-usability-improvements/images/demo.gif)
 
+## Documentation
+https://docs.centml.ai/index.html
+
 ## Installation
 Installation consists of two parts: the front-end UI (this repository) and [Skyline](https://github.com/CentML/skyline) (the backend), which needs to be installed separately.
 
