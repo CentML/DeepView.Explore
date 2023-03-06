@@ -12,6 +12,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 	let disposable = vscode.commands.registerCommand('skyline-vscode.cmd_begin_analyze', () => {
 			let vsconfig = vscode.workspace.getConfiguration('skyline');
+			console.log("GAAAAAAAAAAAAAAAAAA",vsconfig);
 
 			let options: vscode.OpenDialogOptions = {
 				canSelectFiles: false,
@@ -44,6 +45,7 @@ export function activate(context: vscode.ExtensionContext) {
 					projectRoot: 	uri[0].fsPath,
 					addr: 			vsconfig.address,
 					port: 			vsconfig.port,
+					providers:		vsconfig.providers,
 					webviewPanel: 	panel
 				};
 

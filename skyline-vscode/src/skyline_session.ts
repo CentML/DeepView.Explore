@@ -16,6 +16,7 @@ export interface SkylineSessionOptions {
     projectRoot: string;
     addr: string;
     port: number;
+    providers: string;
     webviewPanel: vscode.WebviewPanel
 }
 
@@ -28,6 +29,7 @@ export class SkylineSession {
     connection: Socket;
     port: number;
     addr: string;
+    providers:string;
     seq_num: number;
     last_length: number;
     message_buffer: Uint8Array;
@@ -55,15 +57,17 @@ export class SkylineSession {
     reactProjectRoot: string;
 
     constructor(options: SkylineSessionOptions, environ: SkylineEnvironment) {
-        console.log("SkylineSession instantiated");
+        console.log("SkylineSession instantiated !!!!");
 
         this.resetBackendConnection = false;
         this.connection = new Socket();
         this.connection.on('connect', this.on_connect.bind(this));
         this.connection.on('data', this.on_data.bind(this));
         this.connection.on('close', this.on_close_connection.bind(this));
-        this.port = options.port
-        this.addr = options.addr
+        this.port = options.port;
+        this.addr = options.addr;
+        this.providers = options.providers;
+        console.log("port",this.port,"address", this.addr,"file",this.providers);
 
         this.seq_num = 0;
         this.last_length = -1;
@@ -106,7 +110,8 @@ export class SkylineSession {
     on_connect() {
         let connectionMessage = {
             "message_type": "connection",
-            "status": true
+            "status": true,
+            "file": this.providers
         };
         this.webviewPanel.webview.postMessage(connectionMessage);
     }  
@@ -361,7 +366,7 @@ export class SkylineSession {
 				<meta name="theme-color" content="#000000">
 				<title>Skyline</title>
 				<link rel="stylesheet" type="text/css" href="${styleUri}">
-				<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src vscode-resource: https:; script-src 'nonce-${nonce}';style-src vscode-resource: 'unsafe-inline' http: https: data:;">
+				<meta http-equiv="Content-Security-Policy" content="default-src 'none'; connect-src *; img-src vscode-resource: https:; script-src 'nonce-${nonce}';style-src vscode-resource: 'unsafe-inline' http: https: data:;">
 				<base href="${ buildUri }/">
 			</head>
 			<body>

@@ -66,6 +66,7 @@ function App() {
   const [numIterations, setNumIterations] = useState(100000);
 
   App.vscodeApi = vscodeApi;
+  console.log(vscodeApi);
 
   const resetApp = function () {
     setErrorText("");
@@ -102,6 +103,7 @@ function App() {
     window.addEventListener("message", (event) => {
       if (event.data["message_type"] === "connection") {
         setConnectionStatus(event.data["status"]);
+        console.log("IM HERE",event.data["file"]);
       } else if (event.data["message_type"] === "analysis") {
         processAnalysisState(event.data);
       } else if (event.data["message_type"] === "text_change") {

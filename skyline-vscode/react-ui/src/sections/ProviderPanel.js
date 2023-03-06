@@ -25,6 +25,8 @@ import {
   currencyFormat,
 } from "../utils/utils";
 
+import {loadYamlFile} from '../utils/parsers';
+
 const highlightColor = "#9b59b6";
 const normalSize = 200;
 const highlightSize = 280;
@@ -58,7 +60,7 @@ const populate_initial_data = (habitatData) => {
 
 const ProviderPanel = ({ numIterations, habitatData }) => {
   const [providerPanelSettings, setProviderPanelSettings] = useState({
-    plotData: populate_initial_data(habitatData),
+    plotData: null,
     nearest: null,
     clicked: null,
     maxNumGpu: 0,
@@ -170,171 +172,183 @@ const ProviderPanel = ({ numIterations, habitatData }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [numIterations]);
 
+  useEffect(async()=>{
+    const data = await loadYamlFile();
+    console.log(data)
+    setProviderPanelSettings(prevState=>({
+      ...prevState,
+      plotData: populate_initial_data(habitatData)
+    }))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[])
+
   return (
     <>
+      {providerPanelSettings.plotData && cloudInstances && gpuPropertyList && cloudProviders ? 
       <div className="innpv-memory innpv-subpanel">
-        <Subheader icon="database">Providers</Subheader>
-        <Container fluid>
-          <Row>
-            <Col xl={12} xxl={8}>
-              <Row>
-                <Row className="mt-4 mb-2">
-                  <Col>
-                    <div>
-                      <h6>Filter by provider</h6>
-                      <Form.Select
-                        onChange={(e) =>
-                          handleFilterChange("provider", e.target.value)
-                        }
-                      >
-                        <option value="all">All</option>
-                        {Object.keys(cloudProviders).map((provider, index) => {
-                          return (
-                            <option key={`${index}`} value={provider}>
-                              {provider}
-                            </option>
-                          );
-                        })}
-                      </Form.Select>
-                    </div>
-                  </Col>
-                  <Col>
-                    <div>
-                      <h6>Filter by GPU</h6>
-                      <Form.Select
-                        onChange={(e) =>
-                          handleFilterChange("gpu", e.target.value)
-                        }
-                      >
-                        <option value="all">All</option>
-                        {[...gpuList].map((gpu, index) => {
-                          return (
-                            <option key={`${index}`} value={gpu}>
-                              {gpu}
-                            </option>
-                          );
-                        })}
-                      </Form.Select>
-                    </div>
-                  </Col>
-                  <Col>
-                    <div>
-                      <h6>Filter Max Number of GPUs:</h6>
-                      <ButtonGroup className="me-2">
-                        {MAX_GPU.map((numgpu) => (
-                          <ToggleButton
-                            key={numgpu}
-                            id={`radio-${numgpu}`}
-                            type="radio"
-                            variant={
-                              numgpu === providerPanelSettings.maxNumGpu
-                                ? "primary"
-                                : "light"
-                            }
-                            name="radio"
-                            size="sm"
-                            value={numgpu}
-                            checked={numgpu === providerPanelSettings.maxNumGpu}
-                            onChange={(e) =>
-                              handleFilterChange(
-                                "numGpus ",
-                                e.currentTarget.value
-                              )
-                            }
-                          >
-                            {numgpu === 0 ? "all" : numgpu}
-                          </ToggleButton>
-                        ))}
-                      </ButtonGroup>
-                    </div>
-                  </Col>
-                </Row>
-                <Row className="pb-4">
-                  <ProviderScatterGraph
-                    data={providerPanelSettings.plotData}
-                    onClickHandler={onClickConfig}
-                    xlabel={"Total Training time (hrs)"}
-                    ylabel={"Total Cost (US dollars)"}
-                    providers={cloudProviders}
-                    numIterations={numIterations}
-                  />
-                </Row>
+      <Subheader icon="database">Providers</Subheader>
+      <Container fluid>
+        <Row>
+          <Col xl={12} xxl={8}>
+            <Row>
+              <Row className="mt-4 mb-2">
+                <Col>
+                  <div>
+                    <h6>Filter by provider</h6>
+                    <Form.Select
+                      onChange={(e) =>
+                        handleFilterChange("provider", e.target.value)
+                      }
+                    >
+                      <option value="all">All</option>
+                      {Object.keys(cloudProviders).map((provider, index) => {
+                        return (
+                          <option key={`${index}`} value={provider}>
+                            {provider}
+                          </option>
+                        );
+                      })}
+                    </Form.Select>
+                  </div>
+                </Col>
+                <Col>
+                  <div>
+                    <h6>Filter by GPU</h6>
+                    <Form.Select
+                      onChange={(e) =>
+                        handleFilterChange("gpu", e.target.value)
+                      }
+                    >
+                      <option value="all">All</option>
+                      {[...gpuList].map((gpu, index) => {
+                        return (
+                          <option key={`${index}`} value={gpu}>
+                            {gpu}
+                          </option>
+                        );
+                      })}
+                    </Form.Select>
+                  </div>
+                </Col>
+                <Col>
+                  <div>
+                    <h6>Filter Max Number of GPUs:</h6>
+                    <ButtonGroup className="me-2">
+                      {MAX_GPU.map((numgpu) => (
+                        <ToggleButton
+                          key={numgpu}
+                          id={`radio-${numgpu}`}
+                          type="radio"
+                          variant={
+                            numgpu === providerPanelSettings.maxNumGpu
+                              ? "primary"
+                              : "light"
+                          }
+                          name="radio"
+                          size="sm"
+                          value={numgpu}
+                          checked={numgpu === providerPanelSettings.maxNumGpu}
+                          onChange={(e) =>
+                            handleFilterChange(
+                              "numGpus ",
+                              e.currentTarget.value
+                            )
+                          }
+                        >
+                          {numgpu === 0 ? "all" : numgpu}
+                        </ToggleButton>
+                      ))}
+                    </ButtonGroup>
+                  </div>
+                </Col>
               </Row>
-            </Col>
-            <Col xl={12} xxl={4} className="mb-4">
-              <div className="innpv-memory innpv-subpanel">
-                <Subheader icon="database">Deployment Plan</Subheader>
-                {providerPanelSettings.clicked && (
-                  <CardGroup>
-                    <Card>
-                      <Card.Body>
-                        <Card.Title>
-                          <Row>
-                            <Col xs={3}>
-                              <Image
-                                src={
-                                  cloudProviders[
-                                    providerPanelSettings.clicked.info.provider
-                                  ].logo
-                                }
-                                width="75px"
-                              ></Image>
-                            </Col>
-                            <Col xs={9}>
-                              <h1>
-                                {providerPanelSettings.clicked.info.instance}
-                              </h1>
-                              <Badge>
-                                {`Estimated Cost: ${currencyFormat(
-                                  providerPanelSettings.estimated_cost
-                                )}`}
+              <Row className="pb-4">
+                <ProviderScatterGraph
+                  data={providerPanelSettings.plotData}
+                  onClickHandler={onClickConfig}
+                  xlabel={"Total Training time (hrs)"}
+                  ylabel={"Total Cost (US dollars)"}
+                  providers={cloudProviders}
+                  numIterations={numIterations}
+                />
+              </Row>
+            </Row>
+          </Col>
+          <Col xl={12} xxl={4} className="mb-4">
+            <div className="innpv-memory innpv-subpanel">
+              <Subheader icon="database">Deployment Plan</Subheader>
+              {providerPanelSettings.clicked && (
+                <CardGroup>
+                  <Card>
+                    <Card.Body>
+                      <Card.Title>
+                        <Row>
+                          <Col xs={3}>
+                            <Image
+                              src={
+                                cloudProviders[
+                                  providerPanelSettings.clicked.info.provider
+                                ].logo
+                              }
+                              width="75px"
+                            ></Image>
+                          </Col>
+                          <Col xs={9}>
+                            <h1>
+                              {providerPanelSettings.clicked.info.instance}
+                            </h1>
+                            <Badge>
+                              {`Estimated Cost: ${currencyFormat(
+                                providerPanelSettings.estimated_cost
+                              )}`}
+                            </Badge>
+                            <p>
+                              <Badge bg="success">
+                                {`Estimated Training Time: ${numberFormat(
+                                  providerPanelSettings.estimated_time
+                                )} Hours`}
                               </Badge>
-                              <p>
-                                <Badge bg="success">
-                                  {`Estimated Training Time: ${numberFormat(
-                                    providerPanelSettings.estimated_time
-                                  )} Hours`}
-                                </Badge>
-                              </p>
-                            </Col>
-                          </Row>
-                        </Card.Title>
-                        <Table bordered hover>
-                          <thead>
-                            <tr>
-                              <th>GPU</th>
-                              <th>Num. GPU</th>
-                              <th>VRAM</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr>
-                              <th>{providerPanelSettings.clicked.info.gpu}</th>
-                              <th>
-                                {providerPanelSettings.clicked.info.ngpus}
-                              </th>
-                              <th>{providerPanelSettings.clicked.vmem} GB</th>
-                            </tr>
-                          </tbody>
-                        </Table>
-                      </Card.Body>
-                    </Card>
-                  </CardGroup>
-                )}
-                {providerPanelSettings.clicked == null && (
-                  <CardGroup>
-                    <Card>
-                      <Card.Body>
-                        <Card.Title>Select a configuration.</Card.Title>
-                      </Card.Body>
-                    </Card>
-                  </CardGroup>
-                )}
-              </div>
-            </Col>
-          </Row>
-        </Container>
-      </div>
+                            </p>
+                          </Col>
+                        </Row>
+                      </Card.Title>
+                      <Table bordered hover>
+                        <thead>
+                          <tr>
+                            <th>GPU</th>
+                            <th>Num. GPU</th>
+                            <th>VRAM</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <th>{providerPanelSettings.clicked.info.gpu}</th>
+                            <th>
+                              {providerPanelSettings.clicked.info.ngpus}
+                            </th>
+                            <th>{providerPanelSettings.clicked.vmem} GB</th>
+                          </tr>
+                        </tbody>
+                      </Table>
+                    </Card.Body>
+                  </Card>
+                </CardGroup>
+              )}
+              {providerPanelSettings.clicked == null && (
+                <CardGroup>
+                  <Card>
+                    <Card.Body>
+                      <Card.Title>Select a configuration.</Card.Title>
+                    </Card.Body>
+                  </Card>
+                </CardGroup>
+              )}
+            </div>
+          </Col>
+        </Row>
+      </Container>
+    </div>
+    :<div>Loading</div>}
     </>
   );
 };
