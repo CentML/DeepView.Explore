@@ -15,13 +15,14 @@ import DeploymentTab from "./sections/DeploymentTab";
 import WelcomeScreen from "./sections/WelcomeScreen";
 import PerfBarContainer from "./sections/PerfBarContainer";
 
-import ReactTooltip from "react-tooltip";
+// import ReactTooltip from "react-tooltip";
 
 import { computePercentage, getTraceByLevel } from "./utils/utils";
 import { profiling_data } from "./data/mock_data";
 import EnergyConsumption from "./sections/EnergyConsumption";
 import Iterations from "./sections/Iterations";
 import MemThroughputContainer from "./sections/MemThroughputContainer";
+import GpuUtilization from "./sections/GpuUtilization";
 
 // https://stackoverflow.com/questions/54135313/webview-extension-in-typescript
 /**
@@ -53,12 +54,12 @@ function restartProfiling() {
   });
 }
 
-const sendMock = false;
+const sendMock = true;
 
 function App() {
   const [analysisState, setAnalysisState] = useState();
   const [textChanged, setTextChanged] = useState(false);
-  const [timeBreakDown, setTimeBreakdown] = useState([]);
+  const [timeBreakDown, setTimeBreakdown] = useState({});
 
   const [vscodeApi, setVscodeApi] = useState(acquireApi());
   const [errorText, setErrorText] = useState();
@@ -94,7 +95,7 @@ function App() {
         ),
         fine: computePercentage(fine, state.breakdown.iteration_run_time_ms),
       });
-      ReactTooltip.rebuild();
+      // ReactTooltip.rebuild();
     }
   };
 
@@ -202,7 +203,7 @@ function App() {
                     }
                     renderPerfBars={timeBreakDown.fine}
                   />
-                  <ReactTooltip type="info" effect="float" html={true} />
+                  {/* <ReactTooltip type="info" effect="float" html={true} /> */}
                 </div>
                 <div className="innpv-contents-subrows">
                   <MemThroughputContainer
@@ -216,6 +217,9 @@ function App() {
                   />
                 </div>
               </div>
+            </Tab>
+            <Tab eventKey="gpu" title="GPU Utilization">
+                    <GpuUtilization layers={timeBreakDown.fine} />
             </Tab>
             <Tab eventKey="deploy" title="Deployment">
               <DeploymentTab

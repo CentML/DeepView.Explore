@@ -16,7 +16,9 @@ const PerfBar = (
   onActiveChange = (isActive) => {},
   percentage,
   updateMarginTop,
-  colorClass}
+  colorClass,
+elem,
+index}
 ) => {
 
   const [lastClick, setLastClick] = useState(0);
@@ -89,6 +91,8 @@ const PerfBar = (
       handleGrow={handleIncrease}
       handleSnapBack={handleRestore}
       tooltipHTML={tooltipHTML}
+      elem={elem}
+      index={index}
     >
       <div
         className={`innpv-perfbar ${colorClass}`}

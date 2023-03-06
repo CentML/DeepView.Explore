@@ -45,6 +45,7 @@ const PerfBarContainer = ({
             return (
               <MemoryPerfBar
                 key={`${elem["name"]}_${idx}`}
+                index={idx}
                 elem={elem}
                 isActive={true}
                 label={elem["name"]}
@@ -56,17 +57,17 @@ const PerfBarContainer = ({
                     ? "innpv-untracked-color"
                     : "innpv-blue-color-" + ((idx % 5) + 1)
                 }
-                tooltipHTML={
-                  elem["name"] === "untracked"
-                    ? `<b>Untracked</b><br>Time: ${
-                        Math.round(elem["total_time"] * 100) / 100
-                      }ms`
-                    : `<b>${elem["name"]}</b><br>Forward: ${
-                        Math.round(elem["forward_ms"] * 100) / 100
-                      }ms<br>Backward: ${
-                        Math.round(elem["backward_ms"] * 100) / 100
-                      }ms`
-                }
+                // tooltipHTML={
+                //   elem["name"] === "untracked"
+                //     ? `<b>Untracked</b><br>Time: ${
+                //         Math.round(elem["total_time"] * 100) / 100
+                //       }ms`
+                //     : `<b>${elem["name"]}</b><br>Forward: ${
+                //         Math.round(elem["forward_ms"] * 100) / 100
+                //       }ms<br>Backward: ${
+                //         Math.round(elem["backward_ms"] * 100) / 100
+                //       }ms<br> GPU utilization: 50%`
+                // }
               />
             );
           })}
