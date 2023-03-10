@@ -7,6 +7,7 @@ const fs = require('fs');
 import {Socket} from 'net';
 import { simpleDecoration } from './decorations';
 import { energy_component_type_mapping } from './utils';
+import { AnalyticsManager } from './analytics/AnalyticsManager';
 
 const crypto = require('crypto');
 const resolve = require('path').resolve;
@@ -54,6 +55,9 @@ export class SkylineSession {
     // Environment
     reactProjectRoot: string;
 
+    // Analytics
+    analyticsManager: AnalyticsManager;
+
     constructor(options: SkylineSessionOptions, environ: SkylineEnvironment) {
         console.log("SkylineSession instantiated");
 
@@ -75,6 +79,8 @@ export class SkylineSession {
 
         this.root_dir = options.projectRoot;
         this.reactProjectRoot = environ.reactProjectRoot;
+
+        this.analyticsManager = new AnalyticsManager();
 
         this.webviewPanel.webview.onDidReceiveMessage(this.webview_handle_message.bind(this));
         this.webviewPanel.onDidDispose(this.disconnect.bind(this));
@@ -244,6 +250,8 @@ export class SkylineSession {
                     this.msg_energy = msg.getEnergy();
                     break;
             };
+
+            this.analyticsManager.handleEvents(msg);
 
             let json_msg = await this.generateStateJson();
             json_msg['message_type'] = 'analysis';
