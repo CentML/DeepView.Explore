@@ -22,7 +22,6 @@ import { profiling_data } from "./data/mock_data";
 import EnergyConsumption from "./sections/EnergyConsumption";
 import Iterations from "./sections/Iterations";
 import MemThroughputContainer from "./sections/MemThroughputContainer";
-import GpuUtilization from "./sections/GpuUtilization";
 
 // https://stackoverflow.com/questions/54135313/webview-extension-in-typescript
 /**
@@ -217,9 +216,6 @@ function App() {
                   />
                 </div>
               </div>
-            </Tab>
-            <Tab eventKey="gpu" title="GPU Utilization">
-                    <GpuUtilization layers={timeBreakDown.fine} />
             </Tab>
             <Tab eventKey="deploy" title="Deployment">
               <DeploymentTab

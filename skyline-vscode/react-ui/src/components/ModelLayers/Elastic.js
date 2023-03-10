@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import ReactTooltip from "react-tooltip";
 import ProgressBar from "react-bootstrap/ProgressBar";
 
+
 const DRAG_MAX_PCT = 0.2;
 const GAIN = 0.8;
 
@@ -120,11 +121,12 @@ const Elastic = ({
     paddingBottom: `${paddingBottom}px`,
   };
 
-  const calculateTooltipPosition = ({top,left}) =>{
-    const posLeft = left < 0 ? 40:left;
-    const posTop = Math.abs(window.innerHeight-top) < 100 ? window.innerHeight - 100: top;
-    return {top: posTop,left:posLeft}
-  }
+  const calculateTooltipPosition = ({ top, left }) => {
+    const posLeft = 40;
+    const posTop =
+      Math.abs(window.innerHeight - top) < 100 ? window.innerHeight - 100 : top;
+    return { top: posTop, left: posLeft };
+  };
 
   return (
     <>
@@ -141,14 +143,21 @@ const Elastic = ({
         <div className="innpv-elastic-inner" style={innerStyle}>
           {children}
         </div>
-        <ReactTooltip id={`${index}`} type="info" effect="float" place="right" arrowColor="transparent" overridePosition={calculateTooltipPosition}>
-          <div style={{display:'flex'}}>
+        <ReactTooltip
+          id={`${index}`}
+          type="info"
+          effect="float"
+          place="right"
+          arrowColor="transparent"
+          overridePosition={calculateTooltipPosition}
+        >
+          <div style={{ display: "flex" }}>
             <div>
               {elem["name"] === "untracked" ? (
                 <p>
                   <span style={{ display: "block" }}>Untracked</span>
                   <span style={{ display: "block" }}>
-                    Time: ${Math.round(elem["total_time"] * 100) / 100} ms
+                    Time: {Math.round(elem["total_time"] * 100) / 100} ms
                   </span>
                 </p>
               ) : (
@@ -163,7 +172,13 @@ const Elastic = ({
                 </p>
               )}
             </div>
-            <div style={{marginLeft:'0.5rem', paddingLeft:'0.5rem', borderLeft:'0.1rem solid #d5dbdb'}}>
+            <div
+              style={{
+                marginLeft: "0.5rem",
+                paddingLeft: "0.5rem",
+                borderLeft: "0.1rem solid #d5dbdb",
+              }}
+            >
               <p>GPU utilization</p>
               <ProgressBar variant="success" now={40} label="40%" />
             </div>
