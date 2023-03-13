@@ -258,7 +258,7 @@ export const cloudProviders = {
   },
   azure: {
     name: "Microsoft Azure",
-    logo: "resources/azure.jpg",
+    logo: "resources/azure.png",
     color: "#008AD7",
   },
   aws: {
@@ -269,15 +269,15 @@ export const cloudProviders = {
 }
 
 export const gpuPropertyList = [
-  { name: "p100", vmem: 16 },
-  { name: "p4000", vmem: 8 },
-  { name: "rtx2070", vmem: 8 },
-  { name: "rtx2080ti", vmem: 11 },
-  { name: "t4", vmem: 16 },
-  { name: "v100", vmem: 16 },
-  { name: "a100", vmem: 40 },
-  { name: "rtx3090", vmem: 24},
-  { name: "a40", vmem: 48},
-  { name: "a4000", vmem: 16},
-  { name: "rtx4000", vmem: 8}
+  { name: "p100", vmem: 16, type: "server" },
+  { name: "p4000", vmem: 8, type: "server" },
+  { name: "rtx2070", vmem: 8, type: "consumer" },
+  { name: "rtx2080ti", vmem: 11, type: "consumer" },
+  { name: "t4", vmem: 16, type: "server" },
+  { name: "v100", vmem: 16, type: "server" },
+  { name: "a100", vmem: 40, type: "server" },
+  { name: "rtx3090", vmem: 24, type: "consumer" },
+  { name: "a40", vmem: 48, type: "server" },
+  { name: "a4000", vmem: 16, type: "server" },
+  { name: "rtx4000", vmem: 8, type: "consumer" }
 ];

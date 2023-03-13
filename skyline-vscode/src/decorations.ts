@@ -1,5 +1,3 @@
-
-import { builtinModules } from 'module';
 import * as vscode from 'vscode';
 
 export const simpleDecoration = vscode.window.createTextEditorDecorationType({

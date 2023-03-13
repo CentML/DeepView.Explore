@@ -1,5 +1,11 @@
 import React from "react";
-import { Container, Row, Col, Spinner, Card, Badge } from "react-bootstrap";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Spinner from "react-bootstrap/Spinner";
+import Card from "react-bootstrap/Card";
+import Badge from "react-bootstrap/Badge";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faGlobeAmericas,
@@ -11,7 +17,7 @@ import styled from "styled-components";
 import Subheader from "../components/Subheader";
 import PieGraph from "../components/PieGraph";
 import StackedBarGraph from "../components/StackedBarGraph";
-import { energy_data, unitScale,numberFormat } from "../utils/utils";
+import { energy_data, unitScale, numberFormat } from "../utils/utils";
 
 const EnergyConsumption = ({ energyData, numIterations }) => {
   const cpu_color = "#5499c7";
@@ -130,7 +136,8 @@ const EnergyConsumption = ({ energyData, numIterations }) => {
           <Subheader icon="database">Energy and Environmental Impact</Subheader>
           {(piegraph_data || bargraph_data.length > 0) && (
             <h6>
-              Estimation for <Badge bg="secondary">{numberFormat(numIterations)}</Badge> total
+              Estimation for{" "}
+              <Badge bg="secondary">{numberFormat(numIterations)}</Badge> total
               iterations
             </h6>
           )}
@@ -212,22 +219,22 @@ const EnergyConsumption = ({ energyData, numIterations }) => {
                             />{" "}
                           </div>
                           <p>
-                            <strong>{conversions?.household[0]} x</strong> homes'
-                            energy use for one {conversions?.household[1]}
+                            <strong>{conversions?.household[0]} x</strong>{" "}
+                            homes' energy use for one{" "}
+                            {conversions?.household[1]}
                           </p>
                         </Col>
                         <small>
                           <p>
-                          {`Greenhouse gas equivalencies are based on calculations provided by `}
-                          <a
-                            href="
+                            {`Greenhouse gas equivalencies are based on calculations provided by `}
+                            <a
+                              href="
                           https://www.epa.gov/energy/greenhouse-gas-equivalencies-calculator"
-                            target="_blank"
-                          >
-                            the EPA
-                          </a>
+                              target="_blank"
+                            >
+                              the EPA
+                            </a>
                           </p>
-                          
                         </small>
                       </Row>
                     </Col>

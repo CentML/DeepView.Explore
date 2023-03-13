@@ -1,5 +1,9 @@
 import React, { useState } from "react";
-import { Button, Form, FloatingLabel } from "react-bootstrap";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
+import FloatingLabel from "react-bootstrap/FloatingLabel";
 import styled from "styled-components";
 import { numberFormat } from "../utils/utils";
 
@@ -15,13 +19,13 @@ const Iterations = ({ setNumIterations }) => {
     const name = e.target.name;
     let value = e.target.value;
     if (!value) {
-      setIterations((prevState)=>({ ...prevState, [name]: 0 }));
+      setIterations((prevState) => ({ ...prevState, [name]: 0 }));
       return;
     }
     const val = parseFloat(value);
 
     if (Number.isInteger(val)) {
-      setIterations((prevState)=>({ ...prevState, [name]: val }));
+      setIterations((prevState) => ({ ...prevState, [name]: val }));
       setMessage(null);
     } else {
       setMessage("You must only use integer numbers");
@@ -36,14 +40,15 @@ const Iterations = ({ setNumIterations }) => {
       iterations.iterPerEpoch &&
       Number.isInteger(iterations.iterPerEpoch)
     ) {
-        if(iterations.epochs * iterations.iterPerEpoch>=1e21){
-            setMessage("The total number of iterations should be less than 1e21");
-        }
-      else{
+      if (iterations.epochs * iterations.iterPerEpoch >= 1e21) {
+        setMessage("The total number of iterations should be less than 1e21");
+      } else {
         setEstimation(true);
         setNumIterations(iterations.epochs * iterations.iterPerEpoch);
         setMessage(null);
-        setTimeout(()=>{setEstimation(false)},2000);
+        setTimeout(() => {
+          setEstimation(false);
+        }, 2000);
       }
     }
   };
@@ -51,63 +56,79 @@ const Iterations = ({ setNumIterations }) => {
   return (
     <>
       <Wrapper>
-      <div className="innpv-memory innpv-subpanel">
-        <div className="innpv-subpanel-content">
-          <Form onSubmit={handleSubmit} className="mt-2">
-            <h5>Training Schedule</h5>
-            <FloatingLabel label="Number of Epochs" className="mb-3">
-              <Form.Control
-                type="text"
-                name="epochs"
-                aria-describedby="warningMessage"
-                value={iterations.epochs}
-                onChange={handleChange}
-              />
-            </FloatingLabel>
-            <FloatingLabel
-              label="Number of iterations per epoch"
-              className="mb-3"
-            >
-              <Form.Control
-                type="text"
-                name="iterPerEpoch"
-                aria-describedby="warningMessage"
-                value={iterations.iterPerEpoch}
-                onChange={handleChange}
-              />
-            </FloatingLabel>
-            {message && (
-              <Form.Text id="warningMessage" className="warning-message text-danger">
-                {message}
-              </Form.Text>
-            )}
-            <Form.Group className="mb-2">
-              <Form.Text className="iterations-text">
-                Total number of iterations:{" "}
-                {numberFormat(iterations.epochs * iterations.iterPerEpoch)}
-              </Form.Text>
-            </Form.Group>
-            <Form.Group className="mt-1">
-              <Button variant="outline-primary" type="submit">
-                {estimation ? 'processing':'submit'}
-              </Button>
-            </Form.Group>
-          </Form>
+        <div className="innpv-memory innpv-subpanel">
+          <div className="innpv-subpanel-content">
+            <Form onSubmit={handleSubmit} className="mt-2">
+              <Row>
+                <h5>Training Schedule</h5>
+                <Col>
+                  <FloatingLabel label="Number of Epochs" className="mb-3">
+                    <Form.Control
+                      type="text"
+                      name="epochs"
+                      aria-describedby="warningMessage"
+                      value={iterations.epochs}
+                      onChange={handleChange}
+                    />
+                  </FloatingLabel>
+                </Col>
+                <Col>
+                  <FloatingLabel
+                    label="Number of iterations per epoch"
+                    className="mb-3"
+                  >
+                    <Form.Control
+                      type="text"
+                      name="iterPerEpoch"
+                      aria-describedby="warningMessage"
+                      value={iterations.iterPerEpoch}
+                      onChange={handleChange}
+                    />
+                  </FloatingLabel>
+                </Col>
+                <Col>
+                  <Form.Group className="mb-2">
+                    <Form.Text className="iterations-text">
+                      Total number of iterations:{" "}
+                      {numberFormat(
+                        iterations.epochs * iterations.iterPerEpoch
+                      )}
+                    </Form.Text>
+                  </Form.Group>
+                  {message && (
+                    <Form.Text
+                      id="warningMessage"
+                      className="warning-message text-danger"
+                    >
+                      {message}
+                    </Form.Text>
+                  )}
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  <Form.Group className="mt-1">
+                    <Button variant="outline-primary" type="submit">
+                      {estimation ? "processing" : "submit"}
+                    </Button>
+                  </Form.Group>
+                </Col>
+              </Row>
+            </Form>
+          </div>
         </div>
-      </div>
       </Wrapper>
     </>
   );
 };
 
 const Wrapper = styled.main`
-  .warning-message{
+  .warning-message {
     font-size: 14;
     font-weight: 700;
     color: "red";
-
   }
-  .iterations-text{
+  .iterations-text {
     font-size: 14;
     font-weight: 700;
   }

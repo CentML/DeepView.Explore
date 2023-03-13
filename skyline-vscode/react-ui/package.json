@@ -18,14 +18,12 @@
     "react-scripts": "5.0.0",
     "react-test-renderer": "^17.0.2",
     "react-tooltip": "^4.4.3",
-    "react-vis": "^1.11.7",
     "recharts": "^2.3.2",
-    "styled-components": "^5.3.6",
-    "web-vitals": "^2.1.4"
+    "styled-components": "^5.3.6"
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "GENERATE_SOURCEMAP=false react-scripts build",
     "test": "jest",
     "eject": "react-scripts eject"
   },
@@ -48,6 +46,7 @@
     ]
   },
   "devDependencies": {
-    "jest": "^27.5.1"
+    "jest": "^27.5.1",
+    "webpack-bundle-analyzer": "^4.8.0"
   }
 }

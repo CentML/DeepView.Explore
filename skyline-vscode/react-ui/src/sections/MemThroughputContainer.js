@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Alert, Badge, Container, Col, Row } from "react-bootstrap";
+import Alert from "react-bootstrap/Alert";
+import Badge from "react-bootstrap/Badge";
+import Container from "react-bootstrap/Container";
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
 import styled from "styled-components";
 import BarSlider from "../components/BarSlider";
 import Subheader from "../components/Subheader";
@@ -144,19 +148,15 @@ const MemThroughputContainer = ({ analysisState, SENDMOCK }) => {
             </Col>
           </Row>
           <Row>
-            <Col sm={6}>
+            <Col md={6}>
               <div className="innpv-memory innpv-subpanel">
                 <Subheader icon="database">
                   <div className="gpu-details">
+                    <span className="memory-title">Peak Memory Usage</span>
                     <div>
-                      <span>Peak Memory Usage</span>
-                    </div>
-                    <div>
-                      <Badge className="float-end" bg="secondary">
+                      <Badge bg="success">Local</Badge>
+                      <Badge bg="secondary">
                         {analysisState["hardware_info"]["gpus"][0]}
-                      </Badge>
-                      <Badge className="float-end" bg="success">
-                        Local
                       </Badge>
                     </div>
                   </div>
@@ -186,7 +186,7 @@ const MemThroughputContainer = ({ analysisState, SENDMOCK }) => {
                 </div>
               </div>
             </Col>
-            <Col sm={6}>
+            <Col md={6}>
               <div className="innpv-memory innpv-subpanel">
                 <Subheader icon="database">Throughput</Subheader>
                 <div className="innpv-subpanel-content">
@@ -221,11 +221,22 @@ const MemThroughputContainer = ({ analysisState, SENDMOCK }) => {
 };
 
 const Wrapper = styled.main`
-  .gpu-details{
+  .gpu-details {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    @media (max-width: 1000px) {
+      line-height: 0.5;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+  .memory-title {
+    @media (max-width: 1000px) {
+      margin-top: 0.25rem;
+      margin-bottom: 0.4rem;
+    }
   }
 `;
 

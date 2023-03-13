@@ -1,17 +1,13 @@
 import ProviderPanel from "./ProviderPanel";
-import {
-  Row,
-  Container,
-  Card,
-  Spinner,
-  Badge
-} from "react-bootstrap";
+import Row from "react-bootstrap/Row";
+import Container from "react-bootstrap/Container";
+import Card from "react-bootstrap/Card";
+import Spinner from "react-bootstrap/Spinner";
+import Badge from "react-bootstrap/Badge";
 import React from "react";
 import { numberFormat } from "../utils/utils";
 
 const DeploymentTab = ({ numIterations, habitatData }) => {
-  
-
   return (
     <>
       {habitatData.length === 0 ? (
@@ -29,13 +25,14 @@ const DeploymentTab = ({ numIterations, habitatData }) => {
           <Row>
             <h1>Deployment Target</h1>
             <h6>
-                    Estimation for <Badge bg="secondary">{numberFormat(numIterations)}</Badge>{" "}
-                    total iterations
-                  </h6>
-                <ProviderPanel
-                numIterations={numIterations}
-                habitatData={habitatData}
-              />
+              Estimation for{" "}
+              <Badge bg="secondary">{numberFormat(numIterations)}</Badge> total
+              iterations
+            </h6>
+            <ProviderPanel
+              numIterations={numIterations}
+              habitatData={habitatData}
+            />
           </Row>
         </Container>
       )}
