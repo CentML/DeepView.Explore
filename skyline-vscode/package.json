@@ -44,8 +44,9 @@
     }
   },
   "scripts": {
-    "vscode:prepublish": "npm run esbuild-base -- --minify",
-    "esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/main.js --external:vscode --format=cjs --platform=node",
+    "prebuild": "node -p \"'export const EXT_VERSION = ' + JSON.stringify(require('./package.json').version) + ';'\" > src/version.ts",
+    "vscode:prepublish": "npm run prebuild && npm run esbuild-base -- --minify",
+    "esbuild-base": "npm run prebuild && esbuild ./src/extension.ts --bundle --outfile=out/main.js --external:vscode --format=cjs --platform=node",
     "esbuild": "npm run esbuild-base -- --sourcemap",
     "esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
     "test-compile": "tsc -p ./"

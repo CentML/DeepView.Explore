@@ -2,6 +2,7 @@ import { env, UIKind, version
  } from "vscode";
 // TODO how to handle this for web version of extension?
 import * as os from "os";
+import  { EXT_VERSION } from "../version";
 
 export interface UserProperties {
     // The extension version
@@ -37,7 +38,7 @@ export interface UserProperties {
 
 export function getUserProperties(): UserProperties {
     let userProperties: UserProperties = {
-        extversion: require('root-require')('package.json').version,
+        extversion: EXT_VERSION,
         machineId: env.machineId,
         sessionId: env.sessionId,
         vscodeVersion: version,
