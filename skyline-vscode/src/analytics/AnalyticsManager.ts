@@ -22,34 +22,58 @@ export class AnalyticsManager {
     }
 
     convertMsgToTrackParams(msg: pb.FromServer): TrackParams {
-        let track_params: TrackParams = {
-            userId: this.properties.machineId,
-            event: String(),
-            timestamp: new Date()
-        };
         switch(msg.getPayloadCase()) {
-            case pb.FromServer.PayloadCase.ERROR:
-                track_params.event = "ERROR";
-                track_params.properties = msg.getError()?.toObject()
             case pb.FromServer.PayloadCase.INITIALIZE:
-                track_params.event = "INITIALIZE";
-                track_params.properties = msg.getInitialize()?.toObject();
+                return {
+                    userId: this.properties.machineId,
+                    event: "INITIALIZE",
+                    timestamp: new Date(),
+                    properties: msg.getInitialize()?.toObject()
+                };
             case pb.FromServer.PayloadCase.ANALYSIS_ERROR:
-                track_params.event = "ANALYSIS_ERROR";
-                track_params.properties = msg.getAnalysisError()?.toObject()
+                return {
+                    userId: this.properties.machineId,
+                    event: "ANALYSIS_ERROR",
+                    timestamp: new Date(),
+                    properties: msg.getAnalysisError()?.toObject()
+                };
             case pb.FromServer.PayloadCase.THROUGHPUT:
-                track_params.event = "THROUGHPUT";
-                track_params.properties = msg.getThroughput()?.toObject()
+                return {
+                    userId: this.properties.machineId,
+                    event: "THROUGHPUT",
+                    timestamp: new Date(),
+                    properties: msg.getThroughput()?.toObject()
+                };
             case pb.FromServer.PayloadCase.BREAKDOWN:
-                track_params.event = "BREAKDOWN";
-                track_params.properties = msg.getBreakdown()?.toObject()
+                return {
+                    userId: this.properties.machineId,
+                    event : "BREAKDOWN",
+                    timestamp: new Date(),
+                    properties : msg.getBreakdown()?.toObject()
+                };
             case pb.FromServer.PayloadCase.HABITAT:
-                track_params.event = "HABITAT";
-                track_params.properties = msg.getHabitat()?.toObject()
+                return {
+                    userId: this.properties.machineId,
+                    event : "HABITAT",
+                    timestamp: new Date(),
+                    properties : msg.getHabitat()?.toObject()
+                };
             case pb.FromServer.PayloadCase.ENERGY:
-                track_params.event = "ENERGY";
-                track_params.properties = msg.getEnergy()?.toObject()
+                return {
+                    userId: this.properties.machineId,
+                    event: "ENERGY",
+                    timestamp: new Date(),
+                    properties: msg.getEnergy()?.toObject()
+                };
+            default:
+            case pb.FromServer.PayloadCase.ERROR:
+                return {
+                    userId: this.properties.machineId,
+                    event : "ERROR",
+                    timestamp: new Date(),
+                    properties : msg.getError()?.toObject()
+                };
         };
-        return track_params;
+        
     }
 }
