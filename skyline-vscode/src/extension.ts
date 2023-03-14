@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import {SkylineEnvironment, SkylineSession, SkylineSessionOptions} from './skyline_session';
 
 import * as path from 'path';
+import { AnalyticsManager } from './analytics/AnalyticsManager';
 
 export function activate(context: vscode.ExtensionContext) {
 	let sess: SkylineSession;
@@ -9,6 +10,14 @@ export function activate(context: vscode.ExtensionContext) {
 	let environ_options: SkylineEnvironment = {
 		reactProjectRoot: path.join(context.extensionPath, "react-ui")
 	};
+
+	let anayticsManager: AnalyticsManager = new AnalyticsManager();
+	const telemetrySender: vscode.TelemetrySender = {
+		sendEventData: anayticsManager.sendEventData,
+		sendErrorData: anayticsManager.sendErrorData,
+		flush: anayticsManager.closeAndFlush
+	};
+	const logger = vscode.env.createTelemetryLogger(telemetrySender);
 
 	let disposable = vscode.commands.registerCommand('skyline-vscode.cmd_begin_analyze', () => {
 			let vsconfig = vscode.workspace.getConfiguration('skyline');
@@ -44,7 +53,8 @@ export function activate(context: vscode.ExtensionContext) {
 					projectRoot: 	uri[0].fsPath,
 					addr: 			vsconfig.address,
 					port: 			vsconfig.port,
-					webviewPanel: 	panel
+					webviewPanel: 	panel,
+					telemetryLogger: logger
 				};
 
 
@@ -67,5 +77,9 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 export function deactivate() {
+
+}
+
+async function showTelemetryOptInDialogIfNeeded(context: vscode.ExtensionContext) {
 
 }

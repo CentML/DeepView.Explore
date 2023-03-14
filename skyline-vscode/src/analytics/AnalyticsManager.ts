@@ -1,79 +1,49 @@
-import { isTelemetryEnabled } from "./settings";
 import { SegmentInitializer } from "./SegmentInitializer";
-import Analytics, { TrackParams } from "@segment/analytics-node";
-import { getUserProperties, UserProperties } from "./Properties";
-import * as pb from "../protobuf/innpv_pb"
-
+import Analytics from "@segment/analytics-node";
+import { filterObjectByKeyName } from "../utils";
 export class AnalyticsManager {
-    // initialize
+
     analytics: Analytics;
-    properties: UserProperties;
+    hasIdentifiedUser: boolean;
+    userId: string;
+
     constructor() {
         this.analytics = SegmentInitializer.initialize();
-        this.properties = getUserProperties();
-        this.analytics.identify({userId: this.properties.machineId});
-    }
-    // handle sending events
-    handleEvents(msg: pb.FromServer) {
-        if (isTelemetryEnabled())
-        {
-            this.analytics.track(this.convertMsgToTrackParams(msg));
-        }
+        this.hasIdentifiedUser = false;
+        this.userId = String();
     }
 
-    convertMsgToTrackParams(msg: pb.FromServer): TrackParams {
-        switch(msg.getPayloadCase()) {
-            case pb.FromServer.PayloadCase.INITIALIZE:
-                return {
-                    userId: this.properties.machineId,
-                    event: "INITIALIZE",
-                    timestamp: new Date(),
-                    properties: msg.getInitialize()?.toObject()
-                };
-            case pb.FromServer.PayloadCase.ANALYSIS_ERROR:
-                return {
-                    userId: this.properties.machineId,
-                    event: "ANALYSIS_ERROR",
-                    timestamp: new Date(),
-                    properties: msg.getAnalysisError()?.toObject()
-                };
-            case pb.FromServer.PayloadCase.THROUGHPUT:
-                return {
-                    userId: this.properties.machineId,
-                    event: "THROUGHPUT",
-                    timestamp: new Date(),
-                    properties: msg.getThroughput()?.toObject()
-                };
-            case pb.FromServer.PayloadCase.BREAKDOWN:
-                return {
-                    userId: this.properties.machineId,
-                    event : "BREAKDOWN",
-                    timestamp: new Date(),
-                    properties : msg.getBreakdown()?.toObject()
-                };
-            case pb.FromServer.PayloadCase.HABITAT:
-                return {
-                    userId: this.properties.machineId,
-                    event : "HABITAT",
-                    timestamp: new Date(),
-                    properties : msg.getHabitat()?.toObject()
-                };
-            case pb.FromServer.PayloadCase.ENERGY:
-                return {
-                    userId: this.properties.machineId,
-                    event: "ENERGY",
-                    timestamp: new Date(),
-                    properties: msg.getEnergy()?.toObject()
-                };
-            default:
-            case pb.FromServer.PayloadCase.ERROR:
-                return {
-                    userId: this.properties.machineId,
-                    event : "ERROR",
-                    timestamp: new Date(),
-                    properties : msg.getError()?.toObject()
-                };
-        };
-        
+    sendEventData = (eventName: string, data?: Record<string, any>) => {
+        this.identifyUser(data);
+        this.analytics.track({
+            userId: this.userId,
+            event: eventName,
+            timestamp: new Date(),
+            properties: data
+        });
+    };
+
+    sendErrorData = (error: Error, data?: Record<string, any>) => {
+        this.identifyUser(data);
+        this.analytics.track({
+            userId: this.userId,
+            event: "Client Error",
+            timestamp: new Date(),
+            properties: {... data, ...error}
+        });
+    };
+    
+    closeAndFlush = () => {
+        this.analytics.closeAndFlush();
+    };
+
+    identifyUser(data?: Record<string, any>) {
+        console.log(data);
+        if (!this.hasIdentifiedUser && data) {
+            this.userId = data["common.vscodemachineid"];
+            const commonTraits = filterObjectByKeyName(data, "common.");
+            this.analytics.identify({userId: this.userId, traits:commonTraits });
+            this.hasIdentifiedUser = true;
+        }
     }
 }
