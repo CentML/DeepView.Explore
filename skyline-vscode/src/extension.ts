@@ -4,6 +4,10 @@ import {SkylineEnvironment, SkylineSession, SkylineSessionOptions} from './skyli
 import * as path from 'path';
 import { AnalyticsManager } from './analytics/AnalyticsManager';
 
+const PRIVACY_STATEMENT_URL = "https://centml.ai/privacy-policy/";
+const OPT_OUT_INSTRUCTIONS_URL = "https://github.com/CentML/DeepView.Explore#how-to-disable-telemetry-reporting";
+const RETRY_OPTIN_DELAY_IN_MS = 24 * 60 * 60 * 1000; // 24h
+
 export function activate(context: vscode.ExtensionContext) {
 	let sess: SkylineSession;
 
@@ -53,6 +57,7 @@ export function activate(context: vscode.ExtensionContext) {
 					projectRoot: 	uri[0].fsPath,
 					addr: 			vsconfig.address,
 					port: 			vsconfig.port,
+					isTelemetryEnabled: isTelemetryEnabled,
 					webviewPanel: 	panel,
 					telemetryLogger: logger
 				};
@@ -70,6 +75,7 @@ export function activate(context: vscode.ExtensionContext) {
 				}
 
 				startSkyline();
+				showTelemetryOptInDialogIfNeeded();
 			});
 	});
 
@@ -80,6 +86,27 @@ export function deactivate() {
 
 }
 
-async function showTelemetryOptInDialogIfNeeded(context: vscode.ExtensionContext) {
+async function showTelemetryOptInDialogIfNeeded() {
+	let vsconfig = vscode.workspace.getConfiguration('skyline');
+	if (vsconfig.isTelemetryEnabled === "Ask me"){
+		// Pop up the message then wait
+		const message: string = `Help CentML improve DeepView by allowing us to collect usage data. 
+		Read our [privacy statement](${PRIVACY_STATEMENT_URL}) 
+		and learn how to [opt out](${OPT_OUT_INSTRUCTIONS_URL}).`;
 
+		const retryOptin = setTimeout(showTelemetryOptInDialogIfNeeded, RETRY_OPTIN_DELAY_IN_MS);
+		let selection: string | undefined;
+		selection = await vscode.window.showInformationMessage(message, 'Yes', 'No');
+		if (!selection) {
+		  return;
+		}
+		clearTimeout(retryOptin);
+		// Update telemetry value
+		vsconfig.update("isTelemetryEnabled", selection);
+	}
+}
+
+function isTelemetryEnabled(): boolean {
+	let vsconfig = vscode.workspace.getConfiguration('skyline');
+	return (vsconfig.isTelemetryEnabled === "Yes");
 }

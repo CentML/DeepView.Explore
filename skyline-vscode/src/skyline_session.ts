@@ -16,6 +16,7 @@ export interface SkylineSessionOptions {
     projectRoot: string;
     addr: string;
     port: number;
+    isTelemetryEnabled: CallableFunction;
     webviewPanel: vscode.WebviewPanel,
     telemetryLogger: vscode.TelemetryLogger
 }
@@ -56,6 +57,7 @@ export class SkylineSession {
     reactProjectRoot: string;
 
     // Analytics
+    isTelemetryEnabled: CallableFunction;
     telemetryLogger: vscode.TelemetryLogger;
 
     constructor(options: SkylineSessionOptions, environ: SkylineEnvironment) {
@@ -80,6 +82,7 @@ export class SkylineSession {
         this.root_dir = options.projectRoot;
         this.reactProjectRoot = environ.reactProjectRoot;
 
+        this.isTelemetryEnabled = options.isTelemetryEnabled;
         this.telemetryLogger = options.telemetryLogger;
 
         this.webviewPanel.webview.onDidReceiveMessage(this.webview_handle_message.bind(this));
@@ -252,7 +255,7 @@ export class SkylineSession {
             };
             let eventType: string | undefined =  getObjectKeyNameFromValue(pb.FromServer.PayloadCase, msg.getPayloadCase());
             eventType = eventType || "UNKNOWN";
-            this.telemetryLogger.logUsage(eventType, msg.toObject());
+            this.logUsage(eventType, msg.toObject());
 
             let json_msg = await this.generateStateJson();
             json_msg['message_type'] = 'analysis';
@@ -261,7 +264,7 @@ export class SkylineSession {
             } catch (e) {
                 console.error(e);
                 if (e instanceof Error) {
-                    this.telemetryLogger.logError("Client Error", e);
+                    this.logError(e);
                 }
             }
             this.webviewPanel.webview.postMessage(json_msg);
@@ -270,7 +273,7 @@ export class SkylineSession {
             console.log(message);
             console.log(e);
             if (e instanceof Error) {
-                this.telemetryLogger.logError("Client Error", e);
+                this.logError(e);
             }
         }
     }
@@ -477,5 +480,17 @@ export class SkylineSession {
         }
 
         return fields;
+    }
+
+    logUsage(eventName: string, data?: Record<string, any>){
+        if (this.isTelemetryEnabled()) {
+            this.telemetryLogger.logUsage(eventName, data);
+        }
+    }
+
+    logError(data?: Record<string, any>){
+        if (this.isTelemetryEnabled()) {
+            this.telemetryLogger.logError("Client Error", data);
+        }
     }
 }

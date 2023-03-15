@@ -39,6 +39,13 @@ After installation, please make note of the path to the `skyline` binary. To do 
 2. Press `Ctrl+Shift+P`, then select `Skyline` from the dropdown list.
 3. Click on `Begin Analysis`.
 
+## Disabling telemetry
+If you do not want to send usage data to CentML, you can set the skyline.isTelemetryEnabled setting to "No".
+
+You can set the value by going to File > Preferences > Settings (On macOS: Code > Preferences > Settings), and search for telemetry. Then set the value in Skyline > Is Telemetry Enabled. This will disable all telemetry events.
+
+As well, DeepView respects VSCode's telemetry levels. IF telemetry.telemetryLevel is set to off, then no telemetry events will be sent to CentML, even if redhat.telemetry.enabled is set to true. If telemetry.telemetryLevel is set to error or crash, only events containing an error or errors property will be sent to CentML.
+
 ## Development Environment Setup
 
 ### Dependencies

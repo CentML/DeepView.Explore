@@ -36,17 +36,22 @@
           "description": "Specifies the port of the profiler."
         },
         "skyline.isTelemetryEnabled": {
-          "type": "boolean",
-          "default": true,
-          "description": "Enable usage data and errors to be sent to the developer."
+          "type": "string",
+          "default": "Ask me",
+          "enum": ["Ask me", "Yes", "No"],
+          "enumDescriptions": [
+            "Prompt the user if they consent on collecting their usage data and errors.",
+            "Allow usage data and errors to be sent to the developer.",
+            "Do not allow usage data and errors to be sent to the developer."
+          ],
+          "description": "Controls DeepView telemetry and if data and errors to be sent to the developer. Note that VSCode's telemetry level is respected and takes precedence over this property."
         }
       }
     }
   },
   "scripts": {
-    "prebuild": "node -p \"'export const EXT_VERSION = ' + JSON.stringify(require('./package.json').version) + ';'\" > src/version.ts",
-    "vscode:prepublish": "npm run prebuild && npm run esbuild-base -- --minify",
-    "esbuild-base": "npm run prebuild && esbuild ./src/extension.ts --bundle --outfile=out/main.js --external:vscode --format=cjs --platform=node",
+    "vscode:prepublish": "npm run esbuild-base -- --minify",
+    "esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/main.js --external:vscode --format=cjs --platform=node",
     "esbuild": "npm run esbuild-base -- --sourcemap",
     "esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
     "watch": "tsc -watch -p ./"
