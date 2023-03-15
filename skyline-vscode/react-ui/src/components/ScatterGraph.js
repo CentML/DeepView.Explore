@@ -14,7 +14,7 @@ import {
 } from "recharts";
 
 import { calculate_training_time, currencyFormat } from "../utils/utils";
-import { gpuPropertyList } from "../data/providers";
+import { gpuPropertyList } from "../data/properties";
 
 export const ProviderScatterGraph = ({
   data,

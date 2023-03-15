@@ -64,9 +64,9 @@ function App() {
   const [errorText, setErrorText] = useState();
   const [connectionStatus, setConnectionStatus] = useState(false);
   const [numIterations, setNumIterations] = useState(100000);
+  const [externalData, setExternalData] = useState(null);
 
   App.vscodeApi = vscodeApi;
-  console.log(vscodeApi);
 
   const resetApp = function () {
     setErrorText("");
@@ -103,9 +103,11 @@ function App() {
     window.addEventListener("message", (event) => {
       if (event.data["message_type"] === "connection") {
         setConnectionStatus(event.data["status"]);
-        console.log("IM HERE",event.data["file"]);
       } else if (event.data["message_type"] === "analysis") {
         processAnalysisState(event.data);
+      } else if (event.data["message_type"] === "loaded_additional_providers") {
+        console.log("received loaded file",event.data["additionalProviders"]);
+        setExternalData(event.data["additionalProviders"]);
       } else if (event.data["message_type"] === "text_change") {
         setTextChanged(true);
       } else if (event.data["message_type"] === "error") {
@@ -223,6 +225,7 @@ function App() {
               <DeploymentTab
                 numIterations={numIterations}
                 habitatData={analysisState["habitat"]}
+                additionalProviders={externalData}
               />
             </Tab>
           </Tabs>

@@ -35,9 +35,9 @@
           "default": 60120,
           "description": "Specifies the port of the profiler."
         },
-        "skyline.providers":{
+        "skyline.providers": {
           "type": "string",
-          "default": "/home/john/Documents/centml/misc/dummy.yaml",
+          "default": "",
           "description": "location of additional cloud providers"
         }
       }
@@ -67,6 +67,7 @@
   },
   "dependencies": {
     "google-protobuf": "^3.18.0",
+    "js-yaml": "^4.1.0",
     "ts-protoc-gen": "^0.15.0"
   }
 }

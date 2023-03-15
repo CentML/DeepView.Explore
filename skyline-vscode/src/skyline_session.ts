@@ -6,7 +6,7 @@ const fs = require('fs');
 
 import {Socket} from 'net';
 import { simpleDecoration } from './decorations';
-import { energy_component_type_mapping } from './utils';
+import { energy_component_type_mapping,yaml_loader } from './utils';
 
 const crypto = require('crypto');
 const resolve = require('path').resolve;
@@ -57,7 +57,7 @@ export class SkylineSession {
     reactProjectRoot: string;
 
     constructor(options: SkylineSessionOptions, environ: SkylineEnvironment) {
-        console.log("SkylineSession instantiated !!!!");
+        console.log("SkylineSession instantiated");
 
         this.resetBackendConnection = false;
         this.connection = new Socket();
@@ -67,7 +67,6 @@ export class SkylineSession {
         this.port = options.port;
         this.addr = options.addr;
         this.providers = options.providers;
-        console.log("port",this.port,"address", this.addr,"file",this.providers);
 
         this.seq_num = 0;
         this.last_length = -1;
@@ -84,6 +83,7 @@ export class SkylineSession {
         this.webviewPanel.onDidDispose(this.disconnect.bind(this));
         this.webviewPanel.webview.html = this._getHtmlForWebview();
         this.connect();
+        this.load_extension_yaml_file();
 
         vscode.workspace.onDidChangeTextDocument(this.on_text_change.bind(this));
         this.restart_profiling = this.restart_profiling.bind(this);
@@ -110,8 +110,7 @@ export class SkylineSession {
     on_connect() {
         let connectionMessage = {
             "message_type": "connection",
-            "status": true,
-            "file": this.providers
+            "status": true
         };
         this.webviewPanel.webview.postMessage(connectionMessage);
     }  
@@ -163,6 +162,16 @@ export class SkylineSession {
             "error_text": err_text
         };
         this.webviewPanel.webview.postMessage(errorEvent);
+    }
+
+    load_extension_yaml_file() {
+        const extensionFile = yaml_loader(this.providers);
+        let loadedFile = {
+            "message_type": "loaded_additional_providers",
+            "additionalProviders": extensionFile,
+        };
+        console.log("sending loaded file");
+        this.webviewPanel.webview.postMessage(loadedFile);
     }
 
     webview_handle_message(msg: any) {

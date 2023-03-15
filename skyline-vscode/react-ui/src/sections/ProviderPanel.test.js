@@ -1,3 +1,5 @@
+import { enableFetchMocks } from 'jest-fetch-mock'
+enableFetchMocks()
 import { render, screen } from "@testing-library/react";
 import ProviderPanel from "./ProviderPanel";
 
@@ -18,6 +20,19 @@ const data = [
   ["A4000", 14.67059],
   ["RTX4000", 20.2342],
 ];
+
+const yamlTestData = `
+--- 
+ google:
+  name: "Google Cloud Platform"
+  logo: "resources/google.png"
+  color: "#ea4335"
+  instances: 
+   - name: "a2-highgpu-1g"
+     gpu: "a100"
+     ngpus: 1
+     cost: 3.67
+`
 
 beforeEach(() => {
   delete window.ResizeObserver;
@@ -49,16 +64,22 @@ jest.mock("recharts", () => {
   };
 });
 
-test("Shows a scatter chart", () => {
+test("Shows a scatter chart", async() => {
   // ARRANGE
+  // Mock fetch response
+  jest.spyOn(global, 'fetch').mockResolvedValue({
+    ok: true,
+    text: jest.fn().mockResolvedValue(yamlTestData)
+  })
+
   const { container } = render(
-    <ProviderPanel numIterations={numIterations} habitatData={data} />
+    <ProviderPanel numIterations={numIterations} habitatData={data} additionalProviders={null}/>
   );
 
   // ASSERT
-  expect(screen.getByText(/Providers/i)).toBeTruthy();
+  expect(await screen.findByText(/Providers/i)).toBeTruthy();
   expect(
     container.querySelector(".recharts-responsive-container")  // eslint-disable-line
   ).toBeTruthy();
-  expect(screen.getByText(/select a configuration/i)).toBeTruthy();
+  expect(await screen.findByText(/select a configuration/i)).toBeTruthy();
 });
