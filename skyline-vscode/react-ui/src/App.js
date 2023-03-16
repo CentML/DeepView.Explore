@@ -106,7 +106,6 @@ function App() {
       } else if (event.data["message_type"] === "analysis") {
         processAnalysisState(event.data);
       } else if (event.data["message_type"] === "loaded_additional_providers") {
-        console.log("received loaded file",event.data["additionalProviders"]);
         setExternalData(event.data["additionalProviders"]);
       } else if (event.data["message_type"] === "text_change") {
         setTextChanged(true);

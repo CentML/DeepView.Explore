@@ -1,7 +1,7 @@
-import { enableFetchMocks } from 'jest-fetch-mock'
-enableFetchMocks()
 import { render, screen } from "@testing-library/react";
 import ProviderPanel from "./ProviderPanel";
+import { enableFetchMocks } from 'jest-fetch-mock'
+enableFetchMocks()
 
 const { ResizeObserver } = window;
 const numIterations = 10000;

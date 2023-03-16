@@ -36,7 +36,8 @@ After installation, please make note of the path to the `skyline` binary. To do 
 
 ## Usage example
 1. Open one of the examples DNN project examples, i.e. [Resnet](https://github.com/CentML/skyline/tree/main/examples/resnet) from Skyline in VSCode
-2. Press `Ctrl+Shift+P`, then select `Skyline` from the dropdown list.
+2. (Optional) You can add other external cloud instances. Use the CloudProvidersSchema.yaml file as a reference. This file is located under the schemas folder. Once you have created your own yaml file, you can reference the path to this file in the extension settings in **providers** option. The file will be read when the extension is called.
+3. Press `Ctrl+Shift+P`, then select `Skyline` from the dropdown list.
 3. Click on `Begin Analysis`.
 
 ## Development Environment Setup

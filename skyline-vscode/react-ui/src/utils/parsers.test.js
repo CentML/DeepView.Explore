@@ -1,7 +1,8 @@
+import { loadYamlFile } from "./parsers";
 import { enableFetchMocks } from "jest-fetch-mock";
 enableFetchMocks();
 
-const data = [
+const habitatData = [
   ["source", 22.029312],
   ["P100", 14.069682],
   ["P4000", 127.268085], // 27.268085
@@ -16,7 +17,6 @@ const data = [
   ["RTX4000", 20.2342],
 ];
 
-import { loadYamlFile } from "./parsers";
 
 const yamlTestData = `
 --- 
@@ -38,13 +38,19 @@ const dataFromVSCodeExtension = {
     instances: [{ name: "p3.2xlarge", gpu: "v100", ngpus: 1, cost: 3.06 }],
   },
 };
+const incorrectDataFromVSCodeExtension = {
+  coreweave: {
+    name: "coreweave",
+    instances: [{ name: "p3.2xlarge", gpu: "v100", ngpus: 2.3, cost: '3.06' }],
+  },
+}
 
 test("Parse yaml files and return list of cloud providers and instances", async () => {
   jest.spyOn(global, "fetch").mockResolvedValue({
     ok: true,
     text: jest.fn().mockResolvedValue(yamlTestData),
   });
-  const resp = await loadYamlFile(data, dataFromVSCodeExtension);
+  const resp = await loadYamlFile(habitatData, dataFromVSCodeExtension);
   expect(resp.cloudProviders).toStrictEqual({
     google: {
       name: "Google Cloud Platform",
@@ -89,3 +95,39 @@ test("Parse yaml files and return list of cloud providers and instances", async 
     z: 200,
   });
 });
+
+test("External yaml file is not in correct format", async()=>{
+  jest.spyOn(global, "fetch").mockResolvedValue({
+    ok: true,
+    text: jest.fn().mockResolvedValue(yamlTestData),
+  });
+  const resp = await loadYamlFile(habitatData, incorrectDataFromVSCodeExtension);
+  expect(resp.cloudProviders).toStrictEqual({
+    google: {
+      name: "Google Cloud Platform",
+      logo: "resources/google.png",
+      color: "#ea4335",
+    },
+    coreweave: {
+      name: "coreweave",
+      logo: undefined,
+      color: undefined,
+    },
+  });
+  expect(resp.instanceArray.length).toEqual(1);
+  expect(resp.instanceArray).toContainEqual({
+    id: 0,
+    x: 10.068596,
+    y: 0.000010264374255555554,
+    info: {
+      instance: "a2-highgpu-1g",
+      gpu: "a100",
+      ngpus: 1,
+      cost: 3.67,
+      provider: "google",
+    },
+    vmem: 40,
+    fill: "#ea4335",
+    z: 200,
+  });
+})
