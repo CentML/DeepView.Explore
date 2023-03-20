@@ -17,10 +17,12 @@ class ResponseBuffer{
 
 export const loadYamlFile = async (habitatData, additionalProviders) => {
   const buffer = new ResponseBuffer();
-
-  const response = await fetch("data/providers.yaml");
+  //data/providers.yaml
+  const response = await fetch("https://sandbox-public-data.s3.us-east-2.amazonaws.com/centml/providers.yaml",
+  { cache: "no-store" }); 
   if (!response.ok) {
     console.log("Could not read local file");
+    return { cloudProviders: null, instanceArray: null };
   }
   const localDataText = await response.text();
   const localDataYaml = load(localDataText);

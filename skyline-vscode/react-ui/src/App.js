@@ -53,7 +53,7 @@ function restartProfiling() {
   });
 }
 
-const sendMock = false;
+const sendMock = true;
 
 function App() {
   const [analysisState, setAnalysisState] = useState();

@@ -1,4 +1,3 @@
-
 import * as vscode from 'vscode';
 import * as pb from './protobuf/innpv_pb';
 import * as path from 'path';
@@ -6,7 +5,7 @@ const fs = require('fs');
 
 import {Socket} from 'net';
 import { simpleDecoration } from './decorations';
-import { energy_component_type_mapping,yaml_loader } from './utils';
+import { energy_component_type_mapping } from './utils';
 
 const crypto = require('crypto');
 const resolve = require('path').resolve;
@@ -83,7 +82,7 @@ export class SkylineSession {
         this.webviewPanel.onDidDispose(this.disconnect.bind(this));
         this.webviewPanel.webview.html = this._getHtmlForWebview();
         this.connect();
-        this.load_extension_yaml_file();
+        this.load_external_providers();
 
         vscode.workspace.onDidChangeTextDocument(this.on_text_change.bind(this));
         this.restart_profiling = this.restart_profiling.bind(this);
@@ -164,14 +163,13 @@ export class SkylineSession {
         this.webviewPanel.webview.postMessage(errorEvent);
     }
 
-    load_extension_yaml_file() {
-        const extensionFile = yaml_loader(this.providers);
-        let loadedFile = {
+    load_external_providers() {
+        let otherUrls = {
             "message_type": "loaded_additional_providers",
-            "additionalProviders": extensionFile,
+            "additionalProviders": this.providers,
         };
-        console.log("sending loaded file");
-        this.webviewPanel.webview.postMessage(loadedFile);
+        console.log("sending list of urls");
+        this.webviewPanel.webview.postMessage(otherUrls);
     }
 
     webview_handle_message(msg: any) {

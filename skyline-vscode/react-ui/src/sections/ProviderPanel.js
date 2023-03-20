@@ -13,6 +13,7 @@ import Col from "react-bootstrap/Col";
 import Image from "react-bootstrap/Image";
 import Table from "react-bootstrap/Table";
 import Form from "react-bootstrap/Form";
+import Spinner from "react-bootstrap/Spinner";
 
 import {
   deploymentScatterGraphColorSize
@@ -328,7 +329,17 @@ const ProviderPanel = ({ numIterations, habitatData,additionalProviders }) => {
           </Container>
         </div>
       ) : (
-        <div>Loading</div>
+        <div className="innpv-memory innpv-subpanel">
+          <Container fluid>
+              <Row className="justify-content-md-center">
+                <Card>
+                  <Card.Body>
+                    <Spinner animation="border" size="sm" /> Loading instances
+                  </Card.Body>
+                </Card>
+              </Row>
+            </Container>
+        </div>
       )}
     </>
   );

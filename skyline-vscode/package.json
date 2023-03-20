@@ -67,7 +67,6 @@
   },
   "dependencies": {
     "google-protobuf": "^3.18.0",
-    "js-yaml": "^4.1.0",
     "ts-protoc-gen": "^0.15.0"
   }
 }
