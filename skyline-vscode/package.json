@@ -38,7 +38,7 @@
         "skyline.providers": {
           "type": "string",
           "default": "",
-          "description": "location of additional cloud providers"
+          "description": "additional urls separated by commas"
         }
       }
     }
