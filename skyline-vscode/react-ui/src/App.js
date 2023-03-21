@@ -53,7 +53,7 @@ function restartProfiling() {
   });
 }
 
-const sendMock = true;
+const sendMock = false;
 
 function App() {
   const [analysisState, setAnalysisState] = useState();
@@ -64,7 +64,10 @@ function App() {
   const [errorText, setErrorText] = useState();
   const [connectionStatus, setConnectionStatus] = useState(false);
   const [numIterations, setNumIterations] = useState(100000);
-  const [externalData, setExternalData] = useState(null);
+  const [externalData, setExternalData] = useState([
+    "https://sandbox-public-data.s3.us-east-2.amazonaws.com/centml/dummy1.yaml",
+    "https://sandbox-public-data.s3.us-east-2.amazonaws.com/centml/dummy2.yaml"
+  ]);
 
   App.vscodeApi = vscodeApi;
 

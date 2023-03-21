@@ -7,8 +7,8 @@ import {
   deploymentScatterGraphColorSize,
 } from "../data/properties";
 
-class ResponseBuffer{
-  constructor(){
+class ResponseBuffer {
+  constructor() {
     this.instanceId = 0;
     this.instanceArray = [];
     this.cloudProviders = {};
@@ -18,20 +18,48 @@ class ResponseBuffer{
 export const loadYamlFile = async (habitatData, additionalProviders) => {
   const buffer = new ResponseBuffer();
   //data/providers.yaml
-  const response = await fetch("https://sandbox-public-data.s3.us-east-2.amazonaws.com/centml/providers.yaml",
-  { cache: "no-store" }); 
-  if (!response.ok) {
-    console.log("Could not read local file");
-    return { cloudProviders: null, instanceArray: null };
+  let urlList = [
+    "https://sandbox-public-data.s3.us-east-2.amazonaws.com/centml/providers.yaml",
+  ];
+  urlList = urlList.concat(additionalProviders);
+  const listOfPromises = urlList.map((url)=>fetch(url,{ cache: "no-store" }))
+  try {
+    const responses = await Promise.all(listOfPromises);
+    for(let resp of responses){
+      if(resp.ok){
+        const localDataText = await resp.text();
+        const localDataYaml = load(localDataText);
+        CloudProviderReader(localDataYaml, habitatData, buffer);
+      }else{
+        console.log("error reading from url: ", resp.url);
+      }
+    }
+    return {
+      cloudProviders: buffer.cloudProviders,
+      instanceArray: buffer.instanceArray,
+    };
+  } catch(error){
+    console.log("There was an error", error);
   }
-  const localDataText = await response.text();
-  const localDataYaml = load(localDataText);
-  CloudProviderReader(localDataYaml, habitatData,buffer);
-  CloudProviderReader(additionalProviders, habitatData,buffer);
-  return { cloudProviders: buffer.cloudProviders, instanceArray: buffer.instanceArray };
+    
+  
+  
+  // const response = await fetch(
+  //   "https://sandbox-public-data.s3.us-east-2.amazonaws.com/centml/providers.yaml",
+  //   { cache: "no-store" }
+  // );
+  // if (!response.ok) {
+  //   console.log("Could not read local file");
+  //   return { cloudProviders: null, instanceArray: null };
+  // }
+  // const localDataText = await response.text();
+  // const localDataYaml = load(localDataText);
+  // CloudProviderReader(localDataYaml, habitatData, buffer);
+  // CloudProviderReader(additionalProviders, habitatData, buffer);
+  
 };
 
-const CloudProviderReader = (data, habitatData,storageBuffer) => {
+const CloudProviderReader = (data, habitatData, storageBuffer) => {
   if (data && habitatData) {
     for (const [key, value] of Object.entries(data)) {
       if (!value) {
