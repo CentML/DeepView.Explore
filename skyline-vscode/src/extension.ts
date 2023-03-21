@@ -6,7 +6,7 @@ import { AnalyticsManager } from './analytics/AnalyticsManager';
 
 const PRIVACY_STATEMENT_URL = "https://centml.ai/privacy-policy/";
 const OPT_OUT_INSTRUCTIONS_URL = "https://github.com/CentML/DeepView.Explore#how-to-disable-telemetry-reporting";
-const RETRY_OPTIN_DELAY_IN_MS = 24 * 60 * 60 * 1000; // 24h
+const RETRY_OPTIN_DELAY_IN_MS = 60 * 60 * 1000; // 1h
 
 export function activate(context: vscode.ExtensionContext) {
 	let sess: SkylineSession;
@@ -101,8 +101,7 @@ async function showTelemetryOptInDialogIfNeeded() {
 		  return;
 		}
 		clearTimeout(retryOptin);
-		// Update telemetry value
-		vsconfig.update("isTelemetryEnabled", selection);
+		vsconfig.update("isTelemetryEnabled", selection, true);
 	}
 }
 
