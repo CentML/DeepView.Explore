@@ -6,13 +6,10 @@
   "description": "",
   "version": "0.1.0",
   "engines": {
-    "vscode": "^1.52.0"
+    "vscode": "^1.76.0"
   },
   "categories": [
     "Other"
-  ],
-  "activationEvents": [
-    "onCommand:skyline-vscode.cmd_begin_analyze"
   ],
   "main": "./out/main.js",
   "contributes": {
@@ -34,33 +31,53 @@
           "type": "number",
           "default": 60120,
           "description": "Specifies the port of the profiler."
+        },
+        "skyline.isTelemetryEnabled": {
+          "type": "string",
+          "default": "Ask me",
+          "enum": [
+            "Ask me",
+            "Yes",
+            "No"
+          ],
+          "enumDescriptions": [
+            "Prompt the user if they consent on collecting their usage data and errors.",
+            "Allow usage data and errors to be sent to the developer.",
+            "Do not allow usage data and errors to be sent to the developer."
+          ],
+          "description": "Controls DeepView telemetry and if data and errors to be sent to the developer. Note that VSCode's telemetry level is respected and takes precedence over this property."
         }
       }
     }
   },
   "scripts": {
-    "vscode:prepublish": "npm run esbuild-base -- --minify",
-    "esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/main.js --external:vscode --format=cjs --platform=node",
-    "esbuild": "npm run esbuild-base -- --sourcemap",
-    "esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
-    "test-compile": "tsc -p ./"
+    "vscode:prepublish": "npm run clean && node esbuild.mjs production",
+    "esbuild": "npm run clean && node esbuild.mjs base",
+    "watch": "npm run clean && node esbuild.mjs debug",
+    "clean": "rm -rf ./out",
+    "test": "mocha"
   },
   "devDependencies": {
     "@types/glob": "^7.1.4",
     "@types/google-protobuf": "^3.15.5",
     "@types/mocha": "^9.0.0",
     "@types/node": "14.x",
-    "@types/vscode": "^1.52.0",
+    "@types/vscode": "^1.76.0",
     "@typescript-eslint/eslint-plugin": "^4.31.1",
     "@typescript-eslint/parser": "^4.31.1",
     "@vscode/test-electron": "^1.6.2",
     "esbuild": "^0.17.10",
     "eslint": "^7.32.0",
     "glob": "^7.1.7",
+    "ifdef-loader": "^2.3.2",
     "mocha": "^9.1.1",
     "typescript": "^4.4.3"
   },
   "dependencies": {
+    "@segment/analytics-node": "^1.0.0-beta.23",
+    "@types/ws": "^8.2.0",
+    "bootstrap-fork": "^3.3.6",
+    "esbuild-ifdef": "^0.2.0",
     "google-protobuf": "^3.18.0",
     "ts-protoc-gen": "^0.15.0"
   }
