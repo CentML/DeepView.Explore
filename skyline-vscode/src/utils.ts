@@ -13,4 +13,12 @@ export const energy_component_type_mapping = (code: number):string => {
             break;
     }
     return result;    
-}
+};
+
+export const getObjectKeyNameFromValue = (obj: Object, val: any): string | undefined => {
+    return Object.keys(obj).find(key => obj[key as keyof Object] === val);
+};
+
+export const filterObjectByKeyName = (obj: Object, prefix: string): Object => {
+    return Object.fromEntries(Object.entries(obj).filter(([key, val])=> key.startsWith(prefix)));
+};

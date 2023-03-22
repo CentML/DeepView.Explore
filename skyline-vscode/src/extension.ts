@@ -2,6 +2,11 @@ import * as vscode from 'vscode';
 import {SkylineEnvironment, SkylineSession, SkylineSessionOptions} from './skyline_session';
 
 import * as path from 'path';
+import { AnalyticsManager } from './analytics/AnalyticsManager';
+
+const PRIVACY_STATEMENT_URL = "https://centml.ai/privacy-policy/";
+const OPT_OUT_INSTRUCTIONS_URL = "https://github.com/CentML/DeepView.Explore#how-to-disable-telemetry-reporting";
+const RETRY_OPTIN_DELAY_IN_MS = 60 * 60 * 1000; // 1h
 
 export function activate(context: vscode.ExtensionContext) {
 	let sess: SkylineSession;
@@ -9,6 +14,14 @@ export function activate(context: vscode.ExtensionContext) {
 	let environ_options: SkylineEnvironment = {
 		reactProjectRoot: path.join(context.extensionPath, "react-ui")
 	};
+
+	let anayticsManager: AnalyticsManager = new AnalyticsManager();
+	const telemetrySender: vscode.TelemetrySender = {
+		sendEventData: anayticsManager.sendEventData,
+		sendErrorData: anayticsManager.sendErrorData,
+		flush: anayticsManager.closeAndFlush
+	};
+	const logger = vscode.env.createTelemetryLogger(telemetrySender);
 
 	let disposable = vscode.commands.registerCommand('skyline-vscode.cmd_begin_analyze', () => {
 			let vsconfig = vscode.workspace.getConfiguration('skyline');
@@ -45,7 +58,9 @@ export function activate(context: vscode.ExtensionContext) {
 					addr: 			vsconfig.address,
 					port: 			vsconfig.port,
 					providers:		vsconfig.providers,
-					webviewPanel: 	panel
+					isTelemetryEnabled: isTelemetryEnabled,
+					webviewPanel: 	panel,
+					telemetryLogger: logger
 				};
 
 
@@ -61,6 +76,7 @@ export function activate(context: vscode.ExtensionContext) {
 				}
 
 				startSkyline();
+				showTelemetryOptInDialogIfNeeded();
 			});
 	});
 
@@ -69,4 +85,28 @@ export function activate(context: vscode.ExtensionContext) {
 
 export function deactivate() {
 
+}
+
+async function showTelemetryOptInDialogIfNeeded() {
+	let vsconfig = vscode.workspace.getConfiguration('skyline');
+	if (vsconfig.isTelemetryEnabled === "Ask me"){
+		// Pop up the message then wait
+		const message: string = `Help CentML improve DeepView by allowing us to collect usage data. 
+		Read our [privacy statement](${PRIVACY_STATEMENT_URL}) 
+		and learn how to [opt out](${OPT_OUT_INSTRUCTIONS_URL}).`;
+
+		const retryOptin = setTimeout(showTelemetryOptInDialogIfNeeded, RETRY_OPTIN_DELAY_IN_MS);
+		let selection: string | undefined;
+		selection = await vscode.window.showInformationMessage(message, 'Yes', 'No');
+		if (!selection) {
+		  return;
+		}
+		clearTimeout(retryOptin);
+		vsconfig.update("isTelemetryEnabled", selection, true);
+	}
+}
+
+function isTelemetryEnabled(): boolean {
+	let vsconfig = vscode.workspace.getConfiguration('skyline');
+	return (vsconfig.isTelemetryEnabled === "Yes");
 }

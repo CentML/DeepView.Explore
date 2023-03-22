@@ -5,7 +5,7 @@ const fs = require('fs');
 
 import {Socket} from 'net';
 import { simpleDecoration } from './decorations';
-import { energy_component_type_mapping } from './utils';
+import { energy_component_type_mapping, getObjectKeyNameFromValue } from './utils';
 
 const crypto = require('crypto');
 const resolve = require('path').resolve;
@@ -16,7 +16,9 @@ export interface SkylineSessionOptions {
     addr: string;
     port: number;
     providers: string;
-    webviewPanel: vscode.WebviewPanel
+    isTelemetryEnabled: CallableFunction;
+    webviewPanel: vscode.WebviewPanel;
+    telemetryLogger: vscode.TelemetryLogger;
 }
 
 export interface SkylineEnvironment {
@@ -55,6 +57,10 @@ export class SkylineSession {
     // Environment
     reactProjectRoot: string;
 
+    // Analytics
+    isTelemetryEnabled: CallableFunction;
+    telemetryLogger: vscode.TelemetryLogger;
+
     constructor(options: SkylineSessionOptions, environ: SkylineEnvironment) {
         console.log("SkylineSession instantiated");
 
@@ -77,6 +83,9 @@ export class SkylineSession {
 
         this.root_dir = options.projectRoot;
         this.reactProjectRoot = environ.reactProjectRoot;
+
+        this.isTelemetryEnabled = options.isTelemetryEnabled;
+        this.telemetryLogger = options.telemetryLogger;
 
         this.webviewPanel.webview.onDidReceiveMessage(this.webview_handle_message.bind(this));
         this.webviewPanel.onDidDispose(this.disconnect.bind(this));
@@ -256,19 +265,28 @@ export class SkylineSession {
                     this.msg_energy = msg.getEnergy();
                     break;
             };
+            let eventType: string | undefined =  getObjectKeyNameFromValue(pb.FromServer.PayloadCase, msg.getPayloadCase());
+            eventType = eventType || "UNKNOWN";
+            this.logUsage(eventType, msg.toObject());
 
             let json_msg = await this.generateStateJson();
             json_msg['message_type'] = 'analysis';
             try {
                 fs.writeFileSync('/tmp/msg.json', JSON.stringify(json_msg));
-            } catch (err) {
-                console.error(err);
+            } catch (e) {
+                console.error(e);
+                if (e instanceof Error) {
+                    this.logError(e);
+                }
             }
             this.webviewPanel.webview.postMessage(json_msg);
         } catch (e) {
             console.log("exception!");
             console.log(message);
             console.log(e);
+            if (e instanceof Error) {
+                this.logError(e);
+            }
         }
     }
 
@@ -474,5 +492,17 @@ export class SkylineSession {
         }
 
         return fields;
+    }
+
+    logUsage(eventName: string, data?: Record<string, any>){
+        if (this.isTelemetryEnabled()) {
+            this.telemetryLogger.logUsage(eventName, data);
+        }
+    }
+
+    logError(data?: Record<string, any>){
+        if (this.isTelemetryEnabled()) {
+            this.telemetryLogger.logError("Client Error", data);
+        }
     }
 }
