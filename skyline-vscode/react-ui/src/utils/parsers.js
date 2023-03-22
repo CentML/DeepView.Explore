@@ -19,7 +19,7 @@ export const loadYamlFile = async (habitatData, additionalProviders) => {
   const buffer = new ResponseBuffer();
   //data/providers.yaml
   let urlList = [
-    "https://sandbox-public-data.s3.us-east-2.amazonaws.com/centml/providers.yaml",
+    "https://deepview-explorer-public.s3.amazonaws.com/vscode-cloud-providers/providers.yaml",
   ];
   urlList = urlList.concat(additionalProviders);
   const listOfPromises = urlList.map((url)=>fetch(url,{ cache: "no-store" }))
