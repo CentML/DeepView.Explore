@@ -7,7 +7,6 @@ import Card from "react-bootstrap/Card";
 import { HabitatScatterGraph } from "../components/ScatterGraph";
 
 export default function Habitat({ habitatData }) {
-  console.log(habitatData);
   const habitatIsDemo = habitatData.find(
     (item) => item[0] === "demo" && item[1] === 1
   );
