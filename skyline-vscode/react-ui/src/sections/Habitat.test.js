@@ -18,6 +18,22 @@ const data = [
   ["RTX4000", 20.2342],
 ];
 
+const noHabitatData = [
+  ["source", 22.029312],
+  ["P100",14.069682],
+  ["P4000", 127.268085], // 27.268085
+  ["RTX2070", 16.088268],
+  ["RTX2080Ti", 11.826558],
+  ["T4", 22.029312],
+  ["V100", 10.182922],
+  ["A100", 10.068596],
+  ["RTX3090", 9.841998],
+  ["A40", 11.558072],
+  ["A4000", 14.67059],
+  ["RTX4000", 20.2342],
+  ["demo",1]
+]
+
 beforeEach(() => {
   delete window.ResizeObserver;
   window.ResizeObserver = jest.fn().mockImplementation(() => ({
@@ -61,3 +77,10 @@ test("Shows graph when habitat data is present", () => {
   expect(container.querySelector('.recharts-responsive-container')).toBeTruthy();  // eslint-disable-line
   
 });
+
+test("no habitat data received from backend", ()=>{
+  // ARRANGE
+  const { container } = render(<Habitat habitatData={noHabitatData}/>);
+  // ASSERT
+  expect(screen.getByText(/the local gpu is not supported by habitat/i)).toBeTruthy();
+})

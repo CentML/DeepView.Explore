@@ -7,6 +7,26 @@ import Card from "react-bootstrap/Card";
 import { HabitatScatterGraph } from "../components/ScatterGraph";
 
 export default function Habitat({ habitatData }) {
+  const habitatIsDemo = habitatData.find(
+    (item) => item[0] === "demo" && item[1] === 1
+  );
+  if (habitatIsDemo) {
+    return (
+      <>
+        <div className="innpv-memory innpv-subpanel">
+          <Subheader icon="database">Habitat</Subheader>
+          <div className="innpv-subpanel-content">
+            <Container fluid className="mt-2">
+              <Row className="justify-content-md-center">
+                <h6>The local GPU is not supported by Habitat</h6>
+              </Row>
+            </Container>
+          </div>
+        </div>
+      </>
+    );
+  }
+
   return (
     <>
       <div className="innpv-memory innpv-subpanel">
