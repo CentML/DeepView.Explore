@@ -24,17 +24,17 @@
       "properties": {
         "skyline.address": {
           "type": "string",
-          "default": "localhost",
+          "default": "localhost-2",
           "description": "Specifies the address of the profiler."
         },
         "skyline.port": {
           "type": "number",
-          "default": 60120,
+          "default": 60150,
           "description": "Specifies the port of the profiler."
         },
         "skyline.providers": {
           "type": "string",
-          "default": "",
+          "default": "another",
           "description": "additional urls separated by commas"
         },
         "skyline.isTelemetryEnabled": {

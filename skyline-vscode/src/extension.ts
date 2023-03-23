@@ -51,7 +51,7 @@ export function activate(context: vscode.ExtensionContext) {
 						retainContextWhenHidden: true
 					}
 				);
-
+				console.log("EXTENSION.TS FILE",vsconfig);
 				let sess_options: SkylineSessionOptions = {
 					context: 		context,
 					projectRoot: 	uri[0].fsPath,

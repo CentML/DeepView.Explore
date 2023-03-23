@@ -173,6 +173,8 @@ export class SkylineSession {
     }
 
     load_external_providers() {
+        console.log("PROVIDERS: ",this.providers);
+        console.log("PORT: ",this.port);
         let otherUrls = {
             "message_type": "loaded_additional_providers",
             "additionalProviders": this.providers,
