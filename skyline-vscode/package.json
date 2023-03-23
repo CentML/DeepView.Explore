@@ -11,6 +11,9 @@
   "categories": [
     "Other"
   ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
   "main": "./out/main.js",
   "contributes": {
     "commands": [
