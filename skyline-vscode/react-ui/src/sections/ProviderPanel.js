@@ -14,6 +14,7 @@ import Image from "react-bootstrap/Image";
 import Table from "react-bootstrap/Table";
 import Form from "react-bootstrap/Form";
 import Spinner from "react-bootstrap/Spinner";
+import Alert from 'react-bootstrap/Alert';
 
 import {
   deploymentScatterGraphColorSize
@@ -39,6 +40,8 @@ const ProviderPanel = ({ numIterations, habitatData,additionalProviders }) => {
     estimated_cost: 0,
     estimated_time: 0,
   });
+
+  const habitatIsDemo = habitatData.find(item=>item[0]==="demo" && item[1] === 1)
 
   const MAX_GPU = [1, 2, 4, 0]; // 0 is all
 
@@ -161,7 +164,12 @@ const ProviderPanel = ({ numIterations, habitatData,additionalProviders }) => {
         <div className="innpv-memory innpv-subpanel">
           <Subheader icon="database">Providers</Subheader>
           <Container fluid>
+            {habitatIsDemo && (
             <Row>
+              <Alert variant="danger">Currently showing a demo data because local GPU is not supported by Habitat</Alert>
+            </Row>
+          )}
+          <Row>
               <Col xl={12} xxl={8}>
                 <Row>
                   <Row className="mt-4 mb-2">
