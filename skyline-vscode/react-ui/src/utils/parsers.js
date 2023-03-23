@@ -2,10 +2,13 @@
  * Yaml parser
  */
 import { load } from "js-yaml";
+import Ajv from "ajv/dist/jtd";
 import {
   gpuPropertyList,
   deploymentScatterGraphColorSize,
 } from "../data/properties";
+
+const ajv = new Ajv() // options can be passed, e.g. {allErrors: true}
 
 class ResponseBuffer {
   constructor() {
