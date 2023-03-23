@@ -64,10 +64,7 @@ function App() {
   const [errorText, setErrorText] = useState();
   const [connectionStatus, setConnectionStatus] = useState(false);
   const [numIterations, setNumIterations] = useState(100000);
-  const [externalData, setExternalData] = useState([
-    "https://deepview-explorer-public.s3.amazonaws.com/vscode-cloud-providers/dummy1.yaml",
-    "https://deepview-explorer-public.s3.amazonaws.com/vscode-cloud-providers/dummy2.yaml"
-  ]);
+  const [externalData, setExternalData] = useState([]);
 
   App.vscodeApi = vscodeApi;
 
@@ -109,7 +106,8 @@ function App() {
       } else if (event.data["message_type"] === "analysis") {
         processAnalysisState(event.data);
       } else if (event.data["message_type"] === "loaded_additional_providers") {
-        setExternalData(event.data["additionalProviders"]);
+        console.log(event.data["additionalProviders"].split(","))
+        setExternalData(event.data["additionalProviders"].split(","));
       } else if (event.data["message_type"] === "text_change") {
         setTextChanged(true);
       } else if (event.data["message_type"] === "error") {
