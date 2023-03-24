@@ -12,7 +12,8 @@ env:
 
 jobs:
   build-vsix:
-    if: (startsWith(github.head_ref, 'release-') && github.event.pull_request.merged == true)
+    # if: (startsWith(github.head_ref, 'release-') && github.event.pull_request.merged == true)
+    if: (github.event.pull_request.merged == true)
     runs-on: ubuntu-latest
     steps:
       - name: Configure AWS Credentials
