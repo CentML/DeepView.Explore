@@ -12,7 +12,8 @@
     "Other"
   ],
   "activationEvents": [
-    "onStartupFinished"
+    "onStartupFinished",
+    "onCommand: skyline-vscode.cmd_begin_analyze"
   ],
   "main": "./out/main.js",
   "contributes": {
