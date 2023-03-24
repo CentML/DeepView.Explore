@@ -14,6 +14,7 @@ import {
 } from "recharts";
 
 const renderCustomizedLabel = (props) => {
+  // eslint-disable-next-line no-unused-vars
   const { x, y, width, height, value } = props;
   const Y_OFFSET = 10;
 
