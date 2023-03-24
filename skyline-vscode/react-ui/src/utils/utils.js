@@ -94,7 +94,7 @@ export function toReadableByteSize(sizeBytes) {
     }
     size /= 1024;
   }
-  if (index == BYTE_UNITS.length) {
+  if (index === BYTE_UNITS.length) {
     index--;
   }
 
@@ -139,11 +139,11 @@ export function getTraceByLevel(tree) {
   tree[0]["depth"] = 0;
   tree_size(0);
 
-  let coarseDecomposition = tree.filter(node => { return node["depth"] == 1; });
+  let coarseDecomposition = tree.filter(node => { return node["depth"] === 1; });
   for (let fineLevel = 1; ; fineLevel ++) {
-    let fineDecomposition = tree.filter(node => { return node["depth"] == fineLevel; });
+    let fineDecomposition = tree.filter(node => { return node["depth"] === fineLevel; });
     console.log(`fineLevel: ${fineLevel}, length: ${fineDecomposition.length}`);
-    if (fineDecomposition.length == 0) return { coarse: coarseDecomposition, fine: coarseDecomposition };
+    if (fineDecomposition.length === 0) return { coarse: coarseDecomposition, fine: coarseDecomposition };
     if (fineDecomposition.length >= 7) return { coarse: coarseDecomposition, fine: fineDecomposition };
   }
 }

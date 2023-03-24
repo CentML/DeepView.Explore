@@ -134,6 +134,7 @@ export const HabitatScatterGraph = ({ habitatData, height }) => {
   };
 
   const renderCustomizedLabel = (props) => {
+    // eslint-disable-next-line no-unused-vars
     const { x, y, width, height, value } = props;
     const y_offset = 5;
     return (
