@@ -25,7 +25,7 @@ import {
   currencyFormat,
 } from "../utils/utils";
 
-import { loadYamlFile } from "../utils/parsers";
+import { loadYamlFile,loadJsonFiles } from "../utils/parsers";
 
 const ProviderPanel = ({ numIterations, habitatData,additionalProviders }) => {
   const [providerPanelSettings, setProviderPanelSettings] = useState({
@@ -147,6 +147,7 @@ const ProviderPanel = ({ numIterations, habitatData,additionalProviders }) => {
 
   useEffect(() => {
     async function fetchData() {
+      await loadJsonFiles(habitatData, additionalProviders);
       const data = await loadYamlFile(habitatData, additionalProviders);
       setProviderPanelSettings((prevState) => ({
         ...prevState,

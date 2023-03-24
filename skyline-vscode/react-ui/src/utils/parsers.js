@@ -2,13 +2,30 @@
  * Yaml parser
  */
 import { load } from "js-yaml";
-import Ajv from "ajv/dist/jtd";
+import Ajv from "ajv";
 import {
   gpuPropertyList,
   deploymentScatterGraphColorSize,
 } from "../data/properties";
+import { cloudProviderSchema } from "../schema/CloudProvidersSchema";
 
-const ajv = new Ajv() // options can be passed, e.g. {allErrors: true}
+const ajv = new Ajv({ allErrors: true }); // to report all validation errors (rather than failing on the first errors)
+const validate = ajv.compile(cloudProviderSchema);
+
+const data = [
+  {
+    name: "gcp",
+    logo: "",
+    color: "#ea4335",
+    instances: [{ name: "a2-highgpu-1g", gpu: "a100", ngpus: 1, cost: 0.05 }],
+  },
+];
+
+const valid = validate(data);
+if (!valid) {
+  console.log("Error");
+  validate.errors.forEach((err) => console.log(err.message));
+}
 
 class ResponseBuffer {
   constructor() {
@@ -25,15 +42,17 @@ export const loadYamlFile = async (habitatData, additionalProviders) => {
     "https://deepview-explorer-public.s3.amazonaws.com/vscode-cloud-providers/providers.yaml",
   ];
   urlList = urlList.concat(additionalProviders);
-  const listOfPromises = urlList.map((url)=>fetch(url,{ cache: "no-store" }))
+  const listOfPromises = urlList.map((url) =>
+    fetch(url, { cache: "no-store" })
+  );
   try {
     const responses = await Promise.all(listOfPromises);
-    for(let resp of responses){
-      if(resp.ok){
+    for (let resp of responses) {
+      if (resp.ok) {
         const localDataText = await resp.text();
         const localDataYaml = load(localDataText);
         CloudProviderReader(localDataYaml, habitatData, buffer);
-      }else{
+      } else {
         console.log("error reading from url: ", resp.url);
       }
     }
@@ -41,25 +60,9 @@ export const loadYamlFile = async (habitatData, additionalProviders) => {
       cloudProviders: buffer.cloudProviders,
       instanceArray: buffer.instanceArray,
     };
-  } catch(error){
+  } catch (error) {
     console.log("There was an error", error);
   }
-    
-  
-  
-  // const response = await fetch(
-  //   "https://sandbox-public-data.s3.us-east-2.amazonaws.com/centml/providers.yaml",
-  //   { cache: "no-store" }
-  // );
-  // if (!response.ok) {
-  //   console.log("Could not read local file");
-  //   return { cloudProviders: null, instanceArray: null };
-  // }
-  // const localDataText = await response.text();
-  // const localDataYaml = load(localDataText);
-  // CloudProviderReader(localDataYaml, habitatData, buffer);
-  // CloudProviderReader(additionalProviders, habitatData, buffer);
-  
 };
 
 const CloudProviderReader = (data, habitatData, storageBuffer) => {
@@ -129,5 +132,39 @@ const CloudProviderReader = (data, habitatData, storageBuffer) => {
         }
       }
     }
+  }
+};
+
+export const loadJsonFiles = async (habitatData, additionalProviders) => {
+  const buffer = new ResponseBuffer();
+  let urlList = [
+    "https://deepview-explorer-public.s3.amazonaws.com/vscode-cloud-providers/providers.json",
+  ];
+  urlList = urlList.concat(additionalProviders);
+  const listOfPromises = urlList.map((url) =>
+    fetch(url, { cache: "no-store" })
+  );
+  try {
+    const responses = await Promise.all(listOfPromises);
+    for (let resp of responses) {
+      if (resp.ok) {
+        const respJsonData = await resp.json();
+        const valid = validate(respJsonData);
+        if (valid) {
+          console.log(respJsonData);
+        } else {
+          console.log("Error");
+          validate.errors.forEach((err) => console.log(err.message));
+        }
+      } else {
+        console.log("error reading from url: ", resp.url);
+      }
+    }
+    return {
+      cloudProviders: buffer.cloudProviders,
+      instanceArray: buffer.instanceArray,
+    };
+  } catch (error) {
+    console.log("There was an error", error);
   }
 };
