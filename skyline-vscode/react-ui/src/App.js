@@ -59,7 +59,7 @@ function App() {
   const [analysisState, setAnalysisState] = useState();
   const [textChanged, setTextChanged] = useState(false);
   const [timeBreakDown, setTimeBreakdown] = useState([]);
-
+  // eslint-disable-next-line
   const [vscodeApi, setVscodeApi] = useState(acquireApi());
   const [errorText, setErrorText] = useState();
   const [connectionStatus, setConnectionStatus] = useState(false);
