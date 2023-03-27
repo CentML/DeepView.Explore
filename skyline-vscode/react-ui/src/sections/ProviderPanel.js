@@ -14,26 +14,28 @@ import Image from "react-bootstrap/Image";
 import Table from "react-bootstrap/Table";
 import Form from "react-bootstrap/Form";
 import Spinner from "react-bootstrap/Spinner";
-import Alert from 'react-bootstrap/Alert';
+import Alert from "react-bootstrap/Alert";
 
-import {
-  deploymentScatterGraphColorSize
-} from "../data/properties";
+import { deploymentScatterGraphColorSize } from "../data/properties";
+
+import { ProviderPanelModal } from "../components/Modals";
+
 import {
   calculate_training_time,
   numberFormat,
   currencyFormat,
 } from "../utils/utils";
 
-import { loadYamlFile,loadJsonFiles } from "../utils/parsers";
+import { loadJsonFiles } from "../utils/parsers";
 
-const ProviderPanel = ({ numIterations, habitatData,additionalProviders }) => {
+const ProviderPanel = ({ numIterations, habitatData, additionalProviders }) => {
   const [providerPanelSettings, setProviderPanelSettings] = useState({
     plotData: null,
     initialData: null,
     cloudProviders: null,
     nearest: null,
     clicked: null,
+    fetchErrors: null,
     maxNumGpu: 0,
     provider: "all",
     gpu: "all",
@@ -41,7 +43,9 @@ const ProviderPanel = ({ numIterations, habitatData,additionalProviders }) => {
     estimated_time: 0,
   });
 
-  const habitatIsDemo = habitatData.find(item=>item[0]==="demo" && item[1] === 1)
+  const habitatIsDemo = habitatData.find(
+    (item) => item[0] === "demo" && item[1] === 1
+  );
 
   const MAX_GPU = [1, 2, 4, 0]; // 0 is all
 
@@ -106,7 +110,9 @@ const ProviderPanel = ({ numIterations, habitatData,additionalProviders }) => {
 
   const recalculateCost = (provider) => {
     if (provider == null) return;
-    const originalData = providerPanelSettings.initialData.find((item) => item.id === provider.id);
+    const originalData = providerPanelSettings.initialData.find(
+      (item) => item.id === provider.id
+    );
 
     let totalHr = calculate_training_time(numIterations, originalData); // NEED YUBO FEEDBACK
     let totalCost = provider.info.cost * totalHr;
@@ -147,13 +153,13 @@ const ProviderPanel = ({ numIterations, habitatData,additionalProviders }) => {
 
   useEffect(() => {
     async function fetchData() {
-      await loadJsonFiles(habitatData, additionalProviders);
-      const data = await loadYamlFile(habitatData, additionalProviders);
+      const jsondata = await loadJsonFiles(habitatData, additionalProviders);
       setProviderPanelSettings((prevState) => ({
         ...prevState,
-        plotData: data.instanceArray,
-        initialData: data.instanceArray,
-        cloudProviders: data.cloudProviders,
+        plotData: jsondata.instanceArray,
+        initialData: jsondata.instanceArray,
+        cloudProviders: jsondata.cloudProviders,
+        fetchErrors: jsondata.errors,
       }));
     }
     fetchData();
@@ -161,16 +167,20 @@ const ProviderPanel = ({ numIterations, habitatData,additionalProviders }) => {
   }, []);
   return (
     <>
-      {providerPanelSettings.plotData && providerPanelSettings.cloudProviders ? (
+      {providerPanelSettings.plotData &&
+      providerPanelSettings.cloudProviders ? (
         <div className="innpv-memory innpv-subpanel">
           <Subheader icon="database">Providers</Subheader>
           <Container fluid>
             {habitatIsDemo && (
+              <Row className="mt-2">
+                <Alert variant="danger">
+                  Currently showing a demo data because local GPU is not
+                  supported by DeepView.Predict
+                </Alert>
+              </Row>
+            )}
             <Row>
-              <Alert variant="danger">Currently showing a demo data because local GPU is not supported by Habitat</Alert>
-            </Row>
-          )}
-          <Row>
               <Col xl={12} xxl={8}>
                 <Row>
                   <Row className="mt-4 mb-2">
@@ -183,15 +193,15 @@ const ProviderPanel = ({ numIterations, habitatData,additionalProviders }) => {
                           }
                         >
                           <option value="all">All</option>
-                          {Object.keys(providerPanelSettings.cloudProviders).map(
-                            (provider, index) => {
-                              return (
-                                <option key={`${index}`} value={provider}>
-                                  {provider}
-                                </option>
-                              );
-                            }
-                          )}
+                          {Object.keys(
+                            providerPanelSettings.cloudProviders
+                          ).map((provider, index) => {
+                            return (
+                              <option key={`${index}`} value={provider}>
+                                {provider}
+                              </option>
+                            );
+                          })}
                         </Form.Select>
                       </div>
                     </Col>
@@ -259,6 +269,13 @@ const ProviderPanel = ({ numIterations, habitatData,additionalProviders }) => {
                     />
                   </Row>
                 </Row>
+                {providerPanelSettings.fetchErrors && (
+                  <Row className="mt-2">
+                      <ProviderPanelModal
+                        errors={providerPanelSettings.fetchErrors}
+                      />
+                  </Row>
+                )}
               </Col>
               <Col xl={12} xxl={4} className="mb-4">
                 <div className="innpv-memory innpv-subpanel">
@@ -340,14 +357,14 @@ const ProviderPanel = ({ numIterations, habitatData,additionalProviders }) => {
       ) : (
         <div className="innpv-memory innpv-subpanel">
           <Container fluid>
-              <Row className="justify-content-md-center">
-                <Card>
-                  <Card.Body>
-                    <Spinner animation="border" size="sm" /> Loading instances
-                  </Card.Body>
-                </Card>
-              </Row>
-            </Container>
+            <Row className="justify-content-md-center">
+              <Card>
+                <Card.Body>
+                  <Spinner animation="border" size="sm" /> Loading instances
+                </Card.Body>
+              </Card>
+            </Row>
+          </Container>
         </div>
       )}
     </>
