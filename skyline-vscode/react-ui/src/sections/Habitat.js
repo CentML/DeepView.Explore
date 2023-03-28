@@ -18,7 +18,7 @@ export default function Habitat({ habitatData }) {
           <div className="innpv-subpanel-content">
             <Container fluid className="mt-2">
               <Row className="justify-content-md-center">
-                <h6>The local GPU is not supported by Habitat</h6>
+                <h6>The local GPU is not supported by DeepView.Predict</h6>
               </Row>
             </Container>
           </div>
@@ -37,8 +37,7 @@ export default function Habitat({ habitatData }) {
               <Row className="justify-content-md-center">
                 <Card>
                   <Card.Body>
-                    <Spinner animation="border" size="sm" /> Loading Habitat
-                    predictions.
+                    <Spinner animation="border" size="sm" /> Loading DeepView.Predict data
                   </Card.Body>
                 </Card>
               </Row>

@@ -29,6 +29,35 @@ To install, either:
 Once you have the vsix file, run `code --install-extension vscode*.vsix` to install the extension.
 **Note: the file [build_vsix_dev.sh] is only to be used for development**
 
+**Adding cloud instances to the Deployment Tab:** You can include information about the instances that you use thrugh the extension settings. There you will find an option named **providers** that accepts a list of urls separated by commas. Each url must be a JSON file that follows the schema speficied here : [schema](skyline-vscode/react-ui/src/schema/CloudProvidersSchema.js).<br/>
+Addittionally, you need to add the necessary access so the extension can read the file.<br/>
+You can use an AWS S3 bucket to store your files. Change CORS settings in Permissions tab.
+
+**CORS requirements**:
+```
+[
+    {
+        "AllowedHeaders": [],
+        "AllowedMethods": [
+            "GET"
+        ],
+        "AllowedOrigins": [
+            "http://*",
+            "https://*",
+            "vscode-webview://*"
+        ],
+        "ExposeHeaders": []
+    }
+]
+```
+and allow public access to the file
+
+This is our [file](https://deepview-explorer-public.s3.amazonaws.com/vscode-cloud-providers/providers.json) that you can use as an example.
+
+
+
+
+
 ### Backend Installation
 This plugin requires Skyline (the installation instruction for which can be found [here](https://github.com/CentML/skyline)) and (optionally) Habitat (used to extrapolate GPU runtimes, instructions found [here](https://github.com/CentML/habitat)). **Skyline must be launched before running this extension.**
 

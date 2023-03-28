@@ -28,17 +28,17 @@
       "properties": {
         "skyline.address": {
           "type": "string",
-          "default": "localhost-2",
+          "default": "localhost",
           "description": "Specifies the address of the profiler."
         },
         "skyline.port": {
           "type": "number",
-          "default": 60150,
+          "default": 60120,
           "description": "Specifies the port of the profiler."
         },
         "skyline.providers": {
           "type": "string",
-          "default": "another",
+          "default": "https://deepview-explorer-public.s3.amazonaws.com/vscode-cloud-providers/dummy1.json",
           "description": "additional urls separated by commas"
         },
         "skyline.isTelemetryEnabled": {

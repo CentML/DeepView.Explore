@@ -8,21 +8,6 @@ import { cloudProviderSchema } from "../schema/CloudProvidersSchema";
 const ajv = new Ajv({ allErrors: true }); // to report all validation errors (rather than failing on the first errors)
 const validate = ajv.compile(cloudProviderSchema);
 
-// const data = [
-//   {
-//     name: "gcp",
-//     logo: "",
-//     color: "#ea4335",
-//     instances: [{ name: "a2-highgpu-1g", gpu: "a100", ngpus: 1, cost: 0.05 }],
-//   },
-// ];
-
-// const valid = validate(data);
-// if (!valid) {
-//   console.log("Error");
-//   validate.errors.forEach((err) => console.log(err.message));
-// }
-
 class ResponseBuffer {
   constructor() {
     this.instanceId = 0;
@@ -36,7 +21,8 @@ export const loadJsonFiles = async (habitatData, additionalProviders) => {
   let urlList = [
     "https://deepview-explorer-public.s3.amazonaws.com/vscode-cloud-providers/providers.json",
   ];
-  urlList = urlList.concat(additionalProviders);
+  const additionalList = additionalProviders ? additionalProviders.split(","):[];
+  urlList = urlList.concat(additionalList);
   const listOfPromises = urlList.map((url) =>
     fetch(url, { cache: "no-store" })
   );
@@ -85,7 +71,7 @@ export const loadJsonFiles = async (habitatData, additionalProviders) => {
           buffer.errors.push({
             msg: `invalid data format from url: ${resp.url}`,
             invalidFields: validate.errors.map((err) => ({
-              field: err.dataPath,
+              field: err.instancePath,
               err: err.message,
             })),
           });
@@ -93,18 +79,18 @@ export const loadJsonFiles = async (habitatData, additionalProviders) => {
       } catch (error) {
         buffer.errors.push({
           msg: `error reading from url: ${resp.url}`,
-          code: "incorrect json data",
+          code: `status: ${resp.statusText} | code: ${resp.status}`,
         });
       }
     } else {
       buffer.errors.push({
         msg: `error reading from url: ${resp.url}`,
-        code: resp.status,
+        code: `status: ${resp.statusText} | code: ${resp.status}`,
       });
     }
   }
   return {
-    cloudProviders: Object.keys(buffer.cloudProviders).length > 1 ? buffer.cloudProviders: null,
+    cloudProviders: Object.keys(buffer.cloudProviders).length > 0 ? buffer.cloudProviders: null,
     instanceArray: buffer.instanceArray.length > 0 ? buffer.instanceArray:null,
     errors: buffer.errors.length > 0 ? buffer.errors:null,
   };

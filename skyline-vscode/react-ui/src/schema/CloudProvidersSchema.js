@@ -1,12 +1,12 @@
 export const cloudProviderSchema = {
   title: "SCHEMA DEFINITION FOR CLOUD PROVIDERS",
   description:
-    "Array of cloud providers, (there needs to be at least 1 cloud provider)",
+    "list of cloud providers, (there needs to be at least 1 cloud provider)",
   type: "array",
   items: {
     type: "object",
     description:
-      "each cloud provider needs to include it's name, logo, color, and instace specifications",
+      "each cloud provider needs to include it's name, logo, color, and instance specifications",
     required: ["name", "logo", "color", "instances"],
     properties: {
       name: {

@@ -66,7 +66,7 @@ test("Shows loading spinner when there is no habitat data", () => {
   render(<Habitat habitatData={[]}/>);
 
   // ASSERT
-  expect(screen.getByText(/loading habitat predictions/i)).toBeTruthy();
+  expect(screen.getByText(/loading deepview.predict data/i)).toBeTruthy();
 });
 
 test("Shows graph when habitat data is present", () => {
@@ -82,5 +82,5 @@ test("no habitat data received from backend", ()=>{
   // ARRANGE
   const { container } = render(<Habitat habitatData={noHabitatData}/>);
   // ASSERT
-  expect(screen.getByText(/the local gpu is not supported by habitat/i)).toBeTruthy();
+  expect(screen.getByText(/the local gpu is not supported by deepview.predict/i)).toBeTruthy();
 })

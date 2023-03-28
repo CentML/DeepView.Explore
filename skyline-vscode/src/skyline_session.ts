@@ -6,6 +6,7 @@ const fs = require('fs');
 import {Socket} from 'net';
 import { simpleDecoration } from './decorations';
 import { energy_component_type_mapping, getObjectKeyNameFromValue } from './utils';
+import { stringify } from 'querystring';
 
 const crypto = require('crypto');
 const resolve = require('path').resolve;
@@ -91,7 +92,6 @@ export class SkylineSession {
         this.webviewPanel.onDidDispose(this.disconnect.bind(this));
         this.webviewPanel.webview.html = this._getHtmlForWebview();
         this.connect();
-        this.load_external_providers();
 
         vscode.workspace.onDidChangeTextDocument(this.on_text_change.bind(this));
         this.restart_profiling = this.restart_profiling.bind(this);
@@ -170,17 +170,6 @@ export class SkylineSession {
             "error_text": err_text
         };
         this.webviewPanel.webview.postMessage(errorEvent);
-    }
-
-    load_external_providers() {
-        console.log("PROVIDERS: ",this.providers);
-        console.log("PORT: ",this.port);
-        let otherUrls = {
-            "message_type": "loaded_additional_providers",
-            "additionalProviders": this.providers,
-        };
-        console.log("sending list of urls");
-        this.webviewPanel.webview.postMessage(otherUrls);
     }
 
     webview_handle_message(msg: any) {
@@ -393,7 +382,7 @@ export class SkylineSession {
 				<meta name="theme-color" content="#000000">
 				<title>Skyline</title>
 				<link rel="stylesheet" type="text/css" href="${styleUri}">
-				<meta http-equiv="Content-Security-Policy" content="default-src 'none'; connect-src *; img-src vscode-resource: https:; script-src 'nonce-${nonce}';style-src vscode-resource: 'unsafe-inline' http: https: data:;">
+				<meta http-equiv="Content-Security-Policy" content="default-src 'none'; connect-src *; img-src vscode-resource: https:; script-src 'unsafe-eval' 'nonce-${nonce}';style-src vscode-resource: 'unsafe-inline' http: https: data:;">
 				<base href="${ buildUri }/">
 			</head>
 			<body>
@@ -421,7 +410,9 @@ export class SkylineSession {
             "breakdown": {},
 
             "habitat": [] as Array<[string, number]>,
-            "energy": {}
+            "additionalProviders": this.providers,
+            "energy": {},
+
         };
 
         if (this.msg_throughput) {

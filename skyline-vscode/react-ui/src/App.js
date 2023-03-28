@@ -53,7 +53,7 @@ function restartProfiling() {
   });
 }
 
-const sendMock = true;
+const sendMock = false;
 
 function App() {
   const [analysisState, setAnalysisState] = useState();
@@ -64,7 +64,6 @@ function App() {
   const [errorText, setErrorText] = useState();
   const [connectionStatus, setConnectionStatus] = useState(false);
   const [numIterations, setNumIterations] = useState(100000);
-  const [externalData, setExternalData] = useState([]);
 
   App.vscodeApi = vscodeApi;
 
@@ -95,7 +94,6 @@ function App() {
         ),
         fine: computePercentage(fine, state.breakdown.iteration_run_time_ms),
       });
-      ReactTooltip.rebuild();
     }
   };
 
@@ -104,14 +102,14 @@ function App() {
       if (event.data["message_type"] === "connection") {
         setConnectionStatus(event.data["status"]);
       } else if (event.data["message_type"] === "analysis") {
-        if(event.data.habitat[0][0]==="unavailable" && event.data.habitat[0][1]===-1.0){
-          event.data.habitat = profiling_data.habitat
-          event.data.habitat.push(["demo",1])
+        if (
+          event.data.habitat[0][0] === "unavailable" &&
+          event.data.habitat[0][1] === -1.0
+        ) {
+          event.data.habitat = profiling_data.habitat;
+          event.data.habitat.push(["demo", 1]);
         }
         processAnalysisState(event.data);
-      } else if (event.data["message_type"] === "loaded_additional_providers") {
-        console.log(event.data["additionalProviders"].split(","))
-        setExternalData(event.data["additionalProviders"].split(","));
       } else if (event.data["message_type"] === "text_change") {
         setTextChanged(true);
       } else if (event.data["message_type"] === "error") {
@@ -229,7 +227,7 @@ function App() {
               <DeploymentTab
                 numIterations={numIterations}
                 habitatData={analysisState["habitat"]}
-                additionalProviders={externalData}
+                additionalProviders={analysisState["additionalProviders"]}
               />
             </Tab>
           </Tabs>
