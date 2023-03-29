@@ -38,7 +38,7 @@
         },
         "skyline.providers": {
           "type": "string",
-          "default": "https://deepview-explorer-public.s3.amazonaws.com/vscode-cloud-providers/dummy1.json",
+          "default": "",
           "description": "additional urls separated by commas"
         },
         "skyline.isTelemetryEnabled": {
