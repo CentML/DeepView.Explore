@@ -29,8 +29,8 @@ To install, either:
 Once you have the vsix file, run `code --install-extension vscode*.vsix` to install the extension.
 **Note: the file [build_vsix_dev.sh] is only to be used for development**
 
-**Adding cloud instances to the Deployment Tab:** You can include information about the instances that you use thrugh the extension settings. There you will find an option named **providers** that accepts a list of urls separated by commas. Each url must be a JSON file that follows the schema speficied here : [schema](skyline-vscode/react-ui/src/schema/CloudProvidersSchema.js).<br/>
-Addittionally, you need to add the necessary access so the extension can read the file.<br/>
+**Adding cloud instances to the Deployment Tab:** You can include information about the instances that you use thrugh the extension settings. There you will find an option named **providers** that accepts a list of urls separated by commas. Each url must be a JSON file that follows the schema specified here : [schema](skyline-vscode/react-ui/src/schema/CloudProvidersSchema.js).<br/>
+Additionally, you need to add the necessary access so the extension can read the file.<br/>
 You can use an AWS S3 bucket to store your files. Change CORS settings in Permissions tab.
 
 **CORS requirements**:

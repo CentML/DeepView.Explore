@@ -1,25 +1,24 @@
 import Ajv from "ajv";
 import {
   gpuPropertyList,
+  CENTML_CLOUD_PROVIDERS_URL,
   deploymentScatterGraphColorSize,
 } from "../data/properties";
+import {fetchingURLErrors} from '../utils/utils';
 import { cloudProviderSchema } from "../schema/CloudProvidersSchema";
 
 const ajv = new Ajv({ allErrors: true }); // to report all validation errors (rather than failing on the first errors)
 const validate = ajv.compile(cloudProviderSchema);
 
-class ResponseBuffer {
-  constructor() {
-    this.instanceId = 0;
-    this.instanceArray = [];
-    this.cloudProviders = {};
-    this.errors = [];
-  }
-}
 export const loadJsonFiles = async (habitatData, additionalProviders) => {
-  const buffer = new ResponseBuffer();
+  let instanceId = 0;
+  const instanceArray = [];
+  const cloudProviders = {};
+  const errors = [];
+
+  // const buffer = new cloudProviderAndInstancesBuilder();
   let urlList = [
-    "https://deepview-explorer-public.s3.amazonaws.com/vscode-cloud-providers/providers.json",
+    CENTML_CLOUD_PROVIDERS_URL,
   ];
   const additionalList = additionalProviders ? additionalProviders.split(","):[];
   urlList = urlList.concat(additionalList);
@@ -34,7 +33,7 @@ export const loadJsonFiles = async (habitatData, additionalProviders) => {
         const valid = validate(respJsonData);
         if (valid) {
           for (const cloudProvider of respJsonData) {
-            buffer.cloudProviders[cloudProvider.name.toLocaleLowerCase()] = {
+            cloudProviders[cloudProvider.name.toLocaleLowerCase()] = {
               name: cloudProvider.name,
               logo: cloudProvider.logo,
               color: cloudProvider.color,
@@ -49,8 +48,8 @@ export const loadJsonFiles = async (habitatData, additionalProviders) => {
                   item.name.toLocaleLowerCase() ===
                   instanceData.gpu.toLocaleLowerCase()
               );
-              buffer.instanceArray.push({
-                id: buffer.instanceId,
+              instanceArray.push({
+                id: instanceId,
                 x: found_in_habitat[1], // msec
                 y: (instanceData.cost / 3.6e6) * found_in_habitat[1], // cost per msec * habitatData = cost per 1 iteration
                 info: {
@@ -64,34 +63,22 @@ export const loadJsonFiles = async (habitatData, additionalProviders) => {
                 fill: cloudProvider.color,
                 z: deploymentScatterGraphColorSize.NORMALSIZE,
               });
-              buffer.instanceId += 1;
+              instanceId += 1;
             }
           }
         } else {
-          buffer.errors.push({
-            msg: `invalid data format from url: ${resp.url}`,
-            invalidFields: validate.errors.map((err) => ({
-              field: err.instancePath,
-              err: err.message,
-            })),
-          });
+          errors.push(fetchingURLErrors("schemaValidationErrors",resp,validate));
         }
       } catch (error) {
-        buffer.errors.push({
-          msg: `error reading from url: ${resp.url}`,
-          code: `status: ${resp.statusText} | code: ${resp.status}`,
-        });
+        errors.push(fetchingURLErrors("noJsonResponseFromUrl",resp,null));
       }
     } else {
-      buffer.errors.push({
-        msg: `error reading from url: ${resp.url}`,
-        code: `status: ${resp.statusText} | code: ${resp.status}`,
-      });
+      errors.push(fetchingURLErrors(null,resp,null));
     }
   }
   return {
-    cloudProviders: Object.keys(buffer.cloudProviders).length > 0 ? buffer.cloudProviders: null,
-    instanceArray: buffer.instanceArray.length > 0 ? buffer.instanceArray:null,
-    errors: buffer.errors.length > 0 ? buffer.errors:null,
+    cloudProviders: Object.keys(cloudProviders).length > 0 ? cloudProviders: null,
+    instanceArray: instanceArray.length > 0 ? instanceArray:null,
+    errors: errors.length > 0 ? errors:null,
   };
 };
