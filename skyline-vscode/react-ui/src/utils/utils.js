@@ -231,25 +231,18 @@ export function currencyFormat(cost) {
   return scientificFormater.format(cost);
 }
 
-export function fetchingURLErrors(type, response, validationErrors) {
+export function getErrMsgFromInvalidURL(type, response) {
+  const code = `status: ${response?.statusText} | code: ${response?.status}`;
   switch (type) {
-    case "schemaValidationErrors":
-      return {
-        msg: `invalid data format from url: ${response?.url}`,
-        invalidFields: validationErrors?.errors.map((err) => ({
-          field: err.instancePath,
-          err: err.message,
-        })),
-      };
     case "noJsonResponseFromUrl":
       return {
         msg: `no json data from url: ${response?.url}`,
-        code: `status: ${response?.statusText} | code: ${response?.status}`,
+        code
       };
     default:  // url is not accesible
       return {
-        msg: `error reading from url: ${response?.url}`,
-        code: `status: ${response?.statusText} | code: ${response?.status}`,
+        msg: `url is not accesible: ${response?.url}`,
+        code
       };
   }
 }

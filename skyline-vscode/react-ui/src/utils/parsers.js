@@ -4,7 +4,7 @@ import {
   CENTML_CLOUD_PROVIDERS_URL,
   deploymentScatterGraphColorSize,
 } from "../data/properties";
-import {fetchingURLErrors} from '../utils/utils';
+import {getErrMsgFromInvalidURL} from '../utils/utils';
 import { cloudProviderSchema } from "../schema/CloudProvidersSchema";
 
 const ajv = new Ajv({ allErrors: true }); // to report all validation errors (rather than failing on the first errors)
@@ -67,13 +67,19 @@ export const loadJsonFiles = async (habitatData, additionalProviders) => {
             }
           }
         } else {
-          errors.push(fetchingURLErrors("schemaValidationErrors",resp,validate));
+          errors.push({
+            msg: `invalid data format from url: ${resp.url}`,
+            invalidFields: validate.errors.map((err) => ({
+              field: err.instancePath,
+              err: err.message,
+            })),
+          });
         }
       } catch (error) {
-        errors.push(fetchingURLErrors("noJsonResponseFromUrl",resp,null));
+        errors.push(getErrMsgFromInvalidURL("noJsonResponseFromUrl",resp));
       }
     } else {
-      errors.push(fetchingURLErrors(null,resp,null));
+      errors.push(getErrMsgFromInvalidURL("invalidUrl",resp));
     }
   }
   return {
