@@ -1,78 +1,71 @@
-const BYTE_UNITS = [
-  'B',
-  'KB',
-  'MB',
-  'GB',
-];
+const BYTE_UNITS = ["B", "KB", "MB", "GB"];
 
-const ENERGY_UNITS = [
-  'J',
-  'KJ',
-  'MJ',
-  'GJ',
-  'TJ',
-  'PJ',
-  'EJ'
-]
+const ENERGY_UNITS = ["J", "KJ", "MJ", "GJ", "TJ", "PJ", "EJ"];
 
 const GENERIC_UNITS = [
-  '',
-  'Thousands',
-  'Millions',
+  "",
+  "Thousands",
+  "Millions",
   "Billions",
-  'Trillion',
-  'Quadrillion'
-]
+  "Trillion",
+  "Quadrillion",
+];
 
 const formatTimeUnits = [
-  [365,'day'],
-  [24, 'hour'],
-  [60, 'minute'],
-  [60, 'second'],
-  [1000,'msec']
-]
+  [365, "day"],
+  [24, "hour"],
+  [60, "minute"],
+  [60, "second"],
+  [1000, "msec"],
+];
 
 // reference : https://www.epa.gov/energy/greenhouse-gas-equivalencies-calculator
 const ENERGY_CONVERSION_UNITS = {
   kwh: 2.77778e-7, // 1J = 2.77778e-7 kwh
   carbon: 4.33e-4, // Electricity consumed (kilowatt-hours) : 7.09 × 10-4 metric tons CO2/kWh
-  miles: 1/(4.03e-4), // Miles driven by the average gasoline-powered passenger vehicle : 4.03 x 10-4 metric tons CO2E/mile
-  household: 1/7.94, // Home energy use : 7.94 metric tons CO2 per home per year.
-  phone: 1/(8.22e-6) // 8.22 x 10-6 metric tons CO2/smartphone charged
-}
+  miles: 1 / 4.03e-4, // Miles driven by the average gasoline-powered passenger vehicle : 4.03 x 10-4 metric tons CO2E/mile
+  household: 1 / 7.94, // Home energy use : 7.94 metric tons CO2 per home per year.
+  phone: 1 / 8.22e-6, // 8.22 x 10-6 metric tons CO2/smartphone charged
+};
 
-export function unitScale(quantity, unit){
+export function unitScale(quantity, unit) {
   let idx = 0;
-  while(quantity > 1000){
-    quantity /=1000;
-    idx +=1;
+  while (quantity > 1000) {
+    quantity /= 1000;
+    idx += 1;
   }
 
-  switch(unit){
-    case 'energy':
-      return {val:parseFloat(Number(quantity).toFixed(2)),scale:ENERGY_UNITS[idx],scale_index:idx}
-    case 'generic':
-      return {val:parseFloat(Number(quantity).toFixed(2)),scale:GENERIC_UNITS[idx],scale_index:idx}
+  switch (unit) {
+    case "energy":
+      return {
+        val: parseFloat(Number(quantity).toFixed(2)),
+        scale: ENERGY_UNITS[idx],
+        scale_index: idx,
+      };
+    case "generic":
+      return {
+        val: parseFloat(Number(quantity).toFixed(2)),
+        scale: GENERIC_UNITS[idx],
+        scale_index: idx,
+      };
     default:
-      return null
+      return null;
   }
-
 }
 
-export function homeEnergyUsedFormat(quantity){
-  if (quantity >= 1){
-    return [parseFloat(Number(quantity).toFixed(2)),'year']
+export function homeEnergyUsedFormat(quantity) {
+  if (quantity >= 1) {
+    return [parseFloat(Number(quantity).toFixed(2)), "year"];
   }
   let idx = 0;
   let converter = [];
-  while(quantity < 1){
+  while (quantity < 1) {
     converter = formatTimeUnits[idx];
     quantity *= converter[0];
-    idx+=1;
+    idx += 1;
   }
-  return [parseFloat(Number(quantity).toFixed(2)),converter[1]];
+  return [parseFloat(Number(quantity).toFixed(2)), converter[1]];
 }
-
 
 // export function processFileReference(fileReferenceProto) {
 //   return {
@@ -82,8 +75,8 @@ export function homeEnergyUsedFormat(quantity){
 // };
 
 export function toPercentage(numerator, denominator) {
-  return numerator / denominator * 100;
-};
+  return (numerator / denominator) * 100;
+}
 
 export function toReadableByteSize(sizeBytes) {
   let index = 0;
@@ -99,10 +92,10 @@ export function toReadableByteSize(sizeBytes) {
   }
 
   return `${size.toFixed(1)} ${BYTE_UNITS[index]}`;
-};
+}
 
-export function scalePercentages({scaleSelector, shouldScale, applyFactor}) {
-  return function(list, scaleFactor) {
+export function scalePercentages({ scaleSelector, shouldScale, applyFactor }) {
+  return function (list, scaleFactor) {
     let total = 0;
     const adjusted = [];
 
@@ -119,18 +112,19 @@ export function scalePercentages({scaleSelector, shouldScale, applyFactor}) {
     }
 
     return adjusted.map(([newValue, element]) =>
-      applyFactor(element, toPercentage(newValue, total)));
+      applyFactor(element, toPercentage(newValue, total))
+    );
   };
-};
+}
 
 export function getTraceByLevel(tree) {
   console.log("getTraceByLevel");
-  var tree_size = function(idx) {
+  var tree_size = function (idx) {
     let total = 1;
     let num_children = tree[idx]["num_children"];
     for (let i = 0; i < num_children; i++) {
-      tree[idx+total]["depth"] = 1 + tree[idx]["depth"];
-      tree[idx+total]["parent"] = tree[idx];
+      tree[idx + total]["depth"] = 1 + tree[idx]["depth"];
+      tree[idx + total]["parent"] = tree[idx];
       total += tree_size(idx + total);
     }
     return total;
@@ -139,69 +133,87 @@ export function getTraceByLevel(tree) {
   tree[0]["depth"] = 0;
   tree_size(0);
 
-  let coarseDecomposition = tree.filter(node => { return node["depth"] === 1; });
-  for (let fineLevel = 1; ; fineLevel ++) {
-    let fineDecomposition = tree.filter(node => { return node["depth"] === fineLevel; });
+  let coarseDecomposition = tree.filter((node) => {
+    return node["depth"] === 1;
+  });
+  for (let fineLevel = 1; ; fineLevel++) {
+    let fineDecomposition = tree.filter((node) => {
+      return node["depth"] === fineLevel;
+    });
     console.log(`fineLevel: ${fineLevel}, length: ${fineDecomposition.length}`);
-    if (fineDecomposition.length === 0) return { coarse: coarseDecomposition, fine: coarseDecomposition };
-    if (fineDecomposition.length >= 7) return { coarse: coarseDecomposition, fine: fineDecomposition };
+    if (fineDecomposition.length === 0)
+      return { coarse: coarseDecomposition, fine: coarseDecomposition };
+    if (fineDecomposition.length >= 7)
+      return { coarse: coarseDecomposition, fine: fineDecomposition };
   }
 }
 
 export function computePercentage(operations, total_time) {
   let tracked_total_time = 0;
   for (let elem in operations) {
-    tracked_total_time += operations[elem]["forward_ms"] + operations[elem]["backward_ms"];
+    tracked_total_time +=
+      operations[elem]["forward_ms"] + operations[elem]["backward_ms"];
   }
   total_time = Math.max(total_time, tracked_total_time);
 
   for (let elem in operations) {
-    operations[elem]["percentage"] = 100 * (operations[elem]["forward_ms"] + operations[elem]["backward_ms"]) / total_time;
+    operations[elem]["percentage"] =
+      (100 *
+        (operations[elem]["forward_ms"] + operations[elem]["backward_ms"])) /
+      total_time;
   }
 
   if (tracked_total_time < total_time) {
     operations.push({
       name: "untracked",
-      percentage: 100 * (total_time - tracked_total_time) / total_time,
+      percentage: (100 * (total_time - tracked_total_time)) / total_time,
       num_children: 0,
       forward_ms: 0,
       backward_ms: 0,
       size_bytes: 0,
-      total_time: total_time - tracked_total_time
+      total_time: total_time - tracked_total_time,
     });
   }
 
   return operations;
 }
 
-export function energy_data(currentTotal){
-  const kwh = currentTotal * ENERGY_CONVERSION_UNITS['kwh'];
-  const carbon_emission_tons = kwh*ENERGY_CONVERSION_UNITS['carbon'];
-  const carbon_unit = carbon_emission_tons < 1 ? 
-      `${parseFloat(Number(carbon_emission_tons*1000).toFixed(2))} kg`: 
-      `${parseFloat(Number(carbon_emission_tons).toFixed(2))} Metric Tons`;
-  const miles = unitScale(carbon_emission_tons * ENERGY_CONVERSION_UNITS['miles'],'generic');
-  const household = homeEnergyUsedFormat(carbon_emission_tons * ENERGY_CONVERSION_UNITS['household']);
-  const phone = unitScale(carbon_emission_tons * ENERGY_CONVERSION_UNITS['phone'],'generic');
+export function energy_data(currentTotal) {
+  const kwh = currentTotal * ENERGY_CONVERSION_UNITS["kwh"];
+  const carbon_emission_tons = kwh * ENERGY_CONVERSION_UNITS["carbon"];
+  const carbon_unit =
+    carbon_emission_tons < 1
+      ? `${parseFloat(Number(carbon_emission_tons * 1000).toFixed(2))} kg`
+      : `${parseFloat(Number(carbon_emission_tons).toFixed(2))} Metric Tons`;
+  const miles = unitScale(
+    carbon_emission_tons * ENERGY_CONVERSION_UNITS["miles"],
+    "generic"
+  );
+  const household = homeEnergyUsedFormat(
+    carbon_emission_tons * ENERGY_CONVERSION_UNITS["household"]
+  );
+  const phone = unitScale(
+    carbon_emission_tons * ENERGY_CONVERSION_UNITS["phone"],
+    "generic"
+  );
 
   return {
     kwh: parseFloat(Number(kwh).toFixed(2)),
     carbon: carbon_unit,
     miles: `${miles.val} ${miles.scale}`,
     household: household,
-    phone: `${phone.val} ${phone.scale}`
-  }
-
+    phone: `${phone.val} ${phone.scale}`,
+  };
 }
 
-export function calculate_training_time(numIterations, instance){
+export function calculate_training_time(numIterations, instance) {
   // instance.x is the time for 1 iterations in msec
   // 3.6e6 to convert total training time from msec to hours, divided by the total number of GPUS
   // output is in hours
-  return numIterations * instance.x / 3.6e6 / instance.info.ngpus;
+  return (numIterations * instance.x) / 3.6e6 / instance.info.ngpus;
 }
 
-export function numberFormat(num){
+export function numberFormat(num) {
   const formatter = new Intl.NumberFormat("en-US", {
     notation: "compact",
     compactDisplay: "long",
@@ -209,12 +221,28 @@ export function numberFormat(num){
   return formatter.format(num);
 }
 
-export function currencyFormat(cost){
+export function currencyFormat(cost) {
   const scientificFormater = new Intl.NumberFormat("en-US", {
-    style: 'currency', 
-    currency: 'USD',
+    style: "currency",
+    currency: "USD",
     notation: "compact",
     compactDisplay: "short",
   });
   return scientificFormater.format(cost);
+}
+
+export function getErrMsgFromInvalidURL(type, response) {
+  const code = `status: ${response?.statusText} | code: ${response?.status}`;
+  switch (type) {
+    case "noJsonResponseFromUrl":
+      return {
+        msg: `no json data from url: ${response?.url}`,
+        code
+      };
+    default:  // url is not accesible
+      return {
+        msg: `url is not accesible: ${response?.url}`,
+        code
+      };
+  }
 }

@@ -29,6 +29,35 @@ To install, either:
 Once you have the vsix file, run `code --install-extension vscode*.vsix` to install the extension.
 **Note: the file [build_vsix_dev.sh] is only to be used for development**
 
+**Adding cloud instances to the Deployment Tab:** You can include information about the instances that you use thrugh the extension settings. There you will find an option named **providers** that accepts a list of urls separated by commas. Each url must be a JSON file that follows the schema specified here : [schema](skyline-vscode/react-ui/src/schema/CloudProvidersSchema.js).<br/>
+Additionally, you need to add the necessary access so the extension can read the file.<br/>
+You can use an AWS S3 bucket to store your files. Change CORS settings in Permissions tab.
+
+**CORS requirements**:
+```
+[
+    {
+        "AllowedHeaders": [],
+        "AllowedMethods": [
+            "GET"
+        ],
+        "AllowedOrigins": [
+            "http://*",
+            "https://*",
+            "vscode-webview://*"
+        ],
+        "ExposeHeaders": []
+    }
+]
+```
+and allow public access to the file
+
+This is our [file](https://deepview-explorer-public.s3.amazonaws.com/vscode-cloud-providers/providers.json) that you can use as an example.
+
+
+
+
+
 ### Backend Installation
 This plugin requires Skyline (the installation instruction for which can be found [here](https://github.com/CentML/skyline)) and (optionally) Habitat (used to extrapolate GPU runtimes, instructions found [here](https://github.com/CentML/habitat)). **Skyline must be launched before running this extension.**
 
@@ -36,7 +65,8 @@ After installation, please make note of the path to the `skyline` binary. To do 
 
 ## Usage example
 1. Open one of the examples DNN project examples, i.e. [Resnet](https://github.com/CentML/skyline/tree/main/examples/resnet) from Skyline in VSCode
-2. Press `Ctrl+Shift+P`, then select `Skyline` from the dropdown list.
+2. (Optional) You can add other external cloud instances. Use the CloudProvidersSchema.yaml file as a reference. This file is located under the schemas folder. Once you have created your own yaml file, you can reference the path to this file in the extension settings in **providers** option. The file will be read when the extension is called.
+3. Press `Ctrl+Shift+P`, then select `Skyline` from the dropdown list.
 3. Click on `Begin Analysis`.
 
 ## Disabling telemetry

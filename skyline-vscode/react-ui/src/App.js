@@ -94,7 +94,6 @@ function App() {
         ),
         fine: computePercentage(fine, state.breakdown.iteration_run_time_ms),
       });
-      ReactTooltip.rebuild();
     }
   };
 
@@ -103,9 +102,12 @@ function App() {
       if (event.data["message_type"] === "connection") {
         setConnectionStatus(event.data["status"]);
       } else if (event.data["message_type"] === "analysis") {
-        if(event.data.habitat[0][0]==="unavailable" && event.data.habitat[0][1]===-1.0){
-          event.data.habitat = profiling_data.habitat
-          event.data.habitat.push(["demo",1])
+        if (
+          event.data.habitat[0][0] === "unavailable" &&
+          event.data.habitat[0][1] === -1.0
+        ) {
+          event.data.habitat = profiling_data.habitat;
+          event.data.habitat.push(["demo", 1]);
         }
         processAnalysisState(event.data);
       } else if (event.data["message_type"] === "text_change") {
@@ -225,6 +227,7 @@ function App() {
               <DeploymentTab
                 numIterations={numIterations}
                 habitatData={analysisState["habitat"]}
+                additionalProviders={analysisState["additionalProviders"]}
               />
             </Tab>
           </Tabs>

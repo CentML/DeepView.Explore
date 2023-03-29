@@ -36,6 +36,11 @@
           "default": 60120,
           "description": "Specifies the port of the profiler."
         },
+        "skyline.providers": {
+          "type": "string",
+          "default": "",
+          "description": "additional urls separated by commas"
+        },
         "skyline.isTelemetryEnabled": {
           "type": "string",
           "default": "Ask me",

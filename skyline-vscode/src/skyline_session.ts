@@ -1,4 +1,3 @@
-
 import * as vscode from 'vscode';
 import * as pb from './protobuf/innpv_pb';
 import * as path from 'path';
@@ -7,6 +6,7 @@ const fs = require('fs');
 import {Socket} from 'net';
 import { simpleDecoration } from './decorations';
 import { energy_component_type_mapping, getObjectKeyNameFromValue } from './utils';
+import { stringify } from 'querystring';
 
 const crypto = require('crypto');
 const resolve = require('path').resolve;
@@ -16,9 +16,10 @@ export interface SkylineSessionOptions {
     projectRoot: string;
     addr: string;
     port: number;
+    providers: string;
     isTelemetryEnabled: CallableFunction;
-    webviewPanel: vscode.WebviewPanel,
-    telemetryLogger: vscode.TelemetryLogger
+    webviewPanel: vscode.WebviewPanel;
+    telemetryLogger: vscode.TelemetryLogger;
 }
 
 export interface SkylineEnvironment {
@@ -30,6 +31,7 @@ export class SkylineSession {
     connection: Socket;
     port: number;
     addr: string;
+    providers:string;
     seq_num: number;
     last_length: number;
     message_buffer: Uint8Array;
@@ -68,8 +70,9 @@ export class SkylineSession {
         this.connection.on('connect', this.on_connect.bind(this));
         this.connection.on('data', this.on_data.bind(this));
         this.connection.on('close', this.on_close_connection.bind(this));
-        this.port = options.port
-        this.addr = options.addr
+        this.port = options.port;
+        this.addr = options.addr;
+        this.providers = options.providers;
 
         this.seq_num = 0;
         this.last_length = -1;
@@ -379,7 +382,7 @@ export class SkylineSession {
 				<meta name="theme-color" content="#000000">
 				<title>Skyline</title>
 				<link rel="stylesheet" type="text/css" href="${styleUri}">
-				<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src vscode-resource: https:; script-src 'nonce-${nonce}';style-src vscode-resource: 'unsafe-inline' http: https: data:;">
+				<meta http-equiv="Content-Security-Policy" content="default-src 'none'; connect-src *; img-src vscode-resource: https:; script-src 'unsafe-eval' 'nonce-${nonce}';style-src vscode-resource: 'unsafe-inline' http: https: data:;">
 				<base href="${ buildUri }/">
 			</head>
 			<body>
@@ -407,7 +410,9 @@ export class SkylineSession {
             "breakdown": {},
 
             "habitat": [] as Array<[string, number]>,
-            "energy": {}
+            "additionalProviders": this.providers,
+            "energy": {},
+
         };
 
         if (this.msg_throughput) {

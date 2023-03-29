@@ -7,7 +7,7 @@ import Badge from "react-bootstrap/Badge";
 import React from "react";
 import { numberFormat } from "../utils/utils";
 
-const DeploymentTab = ({ numIterations, habitatData }) => {
+const DeploymentTab = ({ numIterations, habitatData,additionalProviders }) => {
   return (
     <>
       {habitatData.length === 0 ? (
@@ -32,6 +32,7 @@ const DeploymentTab = ({ numIterations, habitatData }) => {
             <ProviderPanel
               numIterations={numIterations}
               habitatData={habitatData}
+              additionalProviders={additionalProviders}
             />
           </Row>
         </Container>

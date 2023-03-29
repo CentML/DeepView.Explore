@@ -1,13 +1,14 @@
 import { render, screen } from "@testing-library/react";
 import DeploymentTab from "./DeploymentTab";
-
+import { enableFetchMocks } from "jest-fetch-mock";
+enableFetchMocks();
 const { ResizeObserver } = window;
 const numIterations = 10000;
 
-const data = [
+const habitatData = [
   ["source", 22.029312],
   ["P100", 14.069682],
-  ["P4000", 127.268085], // 27.268085
+  ["P4000", 127.268085],
   ["RTX2070", 16.088268],
   ["RTX2080Ti", 11.826558],
   ["T4", 22.029312],
@@ -19,13 +20,29 @@ const data = [
   ["RTX4000", 20.2342],
 ];
 
+const correctData = [
+  {
+    name:'google',
+    logo:'resources/google.png',
+    color:'#ea4335',
+    instances:[
+      {
+        name:'a2-highgpu-1g',
+        gpu: 'a100',
+        ngpus:1,
+        cost:36.67
+      }
+    ]
+  }
+]
+
 beforeEach(() => {
   delete window.ResizeObserver;
   window.ResizeObserver = jest.fn().mockImplementation(() => ({
     observe: jest.fn(),
     unobserve: jest.fn(),
     disconnect: jest.fn(),
-  }));
+  }))
 });
 
 afterEach(() => {
@@ -59,17 +76,25 @@ test("Shows loading spinner when there is no habitat data", () => {
   expect(deploymentSection).toBeNull();
 });
 
-test("Shows deployment target when there is habitat data", () => {
+test("Shows deployment target when there is habitat data", async () => {
+ 
   // ARRANGE
-  const { container } = render(
-    <DeploymentTab numIterations={numIterations} habitatData={data} />
-  );
+  // Mock fetch response
+  jest.spyOn(global, 'fetch').mockResolvedValue({
+    ok: true,
+    json: jest.fn().mockResolvedValue(correctData)
+  })
+  
+    const { container } = render(
+      <DeploymentTab numIterations={numIterations} habitatData={habitatData} additionalProviders={""}/>
+    );
 
   // ASSERT
-  expect(screen.getByText(/deployment target/i)).toBeTruthy();
+  expect(await screen.findByText(/deployment target/i)).toBeTruthy();
+
   const deploymentSection = screen.queryByText(/loading information/i);
   expect(deploymentSection).toBeNull();
   expect(
-    container.querySelector(".recharts-responsive-container")  // eslint-disable-line
+    container.querySelector(".recharts-responsive-container") // eslint-disable-line
   ).toBeTruthy();
 });

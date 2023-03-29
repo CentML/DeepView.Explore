@@ -51,12 +51,12 @@ export function activate(context: vscode.ExtensionContext) {
 						retainContextWhenHidden: true
 					}
 				);
-
 				let sess_options: SkylineSessionOptions = {
 					context: 		context,
 					projectRoot: 	uri[0].fsPath,
 					addr: 			vsconfig.address,
 					port: 			vsconfig.port,
+					providers:		vsconfig.providers,
 					isTelemetryEnabled: isTelemetryEnabled,
 					webviewPanel: 	panel,
 					telemetryLogger: logger
