@@ -6,6 +6,8 @@ on:
       - closed
     branches:
       - main
+    paths:
+      - 'skyline-vscode/react-ui/src/schema/providers.json'
 
 jobs:
   update-information:
