@@ -1,5 +1,12 @@
 name: update-cloud-providers
 
+on:
+  pull_request_target:
+    types:
+      - closed
+    branches:
+      - main
+
 jobs:
   update-information:
     if: (github.event.pull_request.merged == true)
