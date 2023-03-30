@@ -1,3 +1,2 @@
 node_modules
 skyline-vscode/src/version.ts
-**/*.secrets
