@@ -10,7 +10,7 @@ ngf = 32
 ngpu = 1
 image_size = 32
 
-def skyline_model_provider():
+def deepview_model_provider():
     if network == 'G':
         net = DVAE.DCGAN_G(image_size, nz, nc, ngf, ngpu)
     elif network == 'E':
@@ -19,7 +19,7 @@ def skyline_model_provider():
     return net.cuda()
 
 
-def skyline_input_provider(batch_size=1024):
+def deepview_input_provider(batch_size=1024):
     """
     target torch.Size([131072])
     going into E torch.Size([128, 1, 32, 32])
@@ -40,7 +40,7 @@ def skyline_input_provider(batch_size=1024):
         torch.randint(low=0, high=1000, size=output_shape).cuda(),
     )
 
-def skyline_iteration_provider(model):
+def deepview_iteration_provider(model):
     optimizer = torch.optim.SGD(model.parameters(), lr=1e-3)
     def iteration(inputs, targets):
         optimizer.zero_grad()
