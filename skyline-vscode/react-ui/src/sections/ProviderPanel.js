@@ -19,16 +19,18 @@ import Alert from "react-bootstrap/Alert";
 import { deploymentScatterGraphColorSize } from "../data/properties";
 
 import { ProviderPanelModal } from "../components/Modals";
+import { HorizontalBarGraph } from "../components/BarGraph";
 
 import {
   calculate_training_time,
+  getCarbonEmissionOfInstance,
   numberFormat,
   currencyFormat,
 } from "../utils/utils";
 
 import { loadJsonFiles } from "../utils/parsers";
 
-const ProviderPanel = ({ numIterations, habitatData, additionalProviders }) => {
+const ProviderPanel = ({ numIterations, habitatData, cloudProviderURLs }) => {
   const [providerPanelSettings, setProviderPanelSettings] = useState({
     plotData: null,
     initialData: null,
@@ -36,6 +38,7 @@ const ProviderPanel = ({ numIterations, habitatData, additionalProviders }) => {
     nearest: null,
     clicked: null,
     fetchErrors: null,
+    carbonData: null,
     maxNumGpu: 0,
     provider: "all",
     gpu: "all",
@@ -108,20 +111,26 @@ const ProviderPanel = ({ numIterations, habitatData, additionalProviders }) => {
     }));
   };
 
-  const recalculateCost = (provider) => {
-    if (provider == null) return;
+  const recalculateCost = (instance) => {
+    if (instance == null) return;
     const originalData = providerPanelSettings.initialData.find(
-      (item) => item.id === provider.id
+      (item) => item.id === instance.id
     );
-
     let totalHr = calculate_training_time(numIterations, originalData); // NEED YUBO FEEDBACK
-    let totalCost = provider.info.cost * totalHr;
+    let totalCost = instance.info.cost * totalHr;
+    
+    let currCarbonData = getCarbonEmissionOfInstance(
+      totalHr, 
+      instance, 
+      providerPanelSettings.cloudProviders[instance.info.provider]
+    );
 
     setProviderPanelSettings((prevState) => ({
       ...prevState,
-      clicked: provider,
+      clicked: instance,
       estimated_cost: totalCost,
       estimated_time: totalHr,
+      carbonData: currCarbonData
     }));
   };
 
@@ -146,6 +155,10 @@ const ProviderPanel = ({ numIterations, habitatData, additionalProviders }) => {
     recalculateCost(value);
   };
 
+  const onClickCarbonBar = (value) => {
+    console.log(value);
+  }
+  
   useEffect(() => {
     recalculateCost(providerPanelSettings.clicked);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -153,7 +166,7 @@ const ProviderPanel = ({ numIterations, habitatData, additionalProviders }) => {
 
   useEffect(() => {
     async function fetchData() {
-      const jsondata = await loadJsonFiles(habitatData, additionalProviders);
+      const jsondata = await loadJsonFiles(habitatData, cloudProviderURLs);
       setProviderPanelSettings((prevState) => ({
         ...prevState,
         plotData: jsondata.instanceArray,
@@ -336,6 +349,13 @@ const ProviderPanel = ({ numIterations, habitatData, additionalProviders }) => {
                               </tr>
                             </tbody>
                           </Table>
+                          <HorizontalBarGraph 
+                            data={providerPanelSettings.carbonData}
+                            height={50*providerPanelSettings.carbonData.length}
+                            xlabel={"CO2 Equivalent (kg)"}
+                            color={"green"}
+                            onBarClick={onClickCarbonBar}
+                          /> 
                         </Card.Body>
                       </Card>
                     </CardGroup>

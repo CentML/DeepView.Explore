@@ -10,7 +10,7 @@ import { cloudProviderSchema } from "../schema/CloudProvidersSchema";
 const ajv = new Ajv({ allErrors: true }); // to report all validation errors (rather than failing on the first errors)
 const validate = ajv.compile(cloudProviderSchema);
 
-export const loadJsonFiles = async (habitatData, additionalProviders) => {
+export const loadJsonFiles = async (habitatData, cloudProviderURLs) => {
   let instanceId = 0;
   const instanceArray = [];
   const cloudProviders = {};
@@ -20,7 +20,7 @@ export const loadJsonFiles = async (habitatData, additionalProviders) => {
   let urlList = [
     CENTML_CLOUD_PROVIDERS_URL,
   ];
-  const additionalList = additionalProviders ? additionalProviders.split(","):[];
+  const additionalList = cloudProviderURLs ? cloudProviderURLs.split(","):[];
   urlList = urlList.concat(additionalList);
   const listOfPromises = urlList.map((url) =>
     fetch(url, { cache: "no-store" })
@@ -37,6 +37,8 @@ export const loadJsonFiles = async (habitatData, additionalProviders) => {
               name: cloudProvider.name,
               logo: cloudProvider.logo,
               color: cloudProvider.color,
+              regions: cloudProvider.regions,
+              pue: cloudProvider.pue
             };
             for (const instanceData of cloudProvider.instances) {
               const found_in_habitat = habitatData.find(
@@ -59,6 +61,7 @@ export const loadJsonFiles = async (habitatData, additionalProviders) => {
                   cost: instanceData.cost,
                   provider: cloudProvider.name.toLocaleLowerCase(),
                 },
+                regions: instanceData.regions,
                 vmem: found_in_gpuPropertyList.vmem,
                 fill: cloudProvider.color,
                 z: deploymentScatterGraphColorSize.NORMALSIZE,

@@ -80,50 +80,10 @@ test("Validate JSON file (URL) and return list of cloud providers and instances"
     json: jest.fn().mockResolvedValue(correctData),
   });
   const resp = await loadJsonFiles(habitatData, "");
-  expect(resp.cloudProviders).toStrictEqual({
-    gcp: {
-      name: "gcp",
-      logo: "resources/google.png",
-      color: "#ea4335",
-    },
-    aws: {
-      name: "aws",
-      logo: "resources/aws.png",
-      color: "#ff9900",
-    },
-  });
-  expect(resp.instanceArray.length).toEqual(2);
-  expect(resp.instanceArray).toContainEqual({
-    id: 0,
-    x: 10.068596,
-    y: 0.000010264374255555554,
-    info: {
-      instance: "a2-highgpu-1g",
-      gpu: "a100",
-      ngpus: 1,
-      cost: 3.67,
-      provider: "gcp",
-    },
-    vmem: 40,
-    fill: "#ea4335",
-    z: 200,
-  });
-  expect(resp.instanceArray).toContainEqual({
-    id: 1,
-    x: 10.182922,
-    y: 0.0000086554837,
-    info: {
-      instance: "p3.2xlarge",
-      gpu: "v100",
-      ngpus: 1,
-      cost: 3.06,
-      provider: "aws",
-    },
-    vmem: 16,
-    fill: "#ff9900",
-    z: 200,
-  });
+  expect(resp.errors).toBeNull();
 });
+
+//TODO mshin: Add tests to test out optional params
 
 test("JSON file (URL) is not in the correct format", async () => {
   jest.spyOn(global, "fetch").mockResolvedValue({

@@ -1,24 +1,45 @@
 export const cloudProviderSchema = {
-  title: "SCHEMA DEFINITION FOR CLOUD PROVIDERS",
+  title: "CLOUD PROVIDERS SCHEMA DEFINITION",
   description:
-    "list of cloud providers, (there needs to be at least 1 cloud provider)",
+    "List of cloud providers. Note that there needs to be at least 1 cloud provider ",
   type: "array",
   items: {
     type: "object",
     description:
-      "each cloud provider needs to include it's name, logo, color, and instance specifications",
+      "Properties related to the cloud provider.",
     required: ["name", "logo", "color", "instances"],
     properties: {
       name: {
         type: "string",
-        description: "name of cloud provider. eg: gcp,aws,azure,coreweaver",
+        description: "name of cloud provider. eg: gcp, aws, azure, coreweave",
       },
-      logo: { type: "string", description: "url reference to the logo" },
-      color: { type: "string", description: "color (CSS format)" },
+      logo: { 
+        type: "string", 
+        description: "url reference to the logo"
+      },
+      color: { 
+        type: "string",
+        description: "color (CSS format)" 
+      },
+      pue: {
+        type: "number",
+        description: "Power usage effectiveness is a constant factor on how efficiently the cloud provider uses power. The number should never be less than 1.",
+        minimum: 1
+      },
+      regions : { 
+        type: "object",
+        description: "Contains the cloud provider's different regions and any properties of the given region",
+        properties: {
+          emissionFactor: { 
+            type: "number", 
+            description: "The amount of metric tons of CO2 emitted using this region per KWh (metric ton/kWh)"
+          }
+        },
+      },
       instances: {
         type: "array",
         description:
-          "list of instances (there needs to be at least 1 instance)",
+          "list of instances. Note that there needs to be at least 1 instance",
         items: {
           type: "object",
           required: ["name", "gpu", "ngpus", "cost"],
@@ -39,7 +60,7 @@ export const cloudProviderSchema = {
                 "rtx4000",
               ],
               description:
-                "only GPUs supported by our product DeepView.Predict",
+                "GPU type. Note this GPU must be supported by DeepView.Predict",
             },
             ngpus: {
               type: "integer",
@@ -51,8 +72,16 @@ export const cloudProviderSchema = {
               exclusiveMinimum: 0,
               description: "cost per hour",
             },
-          },
-          
+            regions: { 
+              type: "array",
+              items: {
+                type: "string",
+                description: "Region name. Note that the name should correspond to a region name in the cloud provider."
+              },
+              minItems: 1,
+              description: "List of regions that can run the given instance."
+            }
+          },          
         },
         minItems: 1,
       },
