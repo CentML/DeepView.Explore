@@ -14,11 +14,11 @@ export default function Habitat({ habitatData }) {
     return (
       <>
         <div className="innpv-memory innpv-subpanel">
-          <Subheader icon="database">Habitat</Subheader>
+          <Subheader icon="database">DeepView.Predict</Subheader>
           <div className="innpv-subpanel-content">
             <Container fluid className="mt-2">
               <Row className="justify-content-md-center">
-                <h6>The local GPU is not supported by DeepView.Predict</h6>
+                <h6>The local GPU is not supported by DeepView.Predict or DeepView.Predict is not installed</h6>
               </Row>
             </Container>
           </div>
@@ -30,7 +30,7 @@ export default function Habitat({ habitatData }) {
   return (
     <>
       <div className="innpv-memory innpv-subpanel">
-        <Subheader icon="database">Habitat</Subheader>
+        <Subheader icon="database">DeepView.Predict</Subheader>
         <div className="innpv-subpanel-content">
           {habitatData.length === 0 ? (
             <Container fluid>
