@@ -15,15 +15,15 @@ import Table from "react-bootstrap/Table";
 import Form from "react-bootstrap/Form";
 import Spinner from "react-bootstrap/Spinner";
 import Alert from "react-bootstrap/Alert";
+import CarbonEquivalent from "./CarbonEquivalent";
 
 import { deploymentScatterGraphColorSize } from "../data/properties";
 
 import { ProviderPanelModal } from "../components/Modals";
-import { HorizontalBarGraph } from "../components/BarGraph";
 
 import {
   calculate_training_time,
-  getCarbonEmissionOfInstance,
+  getCarbonDataOfInstance,
   numberFormat,
   currencyFormat,
 } from "../utils/utils";
@@ -43,7 +43,7 @@ const ProviderPanel = ({ numIterations, habitatData, cloudProviderURLs }) => {
     provider: "all",
     gpu: "all",
     estimated_cost: 0,
-    estimated_time: 0,
+    estimated_time: 0
   });
 
   const habitatIsDemo = habitatData.find(
@@ -119,7 +119,7 @@ const ProviderPanel = ({ numIterations, habitatData, cloudProviderURLs }) => {
     let totalHr = calculate_training_time(numIterations, originalData); // NEED YUBO FEEDBACK
     let totalCost = instance.info.cost * totalHr;
     
-    let currCarbonData = getCarbonEmissionOfInstance(
+    let currCarbonData = getCarbonDataOfInstance(
       totalHr, 
       instance, 
       providerPanelSettings.cloudProviders[instance.info.provider]
@@ -154,10 +154,6 @@ const ProviderPanel = ({ numIterations, habitatData, cloudProviderURLs }) => {
     }));
     recalculateCost(value);
   };
-
-  const onClickCarbonBar = (value) => {
-    console.log(value);
-  }
   
   useEffect(() => {
     recalculateCost(providerPanelSettings.clicked);
@@ -194,7 +190,7 @@ const ProviderPanel = ({ numIterations, habitatData, cloudProviderURLs }) => {
               </Row>
             )}
             <Row>
-              <Col xl={12} xxl={8}>
+              <Col xl={12} xxl={12}>
                 <Row>
                   <Row className="mt-4 mb-2">
                     <Col>
@@ -290,7 +286,7 @@ const ProviderPanel = ({ numIterations, habitatData, cloudProviderURLs }) => {
                   </Row>
                 )}
               </Col>
-              <Col xl={12} xxl={4} className="mb-4">
+              <Col xl={12} xxl={12} className="mb-4">
                 <div className="innpv-memory innpv-subpanel">
                   <Subheader icon="database">Deployment Plan</Subheader>
                   {providerPanelSettings.clicked && (
@@ -349,13 +345,9 @@ const ProviderPanel = ({ numIterations, habitatData, cloudProviderURLs }) => {
                               </tr>
                             </tbody>
                           </Table>
-                          <HorizontalBarGraph 
-                            data={providerPanelSettings.carbonData}
-                            height={50*providerPanelSettings.carbonData.length}
-                            xlabel={"CO2 Equivalent (kg)"}
-                            color={"green"}
-                            onBarClick={onClickCarbonBar}
-                          /> 
+                          <CarbonEquivalent
+                            carbonData={providerPanelSettings.carbonData}
+                          />
                         </Card.Body>
                       </Card>
                     </CardGroup>

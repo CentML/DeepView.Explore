@@ -242,21 +242,33 @@ function getGPUAvgPower(gpuName) {
   return (GPU_POWER.MAX_WATTS[gpuName] - GPU_POWER.MIN_WATTS[gpuName]) * 0.5 + GPU_POWER.MIN_WATTS[gpuName];
 }
 
-export function getCarbonEmissionOfInstance(time, instance, cloudProvider) {
-  let x = [];
-  let y = [];
+export function getCarbonDataOfInstance(time, instance, cloudProvider) {
+  let carbonData = [];
   for (let index = 0; index < instance.regions.length; index++) {
-    x.push(getGPUAvgPower(instance.info.gpu) * instance.info.ngpus * time * cloudProvider.regions[instance.regions[index]].emissionsFactor * cloudProvider.pue);
-    y.push(instance.regions[index]);
+    let instanceCarbonEmissions = getGPUAvgPower(instance.info.gpu) * instance.info.ngpus * time * cloudProvider.regions[instance.regions[index]].emissionsFactor * cloudProvider.pue;
+    const miles = unitScale(
+      instanceCarbonEmissions * ENERGY_CONVERSION_UNITS["miles"],
+      "generic"
+    );
+    const household = homeEnergyUsedFormat(
+      instanceCarbonEmissions * ENERGY_CONVERSION_UNITS["household"]
+    );
+    const phone = unitScale(
+      instanceCarbonEmissions * ENERGY_CONVERSION_UNITS["phone"],
+      "generic"
+    );
+    carbonData.push({
+      regionName: instance.regions[index],
+      carbonEmissions: instanceCarbonEmissions,
+      miles: `${miles.val} ${miles.scale}`,
+      household: household,
+      phone: `${phone.val} ${phone.scale}`
+    });
   }
-  let data = [];
-  for (var j = 0; j < x.length; j++) {
-    data.push({'x': x[j], 'y': y[j]}); 
-  }
-  data.sort(function(a, b) {
-    return ((a.x < b.x) ? -1 : ((a.x === b.x) ? 0 : 1));
+  carbonData.sort(function(a, b) {
+    return ((a.carbonEmissions < b.carbonEmissions) ? -1 : ((a.x === b.x) ? 0 : 1));
   });
-  return data;
+  return carbonData;
 }
 
 export function numberFormat(num) {
