@@ -31,8 +31,6 @@ const CarbonEquivalent = ({ carbonData }) => {
   }
   carbonData.sort((a, b) => a.carbonEmissions - b.carbonEmissions);
   
-  const EQUIVALENT_PROPERTIES = ["miles", "household", "phone"]
-
   const toolTipFormatter = ({ active, payload, label }) => { 
     if (active && payload && payload.length) {
       return (
@@ -45,14 +43,12 @@ const CarbonEquivalent = ({ carbonData }) => {
           <li className="recharts-tooltip-item">{`${payload[0].payload.phone} smartphones charged `}</li>
           <li className="recharts-tooltip-item">{`${payload[0].payload.household[0]} homes' energy use for 1 ${payload[0].payload.household[1]}`}</li>
         </ul>
-
       </div>
     );
     } else {
       return null;
     }
   };
-
 
   return (
     <>
