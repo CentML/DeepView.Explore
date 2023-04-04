@@ -185,7 +185,7 @@ const ProviderPanel = ({ numIterations, habitatData, cloudProviderURLs }) => {
               <Row className="mt-2">
                 <Alert variant="danger">
                   Currently showing a demo data because local GPU is not
-                  supported by DeepView.Predict
+                  supported by DeepView.Predict or DeepView.Predict is not installed 
                 </Alert>
               </Row>
             )}
