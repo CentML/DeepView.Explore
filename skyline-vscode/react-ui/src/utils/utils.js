@@ -1,3 +1,28 @@
+const GPU_POWER = {
+  MIN_WATTS: {
+    "k520": 26,
+    "a10g": 18,
+    "t4": 8,
+    "m60": 35,
+    "k80": 35,
+    "v100": 35,
+    "a100": 46,
+    "p4": 9,
+    "p100": 36
+  },    
+  MAX_WATTS: {
+    "k520": 229,
+    "a10g": 156,
+    "t4": 71,
+    "m60": 306,
+    "k80": 306,
+    "v100": 306,
+    "a100": 107,
+    "p4": 76.5,
+    "p100": 306
+  }
+}
+
 const BYTE_UNITS = ["B", "KB", "MB", "GB"];
 
 const ENERGY_UNITS = ["J", "KJ", "MJ", "GJ", "TJ", "PJ", "EJ"];
@@ -211,6 +236,39 @@ export function calculate_training_time(numIterations, instance) {
   // 3.6e6 to convert total training time from msec to hours, divided by the total number of GPUS
   // output is in hours
   return (numIterations * instance.x) / 3.6e6 / instance.info.ngpus;
+}
+
+function getGPUAvgPower(gpuName) {
+  return (GPU_POWER.MAX_WATTS[gpuName] - GPU_POWER.MIN_WATTS[gpuName]) * 0.5 + GPU_POWER.MIN_WATTS[gpuName];
+}
+
+export function getCarbonDataOfInstance(time, instance, cloudProvider) {
+  let carbonData = [];
+  for (let index = 0; index < instance.regions.length; index++) {
+    let instanceCarbonEmissions = getGPUAvgPower(instance.info.gpu) * instance.info.ngpus * time * cloudProvider.regions[instance.regions[index]].emissionsFactor * cloudProvider.pue;
+    const miles = unitScale(
+      instanceCarbonEmissions * ENERGY_CONVERSION_UNITS["miles"],
+      "generic"
+    );
+    const household = homeEnergyUsedFormat(
+      instanceCarbonEmissions * ENERGY_CONVERSION_UNITS["household"]
+    );
+    const phone = unitScale(
+      instanceCarbonEmissions * ENERGY_CONVERSION_UNITS["phone"],
+      "generic"
+    );
+    carbonData.push({
+      regionName: instance.regions[index],
+      carbonEmissions: instanceCarbonEmissions,
+      miles: `${miles.val} ${miles.scale}`,
+      household: household,
+      phone: `${phone.val} ${phone.scale}`
+    });
+  }
+  carbonData.sort(function(a, b) {
+    return ((a.carbonEmissions < b.carbonEmissions) ? -1 : ((a.x === b.x) ? 0 : 1));
+  });
+  return carbonData;
 }
 
 export function numberFormat(num) {

@@ -7,7 +7,7 @@ on:
     branches:
       - main
     paths:
-      - 'skyline-vscode/react-ui/src/schema/providers.json'
+      - 'skyline-vscode/react-ui/public/providers.json'
 
 jobs:
   update-information:
@@ -26,5 +26,5 @@ jobs:
 
       - name: Upload cloud provider file to S3
         run: |
-          aws s3 cp skyline-vscode/react-ui/src/schema/providers.json s3://deepview-explorer-public/vscode-cloud-providers/
+          aws s3 cp skyline-vscode/react-ui/public/providers.json s3://deepview-explorer-public/vscode-cloud-providers/
           aws s3api put-object-acl --bucket deepview-explorer-public --key vscode-cloud-providers/providers.json --acl public-read

@@ -21,5 +21,11 @@ export const deploymentScatterGraphColorSize = {
   HIGHLIGHTSIZE: 280,
 };
 
-export const CENTML_CLOUD_PROVIDERS_URL = "https://deepview-explorer-public.s3.amazonaws.com/vscode-cloud-providers/providers.json";
+export let CENTML_CLOUD_PROVIDERS_URL;
+
+if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+  CENTML_CLOUD_PROVIDERS_URL = "providers.json";
+} else {
+  CENTML_CLOUD_PROVIDERS_URL = "https://deepview-explorer-public.s3.amazonaws.com/vscode-cloud-providers/providers.json";
+}
 
