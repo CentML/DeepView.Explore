@@ -63,7 +63,7 @@ export class SkylineSession {
     telemetryLogger: vscode.TelemetryLogger;
 
     constructor(options: SkylineSessionOptions, environ: SkylineEnvironment) {
-        console.log("SkylineSession instantiated");
+        console.log("DeepviewSession instantiated");
 
         this.resetBackendConnection = false;
         this.connection = new Socket();

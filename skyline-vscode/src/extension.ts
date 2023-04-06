@@ -23,8 +23,8 @@ export function activate(context: vscode.ExtensionContext) {
 	};
 	const logger = vscode.env.createTelemetryLogger(telemetrySender);
 
-	let disposable = vscode.commands.registerCommand('skyline-vscode.cmd_begin_analyze', () => {
-			let vsconfig = vscode.workspace.getConfiguration('skyline');
+	let disposable = vscode.commands.registerCommand('deepview-explore.cmd_begin_analyze', () => {
+			let vsconfig = vscode.workspace.getConfiguration('deepview');
 
 			let options: vscode.OpenDialogOptions = {
 				canSelectFiles: false,
@@ -40,8 +40,8 @@ export function activate(context: vscode.ExtensionContext) {
 				};
 
 				const panel = vscode.window.createWebviewPanel(
-					'skyline',
-					"Skyline",
+					'deepview',
+					"Deepview",
 					vscode.ViewColumn.Beside,
 					{
 						enableScripts: true,
@@ -87,7 +87,7 @@ export function deactivate() {
 }
 
 async function showTelemetryOptInDialogIfNeeded() {
-	let vsconfig = vscode.workspace.getConfiguration('skyline');
+	let vsconfig = vscode.workspace.getConfiguration('deepview');
 	if (vsconfig.isTelemetryEnabled === "Ask me"){
 		// Pop up the message then wait
 		const message: string = `Help CentML improve DeepView by allowing us to collect usage data. 
@@ -106,6 +106,6 @@ async function showTelemetryOptInDialogIfNeeded() {
 }
 
 function isTelemetryEnabled(): boolean {
-	let vsconfig = vscode.workspace.getConfiguration('skyline');
+	let vsconfig = vscode.workspace.getConfiguration('deepview');
 	return (vsconfig.isTelemetryEnabled === "Yes");
 }
