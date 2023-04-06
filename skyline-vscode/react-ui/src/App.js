@@ -229,7 +229,7 @@ function App() {
               <DeploymentTab
                 numIterations={numIterations}
                 habitatData={analysisState["habitat"]}
-                additionalProviders={analysisState["additionalProviders"]}
+                cloudProviderURLs={analysisState["additionalProviders"]}
               />
             </Tab>
           </Tabs>
