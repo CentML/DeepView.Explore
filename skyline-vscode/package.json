@@ -59,6 +59,7 @@
       }
     }
   },
+  "license": "SEE LICENSE IN LICENSE.txt",
   "scripts": {
     "vscode:prepublish": "npm run clean && node esbuild.mjs production",
     "esbuild": "npm run clean && node esbuild.mjs base",

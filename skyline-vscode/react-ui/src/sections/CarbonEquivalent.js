@@ -34,7 +34,7 @@ const CarbonEquivalent = ({ carbonData }) => {
   const toolTipFormatter = ({ active, payload, label }) => { 
     if (active && payload && payload.length) {
       return (
-      <div class="recharts-default-tooltip">
+      <div className="recharts-default-tooltip">
         <h5 className="recharts-tooltip-label">{payload[0].payload.regionName}</h5>
         <p className="recharts-tooltip-label">{`${XAxisLabel} : ${payload[0].value.toFixed(4)}`}</p>
         <p className="recharts-tooltip-label">This is equivalent to:</p>

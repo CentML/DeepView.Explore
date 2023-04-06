@@ -32,7 +32,7 @@ const DeploymentTab = ({ numIterations, habitatData,additionalProviders }) => {
             <ProviderPanel
               numIterations={numIterations}
               habitatData={habitatData}
-              additionalProviders={additionalProviders}
+              cloudProviderURLs={additionalProviders}
             />
           </Row>
         </Container>

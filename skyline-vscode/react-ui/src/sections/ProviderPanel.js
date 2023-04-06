@@ -119,11 +119,11 @@ const ProviderPanel = ({ numIterations, habitatData, cloudProviderURLs }) => {
     let totalHr = calculate_training_time(numIterations, originalData); // NEED YUBO FEEDBACK
     let totalCost = instance.info.cost * totalHr;
     
-    let currCarbonData = getCarbonDataOfInstance(
+    let currCarbonData = instance.regions !== undefined ? getCarbonDataOfInstance(
       totalHr, 
       instance, 
       providerPanelSettings.cloudProviders[instance.info.provider]
-    );
+    ):null;
 
     setProviderPanelSettings((prevState) => ({
       ...prevState,
@@ -345,9 +345,9 @@ const ProviderPanel = ({ numIterations, habitatData, cloudProviderURLs }) => {
                               </tr>
                             </tbody>
                           </Table>
-                          <CarbonEquivalent
+                          {providerPanelSettings.carbonData && <CarbonEquivalent
                             carbonData={providerPanelSettings.carbonData}
-                          />
+                          />}
                         </Card.Body>
                       </Card>
                     </CardGroup>
