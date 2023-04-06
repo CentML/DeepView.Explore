@@ -51,11 +51,12 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: skyline-vscode-${{ env.RELEASE_VERSION }}.vsix
-          path: skyline-vscode/skyline-vscode-${{ env.RELEASE_VERSION }}.vsix
+          path: skyline-vscode/deepview-explore-${{ env.RELEASE_VERSION }}.vsix
 
       - name: Upload vsix artifact to S3
         run: |
-          aws s3 cp skyline-vscode/skyline-vscode-${{ env.RELEASE_VERSION }}.vsix s3://centml-releases/skyline-vscode/
+          aws s3 cp skyline-vscode/deepview-explore-${{ env.RELEASE_VERSION }}.vsix s3://centml-releases/deepview-explore/
+          aws s3api put-object-acl --bucket centml-releases --key deepview-explore/deepview-explore-${{ env.RELEASE_VERSION }}.vsix --acl public-read
 
   update-index:
     name: Update index.html in S3 bucket
@@ -81,22 +82,23 @@ jobs:
         run: |
           pip3 install dominate
 
-      - name: Download all versions of Skyline-VSCode from S3
+      - name: Download all versions of Deepview-explore from S3
         run : |
           mkdir vsix 
           cd vsix 
-          aws s3 cp s3://centml-releases/skyline-vscode/ . --recursive --exclude "*" --include "*.vsix"
+          aws s3 cp s3://centml-releases/deepview-explore/ . --recursive --exclude "*" --include "*.vsix"
 
       - name: Create index.html
         run: |
-          file_list=(skyline-vscode-*.vsix)
+          file_list=(deepview-explore-*.vsix)
           formatted_file_list=$(basename -a ${file_list[@]})
           cd vsix
-          python3 ../scripts/create_index.py skyline-vscode -f $formatted_file_list
+          python3 ../scripts/create_index.py deepview-explore -f $formatted_file_list
         
       - name: Upload index.html to S3
         run: |
-          aws s3 cp vsix/index.html s3://centml-releases/skyline-vscode/
+          aws s3 cp vsix/index.html s3://centml-releases/deepview-explore/
+          aws s3api put-object-acl --bucket centml-releases --key deepview-explore/index.html --acl public-read
 
   publish-release:
     name: Publish Release
@@ -116,7 +118,7 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v3
         with:
-          name: skyline-vscode-${{ env.RELEASE_VERSION }}.vsix
+          name: deepview-explore-${{ env.RELEASE_VERSION }}.vsix
           path: dist
 
       - name: Publish a release
