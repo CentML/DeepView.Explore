@@ -380,7 +380,7 @@ export class SkylineSession {
 				<meta charset="utf-8">
 				<meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
 				<meta name="theme-color" content="#000000">
-				<title>Skyline</title>
+				<title>DeepView</title>
 				<link rel="stylesheet" type="text/css" href="${styleUri}">
 				<meta http-equiv="Content-Security-Policy" content="default-src 'none'; connect-src *; img-src vscode-resource: https:; script-src 'unsafe-eval' 'nonce-${nonce}';style-src vscode-resource: 'unsafe-inline' http: https: data:;">
 				<base href="${ buildUri }/">
@@ -473,12 +473,15 @@ export class SkylineSession {
             fields['energy'] = {
                 current:{
                     total_consumption: this.msg_energy.getTotalConsumption(),
-                    components: this.msg_energy.getComponentsList().map((item)=> ({type:energy_component_type_mapping(item.getComponentType()), consumption:item.getConsumptionJoules()}))
+                    components: this.msg_energy.getComponentsList().map((item)=> ({type:energy_component_type_mapping(item.getComponentType()), consumption:item.getConsumptionJoules()})),
+                    batch_size: this.msg_energy.getBatchSize()
                 },
                 past_measurements: this.msg_energy.getPastMeasurementsList().map((exp)=>(
                     {
                         total_consumption: exp.getTotalConsumption(),
-                        components: exp.getComponentsList().map((item)=> ({type:energy_component_type_mapping(item.getComponentType()), consumption:item.getConsumptionJoules()}))
+                        components: exp.getComponentsList().map((item)=> ({type:energy_component_type_mapping(item.getComponentType()), consumption:item.getConsumptionJoules()})),
+                        batch_size: exp.getBatchSize()
+
                     }
                 ))
             };

@@ -26,6 +26,7 @@ const EnergyConsumption = ({ energyData, numIterations }) => {
   const gpu_color_opacity = "rgba(23,165,137,0.55)";
 
   let total = null;
+  let max_scaling = null;
   let curr_cpu_dram = null;
   let curr_gpu = null;
   let piegraph_data = null;
@@ -68,6 +69,7 @@ const EnergyConsumption = ({ energyData, numIterations }) => {
       bargraph_data = [
         {
           name: "current",
+          batch_size: current.batch_size,
           total: current.total_consumption * numIterations,
           cpu: curr_cpu_dram.consumption * numIterations,
           gpu: curr_gpu.consumption * numIterations,
@@ -93,9 +95,10 @@ const EnergyConsumption = ({ energyData, numIterations }) => {
         if (cpu_dram && gpu) {
           return {
             name: `exp${(idx += 1)}`,
-            total: item.total_consumption * numIterations,
-            cpu: cpu_dram.consumption * numIterations,
-            gpu: gpu.consumption * numIterations,
+            batch_size: item.batch_size,
+            total: item.total_consumption * numIterations * current.batch_size / item.batch_size,
+            cpu: cpu_dram.consumption * numIterations * current.batch_size / item.batch_size,
+            gpu: gpu.consumption * numIterations * current.batch_size / item.batch_size,
             cpu_color,
             cpu_color_opacity,
             gpu_color,
@@ -111,7 +114,7 @@ const EnergyConsumption = ({ energyData, numIterations }) => {
   if (bargraph_data.length > 0) {
     bargraph_data.sort((a, b) => a.total - b.total);
     const max_element = bargraph_data.slice(-1);
-    const max_scaling = unitScale(max_element[0].total, "energy");
+    max_scaling = unitScale(max_element[0].total, "energy");
     const bargraph_scaling_factor = 10 ** (max_scaling.scale_index * 3);
     bargraph_data = bargraph_data.map((measurement) => {
       return {
@@ -255,7 +258,7 @@ const EnergyConsumption = ({ energyData, numIterations }) => {
                           data={bargraph_data}
                           height={500}
                           xlabel={"Experiments"}
-                          ylabel={`Energy Consumption Joules (${total?.scale})`}
+                          ylabel={`Energy Consumption Joules (${max_scaling?.scale})`}
                           bar1_color={cpu_color}
                           bar2_color={gpu_color}
                         />
