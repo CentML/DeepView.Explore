@@ -90,8 +90,8 @@ async function showTelemetryOptInDialogIfNeeded() {
 	let vsconfig = vscode.workspace.getConfiguration('deepview');
 	if (vsconfig.isTelemetryEnabled === "Ask me"){
 		// Pop up the message then wait
-		const message: string = `DeepView collects usage data to help improve the tool. 
-		Read CentML's [privacy statement](${PRIVACY_STATEMENT_URL}) and learn how to [opt out](${OPT_OUT_INSTRUCTIONS_URL}).`;
+		const message: string = `DeepView collects usage data to help improve the tool. Read CentML's [privacy statement](${PRIVACY_STATEMENT_URL}) 
+		and learn how to [opt out](${OPT_OUT_INSTRUCTIONS_URL}). Note that DeepView respects VSCode's telemetry settings and this takes precedence over DeepView's settings`;
 
 		const retryOptin = setTimeout(showTelemetryOptInDialogIfNeeded, RETRY_OPTIN_DELAY_IN_MS);
 		let selection: string | undefined;
