@@ -41,7 +41,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 				const panel = vscode.window.createWebviewPanel(
 					'deepview',
-					"Deepview",
+					"DeepView",
 					vscode.ViewColumn.Beside,
 					{
 						enableScripts: true,

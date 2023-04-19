@@ -1,12 +1,14 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/0001287428a20bef03ad/maintainability)](https://codeclimate.com/github/CentML/DeepView.Explore/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/0001287428a20bef03ad/test_coverage)](https://codeclimate.com/github/CentML/DeepView.Explore/test_coverage)
 
-# VSCode Plugin for DeepView
+# DeepView Explore
+![DeepView](https://raw.githubusercontent.com/CentML/DeepView.Explore/main/deepview-explore/react-ui/public/resources/deepview.png)
 
-![Demo GIF](https://raw.githubusercontent.com/CentML/mltools-vscode/jun07-usability-improvements/images/demo.gif)
-
-## Documentation
-https://docs.centml.ai/index.html
+DeepView provides an integrated experience which allows ML practioners to
+- Visually identify model bottlenecks
+- Perform rapid iterative profiling
+- Understand energy consumption and environmental impacts of training jobs
+- Predict deployment time and cost to cloud hardware
 
 ## Installation
 Installation consists of two parts: the front-end UI (this repository) and [DeepView.Profile](https://github.com/CentML/DeepView.Profile) (the backend), which needs to be installed separately.
@@ -29,9 +31,9 @@ To install, either:
 Once you have the vsix file, run `code --install-extension deepview-explore-*.vsix` to install the extension.
 **Note: the file [build_vsix_dev.sh] is only to be used for development**
 
-**Adding cloud instances to the Deployment Tab:** You can include information about the instances that you use through the extension settings. There you will find an option named **providers** that accepts a list of urls separated by commas. Each url must be a JSON file that follows the schema specified here : [schema](skyline-vscode/react-ui/src/schema/CloudProvidersSchema.js).<br/>
+**Adding cloud instances to the Deployment Tab:** You can include information about the instances that you use through the extension settings. There you will find an option named **providers** that accepts a list of urls separated by commas. Each url must be a JSON file that follows the schema specified here: [schema](deepview-explore/react-ui/src/schema/CloudProvidersSchema.js).<br/>
 Additionally, you need to add the necessary access so the extension can read the file.<br/>
-You can use an AWS S3 bucket to store your files. Change CORS settings in Permissions tab.
+You can use an AWS S3 bucket to store your files. Note that you need to update the CORS settings in Permissions tab to enable the extension to read your file.
 
 **CORS requirements**:
 ```
@@ -50,29 +52,23 @@ You can use an AWS S3 bucket to store your files. Change CORS settings in Permis
     }
 ]
 ```
-and allow public access to the file
 
 This is our [file](https://deepview-explorer-public.s3.amazonaws.com/vscode-cloud-providers/providers.json) that you can use as an example.
 
-
-
-
-
 ### Backend Installation
-This plugin requires DeepView.Profile (the installation instruction for which can be found [here](https://github.com/CentML/DeepView.Profile)) and (optionally) DeepView.Predict (used to extrapolate GPU runtimes, instructions found [here](https://github.com/CentML/DeepView.Predict)). **DeepView.Profile must be launched before running this extension.**
-
-After installation, please make note of the path to the `DeepView.Profile` binary. To do so, run `which deepview` after ensuring that the `DeepView.Profile` binary works. This path is different depending on how the backend was installed. Default installation from PyPI will place the binary to `/usr/bin/deepview`, however if you're running the backend in virtual environment it will be in a different location. **You need to launch `DeepView.Profile` before running this extension.**
+This plugin requires DeepView.Profile (the installation instruction for which can be found [here](https://github.com/CentML/DeepView.Profile)) **You need to launch `DeepView.Profile` before running this extension.**
 
 ## Usage example
-1. Open one of the examples DNN project examples, i.e. [Resnet](https://github.com/CentML/DeepView.Profile/tree/main/examples/resnet) from DeepView.Profile in VSCode
-2. (Optional) You can add other external cloud instances using the **providers** option in the extension
-3. Press `Ctrl+Shift+P`, then select `Deepview` from the dropdown list.
-3. Click on `Begin Analysis`.
+1. Run DeepView.Profile
+2. Open one of the examples DNN project examples, i.e. [Resnet](https://github.com/CentML/DeepView.Profile/tree/main/examples/resnet) from DeepView.Profile in VSCode
+3. (Optional) You can add other external cloud instances using the **providers** option in the extension
+4. Press `Ctrl+Shift+P`, then select `DeepView` from the dropdown list.
+5. Click on `Begin Analysis`.
 
 ## Disabling telemetry
 If you do not want to send usage data to CentML, you can set isTelemetryEnabled setting to "No".
 
-You can set the value by going to File > Preferences > Settings (On macOS: Code > Preferences > Settings), and search for telemetry. Then set the value in Deepview > Is Telemetry Enabled. This will disable all telemetry events.
+You can set the value by going to File > Preferences > Settings (On macOS: Code > Preferences > Settings), and search for telemetry. Then set the value in DeepView > Is Telemetry Enabled. This will disable all telemetry events.
 
 As well, DeepView respects VSCode's telemetry levels. IF telemetry.telemetryLevel is set to off, then no telemetry events will be sent to CentML, even if deepview.telemetry.enabled is set to true. If telemetry.telemetryLevel is set to error or crash, only events containing an error or errors property will be sent to CentML.
 
@@ -95,9 +91,9 @@ apt install protobuf-compiler
    ```
 1. Install project dependencies
    ```zsh
-   cd skyline-vscode/react-ui && npm install
+   cd deepview-explore/react-ui && npm install
    cd ../..
-   cd skyline-vscode/skyline-vscode && npm install
+   cd deepview-explore/deepview-explore && npm install
    ```
 1. Compile protobuf files:
    ```zsh
@@ -107,7 +103,7 @@ apt install protobuf-compiler
 ## Run extension
 Start VSCode in the plugin source directory:
 ```
-cd skyline-vscode/skyline-vscode;
+cd deepview-explore/deepview-explore;
 code .
 ```
 Press `F5` to compile and run the extension. When the extension window appears, open of the [example projects](https://github.com/CentML/DeepView.Profile/tree/main/examples). Then press `Ctrl-Shift-P` then select `Begin Analysis`.

@@ -26,8 +26,8 @@ check_repo
 echo ""
 check_tools
 
-# Move to skyline-vscode source code dir
-cd ../skyline-vscode
+# Move to deepview-explore source code dir
+cd ../deepview-explore
 echo -en "${COLOR_YELLOW}Release increment: [patch], minor, major ${COLOR_NC}"
 read -r
 case $REPLY in

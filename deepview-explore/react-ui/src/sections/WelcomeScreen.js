@@ -25,7 +25,7 @@ const WelcomeScreen = ({ analysisState, vscodeApi }) => {
           <Card.Title></Card.Title>
           <Card.Body>
             <Stack gap={3}>
-              <Image src="resources/skyline.svg" width="400px"></Image>
+              <Image src="resources/deepview.png" width="400px"></Image>
               {analysisState && (
                 <>
                   <ProjectInfo
