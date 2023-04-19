@@ -1,6 +1,6 @@
 {
   "name": "deepview-explore",
-  "displayName": "deepview-explore",
+  "displayName": "DeepView Explore",
   "publisher": "centml",
   "repository": "https://github.com/CentML/DeepView.Explore",
   "description": "",
@@ -20,11 +20,11 @@
     "commands": [
       {
         "command": "deepview-explore.cmd_begin_analyze",
-        "title": "Deepview"
+        "title": "DeepView"
       }
     ],
     "configuration": {
-      "title": "Deepview",
+      "title": "DeepView",
       "properties": {
         "deepview.address": {
           "type": "string",
