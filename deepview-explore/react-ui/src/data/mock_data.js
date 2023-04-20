@@ -894,6 +894,7 @@ export const profiling_data = {
           { type: "ENERGY_CPU_DRAM", consumption: 1.15 },
           { type: "ENERGY_GPU", consumption: 1.15 },
         ],
+      batch_size: 4
     },
     past_measurements: [
       {
@@ -903,6 +904,7 @@ export const profiling_data = {
           { type: "ENERGY_CPU_DRAM", consumption: 7.05 },
           { type: "ENERGY_GPU", consumption: 1.05 },
         ],
+        batch_size: 1
       },
       {
         total_consumption: 9.30,
@@ -911,6 +913,7 @@ export const profiling_data = {
           { type: "ENERGY_CPU_DRAM", consumption: 1.15 },
           { type: "ENERGY_GPU", consumption: 8.15 },
         ],
+        batch_size: 2
       },
       {
         total_consumption: 8.20,
@@ -919,6 +922,7 @@ export const profiling_data = {
           { type: "ENERGY_CPU_DRAM", consumption: 6.10 },
           { type: "ENERGY_GPU", consumption: 2.10 },
         ],
+        batch_size: 3
       },
       {
         total_consumption: 3.345,
@@ -927,6 +931,7 @@ export const profiling_data = {
           { type: "ENERGY_CPU_DRAM", consumption: 1.473 },
           { type: "ENERGY_GPU", consumption: 1.873 },
         ],
+        batch_size: 4
       },
       {
         total_consumption: 7.345,
@@ -935,6 +940,7 @@ export const profiling_data = {
           { type: "ENERGY_CPU_DRAM", consumption: 4.173 },
           { type: "ENERGY_GPU", consumption: 4.173 },
         ],
+        batch_size: 5
       },
       {
         total_consumption: 4.345,
@@ -943,6 +949,7 @@ export const profiling_data = {
           { type: "ENERGY_CPU_DRAM", consumption: 2.173 },
           { type: "ENERGY_GPU", consumption: 2.173 },
         ],
+        batch_size: 6
       },
       {
         total_consumption: 5.345,
@@ -951,6 +958,7 @@ export const profiling_data = {
           { type: "ENERGY_CPU_DRAM", consumption: 2.573 },
           { type: "ENERGY_GPU", consumption: 2.53 },
         ],
+        batch_size: 7
       },
       {
         total_consumption: 9.345,
@@ -959,6 +967,7 @@ export const profiling_data = {
           { type: "ENERGY_CPU_DRAM", consumption: 8.173 },
           { type: "ENERGY_GPU", consumption: 1.173 },
         ],
+        batch_size: 8
       },
       {
         total_consumption: 2.345,
@@ -967,6 +976,7 @@ export const profiling_data = {
           { type: "ENERGY_CPU_DRAM", consumption: 1.173 },
           { type: "ENERGY_GPU", consumption: 1.173 },
         ],
+        batch_size: 9
       },
       {
         total_consumption: 4.345,
@@ -975,6 +985,7 @@ export const profiling_data = {
           { type: "ENERGY_CPU_DRAM", consumption: 2.173 },
           { type: "ENERGY_GPU", consumption: 2.173 },
         ],
+        batch_size: 10
       },
     ],
   },
