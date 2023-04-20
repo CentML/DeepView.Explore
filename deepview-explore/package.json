@@ -8,8 +8,16 @@
   "engines": {
     "vscode": "^1.76.0"
   },
+  "icon": "deepview_icon.png",
   "categories": [
-    "Other"
+    "Debuggers",
+    "Machine Learning"
+  ],
+  "keywords": [
+    "PyTorch",
+    "Deep Learning",
+    "Profiler",
+    "Profiling"
   ],
   "activationEvents": [
     "onStartupFinished",
