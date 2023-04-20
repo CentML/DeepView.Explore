@@ -30,7 +30,7 @@ export function activate(context: vscode.ExtensionContext) {
 				canSelectFiles: false,
 				canSelectFolders: true,
 				canSelectMany: false,
-				title: "Skyline"
+				title: "DeepView"
 			};
 
 			vscode.window.showOpenDialog(options).then(uri => {
@@ -41,7 +41,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 				const panel = vscode.window.createWebviewPanel(
 					'deepview',
-					"Deepview",
+					"DeepView",
 					vscode.ViewColumn.Beside,
 					{
 						enableScripts: true,
@@ -90,22 +90,20 @@ async function showTelemetryOptInDialogIfNeeded() {
 	let vsconfig = vscode.workspace.getConfiguration('deepview');
 	if (vsconfig.isTelemetryEnabled === "Ask me"){
 		// Pop up the message then wait
-		const message: string = `Help CentML improve DeepView by allowing us to collect usage data. 
-		Read our [privacy statement](${PRIVACY_STATEMENT_URL}) 
-		and learn how to [opt out](${OPT_OUT_INSTRUCTIONS_URL}).`;
+		const message: string = `DeepView collects usage data to help improve the tool. Read CentML's [privacy statement](${PRIVACY_STATEMENT_URL}) 
+		and learn how to [opt out](${OPT_OUT_INSTRUCTIONS_URL}). Note that DeepView respects VSCode's telemetry settings and this takes precedence over DeepView's settings`;
 
 		const retryOptin = setTimeout(showTelemetryOptInDialogIfNeeded, RETRY_OPTIN_DELAY_IN_MS);
 		let selection: string | undefined;
-		selection = await vscode.window.showInformationMessage(message, 'Yes', 'No');
+		selection = await vscode.window.showInformationMessage(message, 'OK');
 		if (!selection) {
 		  return;
 		}
 		clearTimeout(retryOptin);
-		vsconfig.update("isTelemetryEnabled", selection, true);
 	}
 }
 
 function isTelemetryEnabled(): boolean {
 	let vsconfig = vscode.workspace.getConfiguration('deepview');
-	return (vsconfig.isTelemetryEnabled === "Yes");
+	return (vsconfig.isTelemetryEnabled !== "No");
 }

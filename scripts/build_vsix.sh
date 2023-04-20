@@ -1,13 +1,13 @@
 #!/bin/bash
 
 # Build react UI
-pushd skyline-vscode/react-ui && \
+pushd deepview-explore/react-ui && \
     npm install && \
     npm run build && \
     popd;
 
 # Build backend
-pushd skyline-vscode && \
+pushd deepview-explore && \
     npm install && \
     pushd src/protobuf && 
     make && make old && \
