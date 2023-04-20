@@ -27,7 +27,7 @@ const CarbonEquivalent = ({ carbonData }) => {
   // Convert to kgs if we have small values
   if (largestValue < 1) {
     carbonData.map(value => value.carbonEmissions*1000)
-    XAxisLabel = "C02e (kgs)"
+    XAxisLabel = "CO2e (kgs)"
   }
   carbonData.sort((a, b) => a.carbonEmissions - b.carbonEmissions);
   
