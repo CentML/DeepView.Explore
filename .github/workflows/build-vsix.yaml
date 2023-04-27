@@ -49,6 +49,7 @@ jobs:
         run: |
           scripts/build_vsix.sh
 
+
       - name: Publish to VSCode Marketplace
         run: |
           vsce publish -p ${{ secrets.AZURE_PAT }} -i deepview-explore/deepview-explore-${{ github.event.inputs.tag}}.vsix
