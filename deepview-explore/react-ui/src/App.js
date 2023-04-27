@@ -210,7 +210,6 @@ function App() {
                     }
                     renderPerfBars={timeBreakDown.fine}
                   />
-                  <ReactTooltip type="info" effect="float" html={true} />
                 </div>
                 <div className="innpv-contents-subrows">
                   <MemThroughputContainer

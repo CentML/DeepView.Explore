@@ -1,5 +1,5 @@
 import React,{useState} from 'react';
-
+import ReactTooltip from "react-tooltip";
 const DRAG_MAX_PCT = 0.2;
 const GAIN = 0.8;
 
@@ -129,6 +129,7 @@ const Elastic = ({className='',
         <div className="innpv-elastic-inner" style={innerStyle}>
           {children}
         </div>
+        <ReactTooltip type="info" effect="float" html={true} />
       </div>
     </>
   )
