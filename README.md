@@ -15,21 +15,8 @@ Installation consists of two parts: the front-end UI (this repository) and [Deep
 
 ### Frontend Installation
 To install, either:
-* [Download](https://centml-releases.s3.us-east-2.amazonaws.com/deepview-explore/index.html) the prebuilt VSCode plugin package
-* Build it from source
-  1. Prerequisites:
-     - node.js v14+
-     - [Protobuf Compiler](https://grpc.io/docs/protoc-installation/)
-     - npm install -g @vscode/vsce (to build the vscode extension)
-  2. Run the following commands    
-      ```bash
-      git clone https://github.com/CentML/DeepView.Explore.git
-      ./scripts/build_vsix.sh
-      ```
-  3. The vsix file will be generated in the current working directory
-
-Once you have the vsix file, run `code --install-extension deepview-explore-*.vsix` to install the extension.
-**Note: the file [build_vsix_dev.sh] is only to be used for development**
+* Install it from [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=CentML.deepview-explore)
+* Install directly from VSCode by searching for DeepView
 
 **Adding cloud instances to the Deployment Tab:** You can include information about the instances that you use through the extension settings. There you will find an option named **providers** that accepts a list of urls separated by commas. Each url must be a JSON file that follows the schema specified here: [schema](deepview-explore/react-ui/src/schema/CloudProvidersSchema.js).<br/>
 Additionally, you need to add the necessary access so the extension can read the file.<br/>
