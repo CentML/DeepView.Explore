@@ -409,7 +409,7 @@ export class SkylineSession {
             "throughput": {},
             "breakdown": {},
 
-            "habitat": [] as Array<[string, number]>,
+            "habitat": {},
             "additionalProviders": this.providers,
             "energy": {},
 
@@ -462,9 +462,15 @@ export class SkylineSession {
         }
 
         if (this.msg_habitat) {
+            const predictions = [];
             for (let prediction of this.msg_habitat.getPredictionsList()) {
-                fields['habitat'].push([ prediction.getDeviceName(), prediction.getRuntimeMs() ]);
+                predictions.push([ prediction.getDeviceName(), prediction.getRuntimeMs() ]);
             }
+            console.log(this.msg_habitat.getAnalysisError()?.getErrorMessage());
+            fields['habitat'] = {
+                predictions,
+                error: this.msg_habitat.getAnalysisError()?.getErrorMessage()
+            };
         }
 
 
@@ -483,7 +489,8 @@ export class SkylineSession {
                         batch_size: exp.getBatchSize()
 
                     }
-                ))
+                )),
+                error: this.msg_energy.getAnalysisError()?.getErrorMessage()
             };
         }
 

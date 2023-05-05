@@ -7,10 +7,16 @@ import Badge from "react-bootstrap/Badge";
 import React from "react";
 import { numberFormat } from "../utils/utils";
 
-const DeploymentTab = ({ numIterations, habitatData,cloudProviderURLs }) => {
+import { useSelector } from "react-redux";
+
+const DeploymentTab = ({ habitatData,cloudProviderURLs }) => {
+
+  const {epochs, iterPerEpoch} = useSelector((state)=>state.trainingScheduleReducer);
+  const numIterations = epochs * iterPerEpoch;
+
   return (
     <>
-      {habitatData.length === 0 ? (
+      {Object.keys(habitatData).length === 0 ? (
         <Container fluid>
           <Row className="justify-content-md-center">
             <Card>
@@ -30,8 +36,7 @@ const DeploymentTab = ({ numIterations, habitatData,cloudProviderURLs }) => {
               iterations
             </h6>
             <ProviderPanel
-              numIterations={numIterations}
-              habitatData={habitatData}
+              habitatData={habitatData["predictions"]}
               cloudProviderURLs={cloudProviderURLs}
             />
           </Row>

@@ -27,7 +27,8 @@ function updateSliders(
   let throughputModel = analysisState["throughput"]["run_time_ms"];
 
   let maxBatch = Math.floor(
-    (analysisState["breakdown"]["memory_capacity_bytes"] - memoryModel[1]) /
+    (0.65 * analysisState["breakdown"]["memory_capacity_bytes"] -
+      memoryModel[1]) /
       memoryModel[0]
   );
 
@@ -65,7 +66,7 @@ function updateSliders(
   setSliderThroughput([
     (100.0 * throughput) / maxThroughput,
     throughput,
-    maxThroughput,
+    Math.max(maxThroughput, throughput),
   ]);
 
   return bs;
@@ -75,28 +76,6 @@ const MemThroughputContainer = ({ analysisState, SENDMOCK }) => {
   const [sliderMemory, setSliderMemory] = useState([50, 69, 420]);
   const [sliderThroughput, setSliderThroughput] = useState([50, 69, 420]);
   const [curBatchSize, setCurBatchSize] = useState(0);
-  const [recommendation, setRecommendation] = useState(null);
-  
-  const generate_batch_size_recommendation = (data) =>{
-    let memoryModel = data["throughput"]["peak_usage_bytes"];
-    let throughputModel = data["throughput"]["run_time_ms"];
-    const bs = data["breakdown"]["batch_size"]
-
-  let maxBatch = Math.floor(
-    (data["breakdown"]["memory_capacity_bytes"] - memoryModel[1]) /
-      memoryModel[0]
-  );
-
-  let maxMemory = data["breakdown"]["memory_capacity_bytes"];
-  let maxThroughput =
-    (maxBatch * 1000.0) / (maxBatch * throughputModel[0] + throughputModel[1]);
-    let throughput =
-    (bs * 1000.0) / (bs * throughputModel[0] + throughputModel[1]);  
-
-
-  }
-
-
 
   const setInitialLoad = () => {
     if (SENDMOCK) {
@@ -107,7 +86,6 @@ const MemThroughputContainer = ({ analysisState, SENDMOCK }) => {
         setSliderMemory,
         setSliderThroughput
       );
-      generate_batch_size_recommendation(profiling_data)
     } else {
       updateSliders(
         analysisState,
@@ -117,10 +95,8 @@ const MemThroughputContainer = ({ analysisState, SENDMOCK }) => {
         setSliderThroughput,
         analysisState["breakdown"]["batch_size"]
       );
-      generate_batch_size_recommendation(analysisState)
     }
   };
-
 
   const onMemoryResize = function (change) {
     let newHeight = sliderMemory[0] * (1 + change / 100);

@@ -19,7 +19,13 @@ import PieGraph from "../components/PieGraph";
 import StackedBarGraph from "../components/StackedBarGraph";
 import { energy_data, unitScale, numberFormat } from "../utils/utils";
 
-const EnergyConsumption = ({ energyData, numIterations }) => {
+import { useSelector } from "react-redux";
+
+const EnergyConsumption = ({ energyData }) => {
+
+  const {epochs, iterPerEpoch} = useSelector((state)=>state.trainingScheduleReducer);
+  const numIterations = epochs * iterPerEpoch;
+
   const cpu_color = "#5499c7";
   const cpu_color_opacity = "rgba(84,153,199,0.55)";
   const gpu_color = "#17a589";
@@ -130,6 +136,22 @@ const EnergyConsumption = ({ energyData, numIterations }) => {
         ),
       };
     });
+  }
+  if(energyData.error){
+    return(
+      <>
+        <div className="innpv-memory innpv-subpanel">
+          <Subheader icon="database">Energy and Environmental Impact</Subheader>
+          <div className="innpv-subpanel-content">
+            <Container fluid className="mt-2">
+              <Row className="justify-content-md-center">
+                <h6>There was an error measuring energy consumption</h6>
+              </Row>
+            </Container>
+          </div>
+        </div>
+      </>
+    )
   }
 
   return (
