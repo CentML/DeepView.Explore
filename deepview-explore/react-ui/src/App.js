@@ -84,7 +84,7 @@ function App() {
 
   const processAnalysisState = function (state) {
     setAnalysisState(state);
-    if (state.breakdown) {
+    if (state.breakdown && state.breakdown.operation_tree) {
       let operation_tree = state.breakdown.operation_tree;
       let { coarse, fine } = getTraceByLevel(operation_tree);
       setTimeBreakdown({
