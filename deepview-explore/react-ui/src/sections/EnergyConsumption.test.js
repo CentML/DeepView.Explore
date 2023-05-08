@@ -1,9 +1,9 @@
 import { render, screen } from "@testing-library/react";
 import EnergyConsumption from "./EnergyConsumption";
+import store from "../redux/store/store";
+import { Provider } from "react-redux";
 
 const { ResizeObserver } = window;
-
-const numIterations = 10000;
 
 const energy_complete = {
   current: {
@@ -13,6 +13,7 @@ const energy_complete = {
       { type: "ENERGY_CPU_DRAM", consumption: 1.15 },
       { type: "ENERGY_GPU", consumption: 1.15 },
     ],
+    batch_size: 4,
   },
   past_measurements: [
     {
@@ -22,6 +23,7 @@ const energy_complete = {
         { type: "ENERGY_CPU_DRAM", consumption: 7.05 },
         { type: "ENERGY_GPU", consumption: 1.05 },
       ],
+      batch_size: 4,
     },
     {
       total_consumption: 9.3,
@@ -30,6 +32,7 @@ const energy_complete = {
         { type: "ENERGY_CPU_DRAM", consumption: 1.15 },
         { type: "ENERGY_GPU", consumption: 8.15 },
       ],
+      batch_size: 4,
     },
   ],
 };
@@ -42,6 +45,7 @@ const energy_only_current = {
       { type: "ENERGY_CPU_DRAM", consumption: 1.15 },
       { type: "ENERGY_GPU", consumption: 1.15 },
     ],
+    batch_size: 4,
   },
 };
 
@@ -54,6 +58,7 @@ const energy_only_past = {
         { type: "ENERGY_CPU_DRAM", consumption: 7.05 },
         { type: "ENERGY_GPU", consumption: 1.05 },
       ],
+      batch_size: 4,
     },
     {
       total_consumption: 9.3,
@@ -62,6 +67,7 @@ const energy_only_past = {
         { type: "ENERGY_CPU_DRAM", consumption: 1.15 },
         { type: "ENERGY_GPU", consumption: 8.15 },
       ],
+      batch_size: 4,
     },
   ],
 };
@@ -103,7 +109,11 @@ jest.mock("recharts", () => {
 
 test("No energy data: shows only loading spinner", () => {
   // ARRANGE
-  render(<EnergyConsumption energyData={{}} numIterations={numIterations} />);
+  render(
+    <Provider store={store}>
+      <EnergyConsumption energyData={{}} />
+    </Provider>
+  );
 
   // ASSERT
   expect(
@@ -114,10 +124,9 @@ test("No energy data: shows only loading spinner", () => {
 test("Only current data: shows both pie and graph data", () => {
   // ARRANGE
   const { container } = render(
-    <EnergyConsumption
-      energyData={energy_only_current}
-      numIterations={numIterations}
-    />
+    <Provider store={store}>
+      <EnergyConsumption energyData={energy_only_current} />
+    </Provider>
   );
 
   // ASSERT
@@ -125,17 +134,16 @@ test("Only current data: shows both pie and graph data", () => {
   expect(screen.getByText(/relative to your other experiments/i)).toBeTruthy();
 
   expect(
-    container.querySelector(".recharts-responsive-container")  // eslint-disable-line
+    container.querySelector(".recharts-responsive-container") // eslint-disable-line
   ).toBeTruthy();
 });
 
 test("Only past experiments: shows only graph data", () => {
   // ARRANGE
   const { container } = render(
-    <EnergyConsumption
-      energyData={energy_only_past}
-      numIterations={numIterations}
-    />
+    <Provider store={store}>
+      <EnergyConsumption energyData={energy_only_past} />
+    </Provider>
   );
 
   // ASSERT
@@ -143,31 +151,29 @@ test("Only past experiments: shows only graph data", () => {
   expect(screen.getByText(/relative to your other experiments/i)).toBeTruthy();
 
   expect(
-    container.querySelector(".recharts-responsive-container")  // eslint-disable-line
+    container.querySelector(".recharts-responsive-container") // eslint-disable-line
   ).toBeTruthy();
 });
 
 test("Empty data: shows could not load data", () => {
   // ARRANGE
   const { container } = render(
-    <EnergyConsumption
-      energyData={energy_empty_data}
-      numIterations={numIterations}
-    />
+    <Provider store={store}>
+      <EnergyConsumption energyData={energy_empty_data} />
+    </Provider>
   );
 
   // ASSERT
   expect(screen.getAllByText(/could not load the data/i)).toBeTruthy();
 
-  expect(container.querySelector(".recharts-responsive-container")).toBeFalsy();  // eslint-disable-line
+  expect(container.querySelector(".recharts-responsive-container")).toBeFalsy(); // eslint-disable-line
 });
 
 test("All information Complete: show both charts", () => {
   const { container } = render(
-    <EnergyConsumption
-      energyData={energy_complete}
-      numIterations={numIterations}
-    />
+    <Provider store={store}>
+      <EnergyConsumption energyData={energy_complete} />
+    </Provider>
   );
 
   // ASSERT
@@ -175,10 +181,10 @@ test("All information Complete: show both charts", () => {
   expect(screen.getByText(/relative to your other experiments/i)).toBeTruthy();
 
   expect(
-    container.querySelector(".recharts-responsive-container")  // eslint-disable-line
+    container.querySelector(".recharts-responsive-container") // eslint-disable-line
   ).toBeTruthy();
 
   expect(
-    container.querySelector(".bargraph-container")  // eslint-disable-line
+    container.querySelector(".bargraph-container") // eslint-disable-line
   ).toBeTruthy();
 });

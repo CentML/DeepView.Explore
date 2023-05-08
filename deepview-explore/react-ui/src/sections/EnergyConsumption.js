@@ -22,8 +22,9 @@ import { energy_data, unitScale, numberFormat } from "../utils/utils";
 import { useSelector } from "react-redux";
 
 const EnergyConsumption = ({ energyData }) => {
-
-  const {epochs, iterPerEpoch} = useSelector((state)=>state.trainingScheduleReducer);
+  const { epochs, iterPerEpoch } = useSelector(
+    (state) => state.trainingScheduleReducer
+  );
   const numIterations = epochs * iterPerEpoch;
 
   const cpu_color = "#5499c7";
@@ -102,9 +103,15 @@ const EnergyConsumption = ({ energyData }) => {
           return {
             name: `exp${(idx += 1)}`,
             batch_size: item.batch_size,
-            total: item.total_consumption * numIterations * current.batch_size / item.batch_size,
-            cpu: cpu_dram.consumption * numIterations * current.batch_size / item.batch_size,
-            gpu: gpu.consumption * numIterations * current.batch_size / item.batch_size,
+            total:
+              (item.total_consumption * numIterations * current?.batch_size) /
+              item.batch_size,
+            cpu:
+              (cpu_dram.consumption * numIterations * current?.batch_size) /
+              item.batch_size,
+            gpu:
+              (gpu.consumption * numIterations * current?.batch_size) /
+              item.batch_size,
             cpu_color,
             cpu_color_opacity,
             gpu_color,
@@ -137,8 +144,8 @@ const EnergyConsumption = ({ energyData }) => {
       };
     });
   }
-  if(energyData.error){
-    return(
+  if (energyData.error) {
+    return (
       <>
         <div className="innpv-memory innpv-subpanel">
           <Subheader icon="database">Energy and Environmental Impact</Subheader>
@@ -151,7 +158,7 @@ const EnergyConsumption = ({ energyData }) => {
           </div>
         </div>
       </>
-    )
+    );
   }
 
   return (
