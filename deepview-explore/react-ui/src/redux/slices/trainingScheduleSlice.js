@@ -4,7 +4,7 @@ const INITIAL_EPOCHS = 50;
 const INITIAL_ITER_PER_EPOCH = 2000;
 
 
-export const trainingScheduleSlice = createSlice({
+const trainingScheduleSlice = createSlice({
   name: "trainingScheduleSlice",
   initialState: {
     epochs: INITIAL_EPOCHS,
