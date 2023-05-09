@@ -33,7 +33,6 @@ function updateSliders(
       memoryModel[1]) /
       memoryModel[0]
   );
-  console.log("MAX BATCH SIZE", maxBatch);
 
   let maxMemory = analysisState["breakdown"]["memory_capacity_bytes"];
   let maxThroughput =
