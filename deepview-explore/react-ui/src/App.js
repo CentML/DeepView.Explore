@@ -20,7 +20,6 @@ import { profiling_data } from "./data/mock_data";
 import EnergyConsumption from "./sections/EnergyConsumption";
 import Iterations from "./sections/Iterations";
 import MemThroughputContainer from "./sections/MemThroughputContainer";
-import Recommendations from "./sections/Recommendations";
 
 // https://stackoverflow.com/questions/54135313/webview-extension-in-typescript
 /**
@@ -190,7 +189,6 @@ function App() {
             </Card.Body>
           </Card>
           <Iterations />
-          {/* <Recommendations analysisState={analysisState} SENDMOCK={sendMock} /> */}
           <br></br>
           <Tabs defaultActiveKey="profiling" className="mb-3">
             <Tab eventKey="profiling" title="Profiling">
