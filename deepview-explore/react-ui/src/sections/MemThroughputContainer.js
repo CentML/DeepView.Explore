@@ -9,6 +9,7 @@ import BarSlider from "../components/BarSlider";
 import Subheader from "../components/Subheader";
 import NumericDisplay from "../components/NumericDisplay";
 import { profiling_data } from "../data/mock_data";
+import { GPU_MAX_CAPACITY_LIMIT } from "../data/properties";
 /**
  * Returns information required to draw memory and throughput information
  * @param {*} analysisState
@@ -27,7 +28,9 @@ function updateSliders(
   let throughputModel = analysisState["throughput"]["run_time_ms"];
 
   let maxBatch = Math.floor(
-    (analysisState["breakdown"]["memory_capacity_bytes"] - memoryModel[1]) /
+    (GPU_MAX_CAPACITY_LIMIT *
+      analysisState["breakdown"]["memory_capacity_bytes"] -
+      memoryModel[1]) /
       memoryModel[0]
   );
 
@@ -65,7 +68,7 @@ function updateSliders(
   setSliderThroughput([
     (100.0 * throughput) / maxThroughput,
     throughput,
-    maxThroughput,
+    Math.max(maxThroughput, throughput),
   ]);
 
   return bs;

@@ -6,12 +6,18 @@ import Form from "react-bootstrap/Form";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import styled from "styled-components";
 import { numberFormat } from "../utils/utils";
+import { useSelector, useDispatch } from "react-redux";
+import { setIterationsValues } from "../redux/slices/trainingScheduleSlice";
 
-const Iterations = ({ setNumIterations }) => {
-  const [iterations, setIterations] = useState({
-    epochs: 50,
-    iterPerEpoch: 2000,
-  });
+const Iterations = () => {
+  
+  const {epochs, iterPerEpoch} = useSelector((state)=>state.trainingScheduleReducer);
+  const dispatch = useDispatch();
+  const [iterations,setIterations] = useState({
+    epochs,
+    iterPerEpoch
+  })
+
   const [message, setMessage] = useState(null);
   const [estimation, setEstimation] = useState(false);
 
@@ -44,7 +50,7 @@ const Iterations = ({ setNumIterations }) => {
         setMessage("The total number of iterations should be less than 1e21");
       } else {
         setEstimation(true);
-        setNumIterations(iterations.epochs * iterations.iterPerEpoch);
+        dispatch(setIterationsValues({epochs:iterations.epochs, iterPerEpoch:iterations.iterPerEpoch}));
         setMessage(null);
         setTimeout(() => {
           setEstimation(false);
@@ -91,7 +97,7 @@ const Iterations = ({ setNumIterations }) => {
                     <Form.Text className="iterations-text">
                       Total number of iterations:{" "}
                       {numberFormat(
-                        iterations.epochs * iterations.iterPerEpoch
+                        iterations.epochs*iterations.iterPerEpoch
                       )}
                     </Form.Text>
                   </Form.Group>

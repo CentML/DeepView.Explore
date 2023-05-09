@@ -30,7 +30,14 @@ import {
 
 import { loadJsonFiles } from "../utils/parsers";
 
-const ProviderPanel = ({ numIterations, habitatData, cloudProviderURLs }) => {
+import { useSelector } from "react-redux";
+
+const ProviderPanel = ({ habitatData, cloudProviderURLs }) => {
+  const { epochs, iterPerEpoch } = useSelector(
+    (state) => state.trainingScheduleReducer
+  );
+  const numIterations = epochs * iterPerEpoch;
+
   const [providerPanelSettings, setProviderPanelSettings] = useState({
     plotData: null,
     initialData: null,
@@ -43,7 +50,7 @@ const ProviderPanel = ({ numIterations, habitatData, cloudProviderURLs }) => {
     provider: "all",
     gpu: "all",
     estimated_cost: 0,
-    estimated_time: 0
+    estimated_time: 0,
   });
 
   const habitatIsDemo = habitatData.find(
@@ -118,19 +125,22 @@ const ProviderPanel = ({ numIterations, habitatData, cloudProviderURLs }) => {
     );
     let totalHr = calculate_training_time(numIterations, originalData); // NEED YUBO FEEDBACK
     let totalCost = instance.info.cost * totalHr;
-    
-    let currCarbonData = instance.regions !== undefined ? getCarbonDataOfInstance(
-      totalHr, 
-      instance, 
-      providerPanelSettings.cloudProviders[instance.info.provider]
-    ):null;
+
+    let currCarbonData =
+      instance.regions !== undefined
+        ? getCarbonDataOfInstance(
+            totalHr,
+            instance,
+            providerPanelSettings.cloudProviders[instance.info.provider]
+          )
+        : null;
 
     setProviderPanelSettings((prevState) => ({
       ...prevState,
       clicked: instance,
       estimated_cost: totalCost,
       estimated_time: totalHr,
-      carbonData: currCarbonData
+      carbonData: currCarbonData,
     }));
   };
 
@@ -154,7 +164,7 @@ const ProviderPanel = ({ numIterations, habitatData, cloudProviderURLs }) => {
     }));
     recalculateCost(value);
   };
-  
+
   useEffect(() => {
     recalculateCost(providerPanelSettings.clicked);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -185,7 +195,8 @@ const ProviderPanel = ({ numIterations, habitatData, cloudProviderURLs }) => {
               <Row className="mt-2">
                 <Alert variant="danger">
                   Currently showing a demo data because local GPU is not
-                  supported by DeepView.Predict or DeepView.Predict is not installed 
+                  supported by DeepView.Predict or there was an issue generating
+                  accurate predictions
                 </Alert>
               </Row>
             )}
@@ -280,9 +291,9 @@ const ProviderPanel = ({ numIterations, habitatData, cloudProviderURLs }) => {
                 </Row>
                 {providerPanelSettings.fetchErrors && (
                   <Row className="mt-2">
-                      <ProviderPanelModal
-                        errors={providerPanelSettings.fetchErrors}
-                      />
+                    <ProviderPanelModal
+                      errors={providerPanelSettings.fetchErrors}
+                    />
                   </Row>
                 )}
               </Col>
@@ -345,9 +356,11 @@ const ProviderPanel = ({ numIterations, habitatData, cloudProviderURLs }) => {
                               </tr>
                             </tbody>
                           </Table>
-                          {providerPanelSettings.carbonData && <CarbonEquivalent
-                            carbonData={providerPanelSettings.carbonData}
-                          />}
+                          {providerPanelSettings.carbonData && (
+                            <CarbonEquivalent
+                              carbonData={providerPanelSettings.carbonData}
+                            />
+                          )}
                         </Card.Body>
                       </Card>
                     </CardGroup>

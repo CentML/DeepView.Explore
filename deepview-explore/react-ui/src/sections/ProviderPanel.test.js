@@ -1,7 +1,9 @@
 import { render, screen } from "@testing-library/react";
 import ProviderPanel from "./ProviderPanel";
-import { enableFetchMocks } from 'jest-fetch-mock'
-enableFetchMocks()
+import store from "../redux/store/store";
+import { Provider } from "react-redux";
+import { enableFetchMocks } from "jest-fetch-mock";
+enableFetchMocks();
 
 const { ResizeObserver } = window;
 const numIterations = 10000;
@@ -52,7 +54,7 @@ const correctData = [
 
 const noHabitatData = [
   ["source", 22.029312],
-  ["P100",14.069682],
+  ["P100", 14.069682],
   ["P4000", 127.268085], // 27.268085
   ["RTX2070", 16.088268],
   ["RTX2080Ti", 11.826558],
@@ -63,7 +65,7 @@ const noHabitatData = [
   ["A40", 11.558072],
   ["A4000", 14.67059],
   ["RTX4000", 20.2342],
-  ["demo",1]
+  ["demo", 1],
 ];
 
 beforeEach(() => {
@@ -96,34 +98,52 @@ jest.mock("recharts", () => {
   };
 });
 
-test("Shows a scatter chart", async() => {
+test("Shows a scatter chart", async () => {
   // ARRANGE
   // Mock fetch response
-  jest.spyOn(global, 'fetch').mockResolvedValue({
+  jest.spyOn(global, "fetch").mockResolvedValue({
     ok: true,
-    json: jest.fn().mockResolvedValue(correctData)
-  })
+    json: jest.fn().mockResolvedValue(correctData),
+  });
 
   const { container } = render(
-    <ProviderPanel numIterations={numIterations} habitatData={habitatData} additionalProviders={""}/>
+    <Provider store={store}>
+      <ProviderPanel
+        numIterations={numIterations}
+        habitatData={habitatData}
+        additionalProviders={""}
+      />
+    </Provider>
   );
 
   // ASSERT
   expect(await screen.findByText(/Providers/i)).toBeTruthy();
   expect(
-    container.querySelector(".recharts-responsive-container")  // eslint-disable-line
+    container.querySelector(".recharts-responsive-container") // eslint-disable-line
   ).toBeTruthy();
   expect(await screen.findByText(/select a configuration/i)).toBeTruthy();
 });
 
-test("no habitat data received from backend", async()=>{
+test("no habitat data received from backend", async () => {
   // ARRANGE
   // Mock fetch response
-  jest.spyOn(global, 'fetch').mockResolvedValue({
+  jest.spyOn(global, "fetch").mockResolvedValue({
     ok: true,
-    json: jest.fn().mockResolvedValue(correctData)
-  })
-  const { container } = render(<ProviderPanel numIterations={numIterations} habitatData={noHabitatData} additionalProviders={""}/>);
+    json: jest.fn().mockResolvedValue(correctData),
+  });
+  const { container } = render(
+    <Provider store={store}>
+      <ProviderPanel
+        numIterations={numIterations}
+        habitatData={noHabitatData}
+        additionalProviders={""}
+      />
+    </Provider>
+  );
   // ASSERT
-  expect(await screen.findByText(/Currently showing a demo data because local GPU is not supported by DeepView.Predict/i)).toBeTruthy();
-})
+  expect(
+    await screen.findByText(
+      /Currently showing a demo data because local GPU is not supported by DeepView.Predict/i
+    )
+  ).toBeTruthy();
+});

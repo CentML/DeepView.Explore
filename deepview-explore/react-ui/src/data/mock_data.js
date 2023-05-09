@@ -8,8 +8,8 @@ export const profiling_data = {
   throughput: {
     samples_per_second: 179.4022216796875,
     predicted_max_samples_per_second: 253.4250946044922,
-    run_time_ms: [3.9459390531219505,5.8745377327263055],
-    peak_usage_bytes: [85101998.60686015,362023034.03342235],
+    run_time_ms: [3.9459390531219505, 5.8745377327263055],
+    peak_usage_bytes: [85101998.60686015, 362023034.03342235],
     batch_size_context: "entry_point.py,11",
     can_manipulate_batch_size: true,
   },
@@ -872,57 +872,59 @@ export const profiling_data = {
       },
     ],
   },
-  habitat: [
-    ["source", 21.767504],
-    ["P100",13.972405],
-    ["P4000", 56.889559], // 27.268085
-    ["RTX2070", 15.942612],
-    ["RTX2080Ti", 11.753607],
-    ["T4", 21.767504],
-    ["V100", 10.154535],
-    ["A100", 10.081459],
-    ["RTX3090", 9.823705],
-    ["A40", 11.507118],
-    ["A4000", 14.537657],
-    ["RTX4000", 20.04405],
-  ],
+  habitat: {
+    predictions: [
+      ["source", 21.767504],
+      ["P100", 13.972405],
+      ["P4000", 56.889559], // 27.268085
+      ["RTX2070", 15.942612],
+      ["RTX2080Ti", 11.753607],
+      ["T4", 21.767504],
+      ["V100", 10.154535],
+      ["A100", 10.081459],
+      ["RTX3090", 9.823705],
+      ["A40", 11.507118],
+      ["A4000", 14.537657],
+      ["RTX4000", 20.04405],
+    ],
+  },
   energy: {
     current: {
-      total_consumption: 2.30,
-        components: [
-          { type: "ENERGY_UNSPECIFIED", consumption: 0 },
-          { type: "ENERGY_CPU_DRAM", consumption: 1.15 },
-          { type: "ENERGY_GPU", consumption: 1.15 },
-        ],
-      batch_size: 4
+      total_consumption: 2.3,
+      components: [
+        { type: "ENERGY_UNSPECIFIED", consumption: 0 },
+        { type: "ENERGY_CPU_DRAM", consumption: 1.15 },
+        { type: "ENERGY_GPU", consumption: 1.15 },
+      ],
+      batch_size: 4,
     },
     past_measurements: [
       {
-        total_consumption: 8.10,
+        total_consumption: 8.1,
         components: [
           { type: "ENERGY_UNSPECIFIED", consumption: 0 },
           { type: "ENERGY_CPU_DRAM", consumption: 7.05 },
           { type: "ENERGY_GPU", consumption: 1.05 },
         ],
-        batch_size: 1
+        batch_size: 1,
       },
       {
-        total_consumption: 9.30,
+        total_consumption: 9.3,
         components: [
           { type: "ENERGY_UNSPECIFIED", consumption: 0 },
           { type: "ENERGY_CPU_DRAM", consumption: 1.15 },
           { type: "ENERGY_GPU", consumption: 8.15 },
         ],
-        batch_size: 2
+        batch_size: 2,
       },
       {
-        total_consumption: 8.20,
+        total_consumption: 8.2,
         components: [
           { type: "ENERGY_UNSPECIFIED", consumption: 0 },
-          { type: "ENERGY_CPU_DRAM", consumption: 6.10 },
-          { type: "ENERGY_GPU", consumption: 2.10 },
+          { type: "ENERGY_CPU_DRAM", consumption: 6.1 },
+          { type: "ENERGY_GPU", consumption: 2.1 },
         ],
-        batch_size: 3
+        batch_size: 3,
       },
       {
         total_consumption: 3.345,
@@ -931,7 +933,7 @@ export const profiling_data = {
           { type: "ENERGY_CPU_DRAM", consumption: 1.473 },
           { type: "ENERGY_GPU", consumption: 1.873 },
         ],
-        batch_size: 4
+        batch_size: 4,
       },
       {
         total_consumption: 7.345,
@@ -940,7 +942,7 @@ export const profiling_data = {
           { type: "ENERGY_CPU_DRAM", consumption: 4.173 },
           { type: "ENERGY_GPU", consumption: 4.173 },
         ],
-        batch_size: 5
+        batch_size: 5,
       },
       {
         total_consumption: 4.345,
@@ -949,7 +951,7 @@ export const profiling_data = {
           { type: "ENERGY_CPU_DRAM", consumption: 2.173 },
           { type: "ENERGY_GPU", consumption: 2.173 },
         ],
-        batch_size: 6
+        batch_size: 6,
       },
       {
         total_consumption: 5.345,
@@ -958,7 +960,7 @@ export const profiling_data = {
           { type: "ENERGY_CPU_DRAM", consumption: 2.573 },
           { type: "ENERGY_GPU", consumption: 2.53 },
         ],
-        batch_size: 7
+        batch_size: 7,
       },
       {
         total_consumption: 9.345,
@@ -967,7 +969,7 @@ export const profiling_data = {
           { type: "ENERGY_CPU_DRAM", consumption: 8.173 },
           { type: "ENERGY_GPU", consumption: 1.173 },
         ],
-        batch_size: 8
+        batch_size: 8,
       },
       {
         total_consumption: 2.345,
@@ -976,7 +978,7 @@ export const profiling_data = {
           { type: "ENERGY_CPU_DRAM", consumption: 1.173 },
           { type: "ENERGY_GPU", consumption: 1.173 },
         ],
-        batch_size: 9
+        batch_size: 9,
       },
       {
         total_consumption: 4.345,
@@ -985,7 +987,7 @@ export const profiling_data = {
           { type: "ENERGY_CPU_DRAM", consumption: 2.173 },
           { type: "ENERGY_GPU", consumption: 2.173 },
         ],
-        batch_size: 10
+        batch_size: 10,
       },
     ],
   },

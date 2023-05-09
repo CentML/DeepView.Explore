@@ -15,8 +15,6 @@ import DeploymentTab from "./sections/DeploymentTab";
 import WelcomeScreen from "./sections/WelcomeScreen";
 import PerfBarContainer from "./sections/PerfBarContainer";
 
-import ReactTooltip from "react-tooltip";
-
 import { computePercentage, getTraceByLevel } from "./utils/utils";
 import { profiling_data } from "./data/mock_data";
 import EnergyConsumption from "./sections/EnergyConsumption";
@@ -53,7 +51,7 @@ function restartProfiling() {
   });
 }
 
-let sendMock = (!process.env.NODE_ENV || process.env.NODE_ENV === 'development');
+let sendMock = !process.env.NODE_ENV || process.env.NODE_ENV === "development";
 
 function App() {
   const [analysisState, setAnalysisState] = useState();
@@ -63,7 +61,6 @@ function App() {
   const [vscodeApi, setVscodeApi] = useState(acquireApi());
   const [errorText, setErrorText] = useState();
   const [connectionStatus, setConnectionStatus] = useState(false);
-  const [numIterations, setNumIterations] = useState(100000);
 
   App.vscodeApi = vscodeApi;
 
@@ -103,12 +100,14 @@ function App() {
         setConnectionStatus(event.data["status"]);
       } else if (event.data["message_type"] === "analysis") {
         if (
-          event.data.habitat.length === 0 ||
-          (event.data.habitat[0][0] === "unavailable" &&
-            event.data.habitat[0][1] === -1.0)
+          event.data.habitat.predictions &&
+          (event.data.habitat.predictions.length === 0 ||
+            (event.data.habitat.predictions[0][0] === "unavailable" &&
+              event.data.habitat.predictions[0][1] === -1.0))
         ) {
-          event.data.habitat = profiling_data.habitat;
-          event.data.habitat.push(["demo", 1]);
+          event.data.habitat.predictions =
+            profiling_data.habitat["predictions"];
+          event.data.habitat.predictions.push(["demo", 1]);
         }
         console.log(event.data);
         processAnalysisState(event.data);
@@ -152,8 +151,8 @@ function App() {
           <Alert.Heading>Analysis Error</Alert.Heading>
           <p>
             An error has occurred during analysis. This could be a problem with
-            Skyline or possibly your code. For more information, refer to the
-            detailed message below:
+            Deepview profiler or possibly your code. For more information, refer
+            to the detailed message below:
           </p>
           <hr />
           <p className="mb-0">
@@ -189,7 +188,7 @@ function App() {
               )}
             </Card.Body>
           </Card>
-          <Iterations setNumIterations={setNumIterations} />
+          <Iterations />
           <br></br>
           <Tabs defaultActiveKey="profiling" className="mb-3">
             <Tab eventKey="profiling" title="Profiling">
@@ -210,7 +209,6 @@ function App() {
                     }
                     renderPerfBars={timeBreakDown.fine}
                   />
-                  <ReactTooltip type="info" effect="float" html={true} />
                 </div>
                 <div className="innpv-contents-subrows">
                   <MemThroughputContainer
@@ -218,16 +216,12 @@ function App() {
                     SENDMOCK={sendMock}
                   />
                   <Habitat habitatData={analysisState["habitat"]} />
-                  <EnergyConsumption
-                    energyData={analysisState["energy"]}
-                    numIterations={numIterations}
-                  />
+                  <EnergyConsumption energyData={analysisState["energy"]} />
                 </div>
               </div>
             </Tab>
             <Tab eventKey="deploy" title="Deployment">
               <DeploymentTab
-                numIterations={numIterations}
                 habitatData={analysisState["habitat"]}
                 cloudProviderURLs={analysisState["additionalProviders"]}
               />
