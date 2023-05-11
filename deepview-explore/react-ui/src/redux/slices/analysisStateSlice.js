@@ -23,7 +23,7 @@ const analysisStateSlice = createSlice({
       /**
        * Redux state management is immutable and can only be change by using reducers
        * JSON parse and JSON stringify helps make a deep copy and avoid pointing to the same
-       * memory address in App.js
+       * memory address as event.data in App.js
        */
       if (!action.payload) {
         state.analysisState = null;
