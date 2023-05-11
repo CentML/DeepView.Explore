@@ -1,9 +1,11 @@
 import { render, screen } from "@testing-library/react";
 import Habitat from "./Habitat";
+import { Provider } from "react-redux";
+import configureMockStore from "redux-mock-store";
 
 const { ResizeObserver } = window;
 
-const data = {
+const habitatData = {
   predictions: [
     ["source", 22.029312],
     ["P100", 14.069682],
@@ -70,7 +72,20 @@ jest.mock("recharts", () => {
 
 test("Shows loading spinner when there is no habitat data", () => {
   // ARRANGE
-  render(<Habitat habitatData={{}} />);
+  const mockStore = configureMockStore();
+
+  let state = {
+    analysisStateSliceReducer: {
+      analysisState: { habitat: {} },
+    },
+  };
+
+  const store = mockStore(() => state);
+  render(
+    <Provider store={store}>
+      <Habitat habitatData={{}} />
+    </Provider>
+  );
 
   // ASSERT
   expect(screen.getByText(/loading deepview.predict data/i)).toBeTruthy();
@@ -78,17 +93,44 @@ test("Shows loading spinner when there is no habitat data", () => {
 
 test("Shows graph when habitat data is present", () => {
   // ARRANGE
-  const { container } = render(<Habitat habitatData={data} />);
+  const mockStore = configureMockStore();
+
+  let state = {
+    analysisStateSliceReducer: {
+      analysisState: { habitat: habitatData },
+    },
+  };
+
+  const store = mockStore(() => state);
+  const { container } = render(
+    <Provider store={store}>
+      <Habitat />
+    </Provider>
+  );
 
   // ASSERT
   expect(
-    container.querySelector(".recharts-responsive-container")
+    container.querySelector(".recharts-responsive-container") // eslint-disable-line
   ).toBeTruthy(); // eslint-disable-line
 });
 
 test("no habitat data received from backend", () => {
   // ARRANGE
-  const { container } = render(<Habitat habitatData={noHabitatData} />);
+  const mockStore = configureMockStore();
+
+  let state = {
+    analysisStateSliceReducer: {
+      analysisState: { habitat: noHabitatData },
+    },
+  };
+
+  const store = mockStore(() => state);
+  
+  render(
+  <Provider store={store}>
+    <Habitat />
+  </Provider>
+  );
   // ASSERT
   expect(
     screen.getByText(/the local gpu is not supported by deepview.predict/i)

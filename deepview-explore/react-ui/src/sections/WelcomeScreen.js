@@ -5,8 +5,11 @@ import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
 import Image from "react-bootstrap/Image";
 import Stack from "react-bootstrap/Stack";
+import { useSelector } from "react-redux";
 
-const WelcomeScreen = ({ analysisState, vscodeApi }) => {
+const WelcomeScreen = () => {
+  const { vscodeApi } = useSelector((state) => state.vsCodeSliceReducer);
+  const {analysisState} = useSelector((state) => state.analysisStateSliceReducer);
   const [btn_clicked, setBtn_clicked] = useState(false);
 
   const onClickBeginAnalysis = () => {
@@ -28,10 +31,7 @@ const WelcomeScreen = ({ analysisState, vscodeApi }) => {
               <Image src="resources/deepview.png"></Image>
               {analysisState && (
                 <>
-                  <ProjectInfo
-                    projectRoot={analysisState["project_root"]}
-                    entryPoint={analysisState["project_entry_point"]}
-                  />
+                  <ProjectInfo />
                 </>
               )}
               <Button

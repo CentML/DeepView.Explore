@@ -1,10 +1,16 @@
 import { render, screen } from "@testing-library/react";
 import PerfBarContainer from "./PerfBarContainer";
 import { labels, renderPerfBars } from "../data/test_data";
+import store from "../redux/store/store";
+import { Provider } from "react-redux";
 
 test("No display when there is no information", () => {
   // ARRANGE
-  render(<PerfBarContainer labels={[]} renderPerfBars={[]} />);
+  render(
+    <Provider store={store}>
+      <PerfBarContainer labels={[]} renderPerfBars={[]} />
+    </Provider>
+  );
 
   // ASSERT
   const layer1 = screen.queryByText(/layer1.0/i);
@@ -18,12 +24,16 @@ test("No display when there is no information", () => {
 });
 
 test("Display set of layers", () => {
-    // ARRANGE
-    render(<PerfBarContainer labels={labels} renderPerfBars={renderPerfBars} />);
-  
-    // ASSERT
-    expect(screen.getByText(/layer1.0/i)).toBeTruthy();
-    expect(screen.getByText(/layer2.0/i)).toBeTruthy();
-    expect(screen.getByText(/layer3.0/i)).toBeTruthy();
-    expect(screen.getByText(/layer4.0/i)).toBeTruthy();
-  });
+  // ARRANGE
+  render(
+    <Provider store={store}>
+      <PerfBarContainer labels={labels} renderPerfBars={renderPerfBars} />
+    </Provider>
+  );
+
+  // ASSERT
+  expect(screen.getByText(/layer1.0/i)).toBeTruthy();
+  expect(screen.getByText(/layer2.0/i)).toBeTruthy();
+  expect(screen.getByText(/layer3.0/i)).toBeTruthy();
+  expect(screen.getByText(/layer4.0/i)).toBeTruthy();
+});

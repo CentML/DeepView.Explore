@@ -1,8 +1,12 @@
 
 import React from "react";
 import styled from "styled-components";
+import { useSelector } from "react-redux";
 
-const ProjectInfo = ({ projectRoot, entryPoint }) => {
+const ProjectInfo = () => {
+  const {analysisState} = useSelector((state) => state.analysisStateSliceReducer);
+  const projectRoot = analysisState["project_root"];
+  const entryPoint = analysisState["project_entry_point"];
   return (
     <>
       <Wrapper>

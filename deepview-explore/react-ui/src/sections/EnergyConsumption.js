@@ -21,11 +21,13 @@ import { energy_data, unitScale, numberFormat } from "../utils/utils";
 
 import { useSelector } from "react-redux";
 
-const EnergyConsumption = ({ energyData }) => {
+const EnergyConsumption = () => {
+  const {analysisState} = useSelector((state) => state.analysisStateSliceReducer);
   const { epochs, iterPerEpoch } = useSelector(
     (state) => state.trainingScheduleReducer
   );
   const numIterations = epochs * iterPerEpoch;
+  const energyData = analysisState["energy"];
 
   const cpu_color = "#5499c7";
   const cpu_color_opacity = "rgba(84,153,199,0.55)";

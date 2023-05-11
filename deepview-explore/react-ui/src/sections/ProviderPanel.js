@@ -32,11 +32,14 @@ import { loadJsonFiles } from "../utils/parsers";
 
 import { useSelector } from "react-redux";
 
-const ProviderPanel = ({ habitatData, cloudProviderURLs }) => {
+const ProviderPanel = () => {
+  const {analysisState} = useSelector((state) => state.analysisStateSliceReducer);
   const { epochs, iterPerEpoch } = useSelector(
     (state) => state.trainingScheduleReducer
   );
   const numIterations = epochs * iterPerEpoch;
+  const habitatData = analysisState["habitat"]["predictions"];
+  const cloudProviderURLs = analysisState["additionalProviders"];
 
   const [providerPanelSettings, setProviderPanelSettings] = useState({
     plotData: null,

@@ -10,6 +10,7 @@ import Subheader from "../components/Subheader";
 import NumericDisplay from "../components/NumericDisplay";
 import { profiling_data } from "../data/mock_data";
 import { GPU_MAX_CAPACITY_LIMIT } from "../data/properties";
+import { useSelector } from "react-redux";
 /**
  * Returns information required to draw memory and throughput information
  * @param {*} analysisState
@@ -33,7 +34,6 @@ function updateSliders(
       memoryModel[1]) /
       memoryModel[0]
   );
-  console.log("MAX BATCH SIZE", maxBatch);
 
   let maxMemory = analysisState["breakdown"]["memory_capacity_bytes"];
   let maxThroughput =
@@ -75,7 +75,8 @@ function updateSliders(
   return bs;
 }
 
-const MemThroughputContainer = ({ analysisState, SENDMOCK }) => {
+const MemThroughputContainer = ({  SENDMOCK }) => {
+  const {analysisState} = useSelector((state) => state.analysisStateSliceReducer);
   const [sliderMemory, setSliderMemory] = useState([50, 69, 420]);
   const [sliderThroughput, setSliderThroughput] = useState([50, 69, 420]);
   const [curBatchSize, setCurBatchSize] = useState(0);

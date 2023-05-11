@@ -9,10 +9,12 @@ import { numberFormat } from "../utils/utils";
 
 import { useSelector } from "react-redux";
 
-const DeploymentTab = ({ habitatData,cloudProviderURLs }) => {
+const DeploymentTab = () => {
 
+  const {analysisState} = useSelector((state) => state.analysisStateSliceReducer);
   const {epochs, iterPerEpoch} = useSelector((state)=>state.trainingScheduleReducer);
   const numIterations = epochs * iterPerEpoch;
+  const habitatData = analysisState["habitat"];
 
   return (
     <>
@@ -35,10 +37,7 @@ const DeploymentTab = ({ habitatData,cloudProviderURLs }) => {
               <Badge bg="secondary">{numberFormat(numIterations)}</Badge> total
               iterations
             </h6>
-            <ProviderPanel
-              habitatData={habitatData["predictions"]}
-              cloudProviderURLs={cloudProviderURLs}
-            />
+            <ProviderPanel />
           </Row>
         </Container>
       )}

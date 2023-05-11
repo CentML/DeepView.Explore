@@ -1,27 +1,29 @@
 import { render, screen } from "@testing-library/react";
 import ProviderPanel from "./ProviderPanel";
-import store from "../redux/store/store";
 import { Provider } from "react-redux";
 import { enableFetchMocks } from "jest-fetch-mock";
+import configureMockStore from "redux-mock-store";
+
 enableFetchMocks();
 
 const { ResizeObserver } = window;
-const numIterations = 10000;
 
-const habitatData = [
-  ["source", 22.029312],
-  ["P100", 14.069682],
-  ["P4000", 127.268085], // 27.268085
-  ["RTX2070", 16.088268],
-  ["RTX2080Ti", 11.826558],
-  ["T4", 22.029312],
-  ["V100", 10.182922],
-  ["A100", 10.068596],
-  ["RTX3090", 9.841998],
-  ["A40", 11.558072],
-  ["A4000", 14.67059],
-  ["RTX4000", 20.2342],
-];
+const habitatData = {
+  predictions: [
+    ["source", 22.029312],
+    ["P100", 14.069682],
+    ["P4000", 127.268085], // 27.268085
+    ["RTX2070", 16.088268],
+    ["RTX2080Ti", 11.826558],
+    ["T4", 22.029312],
+    ["V100", 10.182922],
+    ["A100", 10.068596],
+    ["RTX3090", 9.841998],
+    ["A40", 11.558072],
+    ["A4000", 14.67059],
+    ["RTX4000", 20.2342],
+  ],
+};
 
 const correctData = [
   {
@@ -52,21 +54,23 @@ const correctData = [
   },
 ];
 
-const noHabitatData = [
-  ["source", 22.029312],
-  ["P100", 14.069682],
-  ["P4000", 127.268085], // 27.268085
-  ["RTX2070", 16.088268],
-  ["RTX2080Ti", 11.826558],
-  ["T4", 22.029312],
-  ["V100", 10.182922],
-  ["A100", 10.068596],
-  ["RTX3090", 9.841998],
-  ["A40", 11.558072],
-  ["A4000", 14.67059],
-  ["RTX4000", 20.2342],
-  ["demo", 1],
-];
+const noHabitatData = {
+  predictions: [
+    ["source", 22.029312],
+    ["P100", 14.069682],
+    ["P4000", 127.268085], // 27.268085
+    ["RTX2070", 16.088268],
+    ["RTX2080Ti", 11.826558],
+    ["T4", 22.029312],
+    ["V100", 10.182922],
+    ["A100", 10.068596],
+    ["RTX3090", 9.841998],
+    ["A40", 11.558072],
+    ["A4000", 14.67059],
+    ["RTX4000", 20.2342],
+    ["demo", 1],
+  ],
+};
 
 beforeEach(() => {
   delete window.ResizeObserver;
@@ -106,13 +110,23 @@ test("Shows a scatter chart", async () => {
     json: jest.fn().mockResolvedValue(correctData),
   });
 
+  const mockStore = configureMockStore();
+
+  let state = {
+    analysisStateSliceReducer: {
+      analysisState: { habitat: habitatData },
+    },
+    trainingScheduleReducer: {
+      epochs: 50,
+      iterPerEpoch: 2000,
+    },
+  };
+
+  const store = mockStore(() => state);
+
   const { container } = render(
     <Provider store={store}>
-      <ProviderPanel
-        numIterations={numIterations}
-        habitatData={habitatData}
-        additionalProviders={""}
-      />
+      <ProviderPanel />
     </Provider>
   );
 
@@ -131,12 +145,25 @@ test("no habitat data received from backend", async () => {
     ok: true,
     json: jest.fn().mockResolvedValue(correctData),
   });
-  const { container } = render(
+
+  const mockStore = configureMockStore();
+
+  let state = {
+    analysisStateSliceReducer: {
+      analysisState: { habitat: noHabitatData },
+    },
+    trainingScheduleReducer: {
+      epochs: 50,
+      iterPerEpoch: 2000,
+    },
+  };
+
+  const store = mockStore(() => state);
+
+
+  render(
     <Provider store={store}>
       <ProviderPanel
-        numIterations={numIterations}
-        habitatData={noHabitatData}
-        additionalProviders={""}
       />
     </Provider>
   );

@@ -1,8 +1,9 @@
 import { render, screen } from "@testing-library/react";
 import DeploymentTab from "./DeploymentTab";
-import store from "../redux/store/store";
 import { Provider } from "react-redux";
 import { enableFetchMocks } from "jest-fetch-mock";
+import configureMockStore from "redux-mock-store";
+
 enableFetchMocks();
 const { ResizeObserver } = window;
 
@@ -71,9 +72,23 @@ jest.mock("recharts", () => {
 
 test("Shows loading spinner when there is no habitat data", () => {
   // ARRANGE
+  const mockStore = configureMockStore();
+
+  let state = {
+    analysisStateSliceReducer: {
+      analysisState: { habitat: {} },
+    },
+    trainingScheduleReducer: {
+      epochs: 50,
+      iterPerEpoch: 2000,
+    },
+  };
+
+  const store = mockStore(() => state);
+
   render(
     <Provider store={store}>
-      <DeploymentTab habitatData={{}} />
+      <DeploymentTab/>
     </Provider>
   );
 
@@ -91,9 +106,23 @@ test("Shows deployment target when there is habitat data", async () => {
     json: jest.fn().mockResolvedValue(correctData),
   });
 
+  const mockStore = configureMockStore();
+
+  let state = {
+    analysisStateSliceReducer: {
+      analysisState: { habitat: habitatData },
+    },
+    trainingScheduleReducer: {
+      epochs: 50,
+      iterPerEpoch: 2000,
+    },
+  };
+
+  const store = mockStore(() => state);
+
   const { container } = render(
     <Provider store={store}>
-      <DeploymentTab habitatData={habitatData} additionalProviders={""} />
+      <DeploymentTab/>
     </Provider>
   );
 
@@ -106,3 +135,5 @@ test("Shows deployment target when there is habitat data", async () => {
     container.querySelector(".recharts-responsive-container") // eslint-disable-line
   ).toBeTruthy();
 });
+
+test("temp",()=>{});
