@@ -8,11 +8,10 @@ import { HabitatScatterGraph } from "../components/ScatterGraph";
 import { useSelector } from "react-redux";
 
 export default function Habitat() {
-  const {analysisState} = useSelector((state) => state.analysisStateSliceReducer);
-  const habitatData = analysisState["habitat"];
-  const habitatIsDemo = habitatData.predictions?.find(
-    (item) => item[0] === "demo" && item[1] === 1
+  const { analysisState } = useSelector(
+    (state) => state.analysisStateSliceReducer
   );
+  const habitatData = analysisState["habitat"];
   if (habitatData.error) {
     return (
       <>
@@ -29,7 +28,7 @@ export default function Habitat() {
       </>
     );
   }
-  if (habitatIsDemo) {
+  if (habitatData.isDemo) {
     return (
       <>
         <div className="innpv-memory innpv-subpanel">

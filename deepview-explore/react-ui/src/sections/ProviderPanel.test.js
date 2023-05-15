@@ -68,8 +68,8 @@ const noHabitatData = {
     ["A40", 11.558072],
     ["A4000", 14.67059],
     ["RTX4000", 20.2342],
-    ["demo", 1],
   ],
+  isDemo: true,
 };
 
 beforeEach(() => {
@@ -160,11 +160,9 @@ test("no habitat data received from backend", async () => {
 
   const store = mockStore(() => state);
 
-
   render(
     <Provider store={store}>
-      <ProviderPanel
-      />
+      <ProviderPanel />
     </Provider>
   );
   // ASSERT
