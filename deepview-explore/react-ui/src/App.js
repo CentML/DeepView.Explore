@@ -23,17 +23,10 @@ import MemThroughputContainer from "./sections/MemThroughputContainer";
 
 import { useSelector, useDispatch } from "react-redux";
 import { updateDeepviewState } from "./redux/slices/analysisStateSlice";
-import { useSelector, useDispatch } from "react-redux";
-import { updateDeepviewState } from "./redux/slices/analysisStateSlice";
 
 let sendMock = !process.env.NODE_ENV || process.env.NODE_ENV === "development";
 
 function App() {
-  const { vscodeApi } = useSelector((state) => state.vsCodeSliceReducer);
-  const { analysisState } = useSelector(
-    (state) => state.analysisStateSliceReducer
-  );
-  const dispatch = useDispatch();
   const { vscodeApi } = useSelector((state) => state.vsCodeSliceReducer);
   const { analysisState } = useSelector(
     (state) => state.analysisStateSliceReducer
@@ -56,13 +49,10 @@ function App() {
   const resetApp = function () {
     setErrorText("");
     dispatch(updateDeepviewState(null));
-    dispatch(updateDeepviewState(null));
   };
 
   const connect = function () {
     resetApp();
-    if (vscodeApi) {
-      vscodeApi.postMessage({
     if (vscodeApi) {
       vscodeApi.postMessage({
         command: "connect",
@@ -71,7 +61,6 @@ function App() {
   };
 
   const processAnalysisState = function (state) {
-    dispatch(updateDeepviewState(state));
     dispatch(updateDeepviewState(state));
     if (state.breakdown && state.breakdown.operation_tree) {
       let operation_tree = state.breakdown.operation_tree;
@@ -117,7 +106,6 @@ function App() {
     return () => {
       window.removeEventListener("message", () => {}); //remove event listener before re-render to avoid memory leaks
     };
-    // eslint-disable-next-line
     // eslint-disable-next-line
   }, []);
 
@@ -166,7 +154,6 @@ function App() {
             <Card.Header>Project Information</Card.Header>
             <Card.Body>
               <ProjectInfo />
-              <ProjectInfo />
               {textChanged && (
                 <Alert key="info" variant="info">
                   Change is detected in the project.{" "}
@@ -200,9 +187,7 @@ function App() {
                   />
                 </div>
                 <div className="innpv-contents-subrows">
-                  <MemThroughputContainer
-                    SENDMOCK={sendMock}
-                  />
+                  <MemThroughputContainer SENDMOCK={sendMock} />
                   <Habitat />
                   <EnergyConsumption />
                 </div>
@@ -218,7 +203,6 @@ function App() {
   } else {
     return (
       <>
-        <WelcomeScreen />
         <WelcomeScreen />
       </>
     );
