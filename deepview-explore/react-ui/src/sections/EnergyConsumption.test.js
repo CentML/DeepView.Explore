@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import EnergyConsumption from "./EnergyConsumption";
-import store from "../redux/store/store";
 import { Provider } from "react-redux";
+import configureMockStore from "redux-mock-store";
 
 const { ResizeObserver } = window;
 
@@ -109,9 +109,23 @@ jest.mock("recharts", () => {
 
 test("No energy data: shows only loading spinner", () => {
   // ARRANGE
+  const mockStore = configureMockStore();
+
+  let state = {
+    analysisStateSliceReducer: {
+      analysisState: { energy: {} },
+    },
+    trainingScheduleReducer: {
+      epochs: 50,
+      iterPerEpoch: 2000,
+    },
+  };
+
+  const store = mockStore(() => state);
+
   render(
     <Provider store={store}>
-      <EnergyConsumption energyData={{}} />
+      <EnergyConsumption />
     </Provider>
   );
 
@@ -123,9 +137,23 @@ test("No energy data: shows only loading spinner", () => {
 
 test("Only current data: shows both pie and graph data", () => {
   // ARRANGE
+  const mockStore = configureMockStore();
+
+  let state = {
+    analysisStateSliceReducer: {
+      analysisState: { energy: energy_only_current },
+    },
+    trainingScheduleReducer: {
+      epochs: 50,
+      iterPerEpoch: 2000,
+    },
+  };
+
+  const store = mockStore(() => state);
+
   const { container } = render(
     <Provider store={store}>
-      <EnergyConsumption energyData={energy_only_current} />
+      <EnergyConsumption />
     </Provider>
   );
 
@@ -140,9 +168,23 @@ test("Only current data: shows both pie and graph data", () => {
 
 test("Only past experiments: shows only graph data", () => {
   // ARRANGE
+  const mockStore = configureMockStore();
+
+  let state = {
+    analysisStateSliceReducer: {
+      analysisState: { energy: energy_only_past },
+    },
+    trainingScheduleReducer: {
+      epochs: 50,
+      iterPerEpoch: 2000,
+    },
+  };
+
+  const store = mockStore(() => state);
+
   const { container } = render(
     <Provider store={store}>
-      <EnergyConsumption energyData={energy_only_past} />
+      <EnergyConsumption />
     </Provider>
   );
 
@@ -157,9 +199,23 @@ test("Only past experiments: shows only graph data", () => {
 
 test("Empty data: shows could not load data", () => {
   // ARRANGE
+  const mockStore = configureMockStore();
+
+  let state = {
+    analysisStateSliceReducer: {
+      analysisState: { energy: energy_empty_data},
+    },
+    trainingScheduleReducer: {
+      epochs: 50,
+      iterPerEpoch: 2000,
+    },
+  };
+
+  const store = mockStore(() => state);
+
   const { container } = render(
     <Provider store={store}>
-      <EnergyConsumption energyData={energy_empty_data} />
+      <EnergyConsumption />
     </Provider>
   );
 
@@ -170,9 +226,23 @@ test("Empty data: shows could not load data", () => {
 });
 
 test("All information Complete: show both charts", () => {
+  const mockStore = configureMockStore();
+
+  let state = {
+    analysisStateSliceReducer: {
+      analysisState: { energy: energy_complete },
+    },
+    trainingScheduleReducer: {
+      epochs: 50,
+      iterPerEpoch: 2000,
+    },
+  };
+
+  const store = mockStore(() => state);
+
   const { container } = render(
     <Provider store={store}>
-      <EnergyConsumption energyData={energy_complete} />
+      <EnergyConsumption/>
     </Provider>
   );
 
@@ -188,3 +258,5 @@ test("All information Complete: show both charts", () => {
     container.querySelector(".bargraph-container") // eslint-disable-line
   ).toBeTruthy();
 });
+
+test("demo",()=>{});

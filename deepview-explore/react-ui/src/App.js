@@ -21,66 +21,46 @@ import EnergyConsumption from "./sections/EnergyConsumption";
 import Iterations from "./sections/Iterations";
 import MemThroughputContainer from "./sections/MemThroughputContainer";
 
-// https://stackoverflow.com/questions/54135313/webview-extension-in-typescript
-/**
- * Returns the vscode API handle. the acquireVsCodeApi function would not be available when compiling
- * the react project, so we need to dynamically look it up. This function also caches the handle and
- * returns it if previously acquired.
- * @returns The VSCode API handle
- */
-function acquireApi() {
-  // if (typeof this.acquireApi.api == 'undefined') {
-  if (typeof acquireApi.api === "undefined") {
-    if (typeof acquireVsCodeApi === "function") {
-      let f = window["acquireVsCodeApi"];
-      let a = f();
-      acquireApi.api = a;
-    } else {
-      acquireApi.api = null;
-    }
-  }
-
-  return acquireApi.api;
-}
-
-function restartProfiling() {
-  console.log("restartProfiling");
-  let vscode = App.vscodeApi;
-  vscode.postMessage({
-    command: "restart_profiling_clicked",
-  });
-}
+import { useSelector, useDispatch } from "react-redux";
+import { updateDeepviewState } from "./redux/slices/analysisStateSlice";
 
 let sendMock = !process.env.NODE_ENV || process.env.NODE_ENV === "development";
 
 function App() {
-  const [analysisState, setAnalysisState] = useState();
+  const { vscodeApi } = useSelector((state) => state.vsCodeSliceReducer);
+  const { analysisState } = useSelector(
+    (state) => state.analysisStateSliceReducer
+  );
+  const dispatch = useDispatch();
   const [textChanged, setTextChanged] = useState(false);
   const [timeBreakDown, setTimeBreakdown] = useState([]);
   // eslint-disable-next-line
-  const [vscodeApi, setVscodeApi] = useState(acquireApi());
   const [errorText, setErrorText] = useState();
   const [connectionStatus, setConnectionStatus] = useState(false);
 
-  App.vscodeApi = vscodeApi;
+  function restartProfiling() {
+    console.log("restartProfiling");
+    vscodeApi.postMessage({
+      command: "restart_profiling_clicked",
+    });
+  }
 
   const resetApp = function () {
     setErrorText("");
-    setAnalysisState(undefined);
+    dispatch(updateDeepviewState(null));
   };
 
   const connect = function () {
     resetApp();
-    let vscode = App.vscodeApi;
-    if (vscode) {
-      vscode.postMessage({
+    if (vscodeApi) {
+      vscodeApi.postMessage({
         command: "connect",
       });
     }
   };
 
   const processAnalysisState = function (state) {
-    setAnalysisState(state);
+    dispatch(updateDeepviewState(state));
     if (state.breakdown && state.breakdown.operation_tree) {
       let operation_tree = state.breakdown.operation_tree;
       let { coarse, fine } = getTraceByLevel(operation_tree);
@@ -99,16 +79,6 @@ function App() {
       if (event.data["message_type"] === "connection") {
         setConnectionStatus(event.data["status"]);
       } else if (event.data["message_type"] === "analysis") {
-        if (
-          event.data.habitat.predictions &&
-          (event.data.habitat.predictions.length === 0 ||
-            (event.data.habitat.predictions[0][0] === "unavailable" &&
-              event.data.habitat.predictions[0][1] === -1.0))
-        ) {
-          event.data.habitat.predictions =
-            profiling_data.habitat["predictions"];
-          event.data.habitat.predictions.push(["demo", 1]);
-        }
         console.log(event.data);
         processAnalysisState(event.data);
       } else if (event.data["message_type"] === "text_change") {
@@ -128,6 +98,7 @@ function App() {
     return () => {
       window.removeEventListener("message", () => {}); //remove event listener before re-render to avoid memory leaks
     };
+    // eslint-disable-next-line
   }, []);
 
   if (!connectionStatus && !sendMock) {
@@ -174,10 +145,7 @@ function App() {
           <Card>
             <Card.Header>Project Information</Card.Header>
             <Card.Body>
-              <ProjectInfo
-                projectRoot={analysisState["project_root"]}
-                entryPoint={analysisState["project_entry_point"]}
-              />
+              <ProjectInfo />
               {textChanged && (
                 <Alert key="info" variant="info">
                   Change is detected in the project.{" "}
@@ -212,19 +180,15 @@ function App() {
                 </div>
                 <div className="innpv-contents-subrows">
                   <MemThroughputContainer
-                    analysisState={analysisState}
                     SENDMOCK={sendMock}
                   />
-                  <Habitat habitatData={analysisState["habitat"]} />
-                  <EnergyConsumption energyData={analysisState["energy"]} />
+                  <Habitat />
+                  <EnergyConsumption />
                 </div>
               </div>
             </Tab>
             <Tab eventKey="deploy" title="Deployment">
-              <DeploymentTab
-                habitatData={analysisState["habitat"]}
-                cloudProviderURLs={analysisState["additionalProviders"]}
-              />
+              <DeploymentTab/>
             </Tab>
           </Tabs>
         </Container>
@@ -233,10 +197,7 @@ function App() {
   } else {
     return (
       <>
-        <WelcomeScreen
-          analysisState={analysisState}
-          vscodeApi={vscodeApi}
-        ></WelcomeScreen>
+        <WelcomeScreen />
       </>
     );
   }

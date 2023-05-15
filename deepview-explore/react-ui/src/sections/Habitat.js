@@ -5,11 +5,13 @@ import Row from "react-bootstrap/Row";
 import Spinner from "react-bootstrap/Spinner";
 import Card from "react-bootstrap/Card";
 import { HabitatScatterGraph } from "../components/ScatterGraph";
+import { useSelector } from "react-redux";
 
-export default function Habitat({ habitatData }) {
-  const habitatIsDemo = habitatData.predictions?.find(
-    (item) => item[0] === "demo" && item[1] === 1
+export default function Habitat() {
+  const { analysisState } = useSelector(
+    (state) => state.analysisStateSliceReducer
   );
+  const habitatData = analysisState["habitat"];
   if (habitatData.error) {
     return (
       <>
@@ -26,7 +28,7 @@ export default function Habitat({ habitatData }) {
       </>
     );
   }
-  if (habitatIsDemo) {
+  if (habitatData.isDemo) {
     return (
       <>
         <div className="innpv-memory innpv-subpanel">
@@ -64,7 +66,7 @@ export default function Habitat({ habitatData }) {
             </Container>
           ) : (
             <HabitatScatterGraph
-              habitatData={habitatData["predictions"]}
+              habitatData={[...habitatData["predictions"]]}
               height={500}
             />
           )}

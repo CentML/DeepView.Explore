@@ -138,10 +138,14 @@ export const HabitatScatterGraph = ({ habitatData, height }) => {
     const { x, y, width, height, value } = props;
     const y_offset = 5;
     return (
-      <text x={x + width / 2} y={y - y_offset} fill="#1c2833"
-      fontSize={12}
-      fontWeight={650}
-      fontFamily="sans-serif">
+      <text
+        x={x + width / 2}
+        y={y - y_offset}
+        fill="#1c2833"
+        fontSize={12}
+        fontWeight={650}
+        fontFamily="sans-serif"
+      >
         {value}
       </text>
     );
@@ -151,10 +155,9 @@ export const HabitatScatterGraph = ({ habitatData, height }) => {
   const habitatConsumerCards = [];
   const habitatServerCards = [];
   const sourceInHabitat = [];
-
   habitatData.sort((a, b) => a[1] - b[1]);
 
-  habitatData.forEach((habitatItem,idx) => {
+  habitatData.forEach((habitatItem, idx) => {
     const findGPUProperty = gpuPropertyList.find(
       (item) => item.name.toLowerCase() === habitatItem[0].toLowerCase()
     );
@@ -163,14 +166,14 @@ export const HabitatScatterGraph = ({ habitatData, height }) => {
         habitatServerCards.push({
           time: parseFloat(Number(habitatItem[1]).toFixed(2)),
           card: habitatItem[0],
-          index: idx%NUMBER_OF_COLUMNS +0.5,
+          index: (idx % NUMBER_OF_COLUMNS) + 0.5,
           size: 100,
         });
       } else {
         habitatConsumerCards.push({
           time: parseFloat(Number(habitatItem[1]).toFixed(2)),
           card: habitatItem[0],
-          index: idx%NUMBER_OF_COLUMNS+0.5,
+          index: (idx % NUMBER_OF_COLUMNS) + 0.5,
           size: 100,
         });
       }
@@ -178,7 +181,7 @@ export const HabitatScatterGraph = ({ habitatData, height }) => {
       sourceInHabitat.push({
         time: parseFloat(Number(habitatItem[1]).toFixed(2)),
         card: "Local GPU",
-        index: idx%NUMBER_OF_COLUMNS+0.5,
+        index: (idx % NUMBER_OF_COLUMNS) + 0.5,
         size: 100,
       });
     }
@@ -208,7 +211,7 @@ export const HabitatScatterGraph = ({ habitatData, height }) => {
             type="number"
             dataKey="index"
             name="Server Grade"
-            domain={[0,NUMBER_OF_COLUMNS+1]}
+            domain={[0, NUMBER_OF_COLUMNS + 1]}
             width={80}
             tick={false}
             tickLine={false}
