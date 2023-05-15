@@ -33,7 +33,9 @@ import { loadJsonFiles } from "../utils/parsers";
 import { useSelector } from "react-redux";
 
 const ProviderPanel = () => {
-  const {analysisState} = useSelector((state) => state.analysisStateSliceReducer);
+  const { analysisState } = useSelector(
+    (state) => state.analysisStateSliceReducer
+  );
   const { epochs, iterPerEpoch } = useSelector(
     (state) => state.trainingScheduleReducer
   );
@@ -187,6 +189,20 @@ const ProviderPanel = () => {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  if (analysisState["habitat"].error) {
+    return (
+      <div className="innpv-memory innpv-subpanel">
+        <Subheader icon="database">Providers</Subheader>
+        <Container fluid>
+          <Row className="mt-2">
+            <Alert variant="danger">
+              There was an error obtaining accurate DeepView Predictions
+            </Alert>
+          </Row>
+        </Container>
+      </div>
+    );
+  }
   return (
     <>
       {providerPanelSettings.plotData &&
