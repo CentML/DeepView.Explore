@@ -33,14 +33,15 @@ import { loadJsonFiles } from "../utils/parsers";
 import { useSelector } from "react-redux";
 
 const ProviderPanel = () => {
-  const {analysisState} = useSelector((state) => state.analysisStateSliceReducer);
+  const { analysisState } = useSelector(
+    (state) => state.analysisStateSliceReducer
+  );
   const { epochs, iterPerEpoch } = useSelector(
     (state) => state.trainingScheduleReducer
   );
   const numIterations = epochs * iterPerEpoch;
-  const habitatData = analysisState["habitat"]["predictions"];
+  const habitatData = analysisState["habitat"];
   const cloudProviderURLs = analysisState["additionalProviders"];
-
   const [providerPanelSettings, setProviderPanelSettings] = useState({
     plotData: null,
     initialData: null,
@@ -56,13 +57,7 @@ const ProviderPanel = () => {
     estimated_time: 0,
   });
 
-  const habitatIsDemo = habitatData.find(
-    (item) => item[0] === "demo" && item[1] === 1
-  );
-
   const MAX_GPU = [1, 2, 4, 0]; // 0 is all
-
-  // const initial_data = populate_initial_data(habitatData);
 
   let gpuList = new Set();
   if (providerPanelSettings.initialData) {
@@ -175,7 +170,10 @@ const ProviderPanel = () => {
 
   useEffect(() => {
     async function fetchData() {
-      const jsondata = await loadJsonFiles(habitatData, cloudProviderURLs);
+      const jsondata = await loadJsonFiles(
+        habitatData["predictions"],
+        cloudProviderURLs
+      );
       setProviderPanelSettings((prevState) => ({
         ...prevState,
         plotData: jsondata.instanceArray,
@@ -194,7 +192,7 @@ const ProviderPanel = () => {
         <div className="innpv-memory innpv-subpanel">
           <Subheader icon="database">Providers</Subheader>
           <Container fluid>
-            {habitatIsDemo && (
+            {habitatData.isDemo && (
               <Row className="mt-2">
                 <Alert variant="danger">
                   Currently showing a demo data because local GPU is not

@@ -9,7 +9,7 @@ const verifyHabitatData = (data) => {
         data.habitat.predictions[0][1] === -1.0))
   ) {
     data.habitat.predictions = [...profiling_data.habitat["predictions"]];
-    data.habitat.predictions.push(["demo", 1]);
+    data.habitat.isDemo = true;
   }
 };
 
