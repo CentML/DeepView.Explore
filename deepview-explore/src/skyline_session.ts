@@ -119,7 +119,6 @@ export class SkylineSession {
             "message_type": "connection",
             "status": true
         };
-        console.log("sending message to frontend", connectionMessage);
         this.webviewPanel.webview.postMessage(connectionMessage);
         this.on_open();
     }  
@@ -143,7 +142,6 @@ export class SkylineSession {
     }
 
     connect() {
-        console.log("connection called")
         this.connection.connect(this.port, this.addr);
     }
 
