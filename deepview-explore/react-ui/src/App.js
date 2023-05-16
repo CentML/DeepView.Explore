@@ -41,6 +41,7 @@ function App() {
   function restartProfiling() {
     console.log("restartProfiling");
     setTextChanged(false);
+    setErrorText("");
     vscodeApi.postMessage({
       command: "restart_profiling_clicked",
     });
