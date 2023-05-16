@@ -91,8 +91,7 @@ export class SkylineSession {
         this.webviewPanel.webview.onDidReceiveMessage(this.webview_handle_message.bind(this));
         this.webviewPanel.onDidDispose(this.disconnect.bind(this));
         this.webviewPanel.webview.html = this._getHtmlForWebview();
-        this.connect();
-
+        
         vscode.workspace.onDidChangeTextDocument(this.on_text_change.bind(this));
         this.restart_profiling = this.restart_profiling.bind(this);
     }
@@ -121,6 +120,7 @@ export class SkylineSession {
             "status": true
         };
         this.webviewPanel.webview.postMessage(connectionMessage);
+        this.on_open();
     }  
 
     on_open() {
@@ -142,17 +142,18 @@ export class SkylineSession {
     }
 
     connect() {
-        this.connection.connect(this.port, this.addr, this.on_open.bind(this));
+        this.connection.connect(this.port, this.addr);
     }
 
     disconnect() {
-        this.connection.destroy()
+        this.connection.destroy();
     }
 
-    restart_profiling() {
-        console.log("restart_profiling", this.startSkyline);
-        this.resetBackendConnection = true;
-        this.disconnect();
+    async restart_profiling() {
+        this.reset_payload();
+        let json_msg = await this.generateStateJson();
+        json_msg['message_type'] = 'analysis';
+        this.webviewPanel.webview.postMessage(json_msg);
     }
     
     on_text_change() {
@@ -170,6 +171,26 @@ export class SkylineSession {
             "error_text": err_text
         };
         this.webviewPanel.webview.postMessage(errorEvent);
+    }
+
+    on_close_connection() {
+        this.msg_initialize = undefined;
+        this.reset_payload();
+        let connectionMessage = {
+            "message_type": "connection",
+            "status": false
+        };
+        
+        if (this.webviewPanel.active) {
+            this.webviewPanel.webview.postMessage(connectionMessage);
+        }        
+    }
+
+    reset_payload(){
+        this.msg_throughput = undefined;
+        this.msg_breakdown = undefined;
+        this.msg_habitat = undefined;
+        this.msg_energy = undefined;
     }
 
     webview_handle_message(msg: any) {
@@ -337,25 +358,6 @@ export class SkylineSession {
         editor.setDecorations(simpleDecoration, Array.from(decorations.values()));
     }
 
-    on_close_connection() {
-        if (this.resetBackendConnection)
-        {
-            this.startSkyline?.();
-        }
-        let connectionMessage = {
-            "message_type": "connection",
-            "status": false
-        };
-        this.msg_initialize = undefined;
-        this.msg_throughput = undefined;
-        this.msg_breakdown = undefined;
-        this.msg_habitat = undefined;
-        this.msg_energy = undefined;
-        if (this.webviewPanel.active) {
-            this.webviewPanel.webview.postMessage(connectionMessage);
-        }        
-    }
-
     private _getHtmlForWebview() {
         const buildPath = resolve(this.reactProjectRoot);
         console.log("resolved buildPath", buildPath);
@@ -466,7 +468,6 @@ export class SkylineSession {
             for (let prediction of this.msg_habitat.getPredictionsList()) {
                 predictions.push([ prediction.getDeviceName(), prediction.getRuntimeMs() ]);
             }
-            console.log(this.msg_habitat.getAnalysisError()?.getErrorMessage());
             fields['habitat'] = {
                 predictions,
                 error: this.msg_habitat.getAnalysisError()?.getErrorMessage()

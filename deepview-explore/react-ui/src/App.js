@@ -40,6 +40,8 @@ function App() {
 
   function restartProfiling() {
     console.log("restartProfiling");
+    setTextChanged(false);
+    setErrorText("");
     vscodeApi.postMessage({
       command: "restart_profiling_clicked",
     });
@@ -93,6 +95,13 @@ function App() {
         const mockResponse = profiling_data;
         processAnalysisState(mockResponse);
       }, 1000);
+    }
+
+    // Connection request when UI renders for the 1rst time
+    if (vscodeApi) {
+      vscodeApi.postMessage({
+        command: "connect",
+      });
     }
 
     return () => {
@@ -179,16 +188,14 @@ function App() {
                   />
                 </div>
                 <div className="innpv-contents-subrows">
-                  <MemThroughputContainer
-                    SENDMOCK={sendMock}
-                  />
+                  <MemThroughputContainer SENDMOCK={sendMock} />
                   <Habitat />
                   <EnergyConsumption />
                 </div>
               </div>
             </Tab>
             <Tab eventKey="deploy" title="Deployment">
-              <DeploymentTab/>
+              <DeploymentTab />
             </Tab>
           </Tabs>
         </Container>
