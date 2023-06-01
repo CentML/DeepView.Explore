@@ -143,8 +143,6 @@ export function scalePercentages({ scaleSelector, shouldScale, applyFactor }) {
 }
 
 export function getTraceByLevel(tree) {
-  console.log("Tree", tree)
-  console.log("getTraceByLevel");
   var tree_size = function (idx) {
     let total = 1;
     let num_children = tree[idx]["num_children"];
