@@ -143,6 +143,7 @@ export function scalePercentages({ scaleSelector, shouldScale, applyFactor }) {
 }
 
 export function getTraceByLevel(tree) {
+  console.log("Tree", tree)
   console.log("getTraceByLevel");
   var tree_size = function (idx) {
     let total = 1;
@@ -152,25 +153,62 @@ export function getTraceByLevel(tree) {
       tree[idx + total]["parent"] = tree[idx];
       total += tree_size(idx + total);
     }
+    return tree[idx]["total"] = total;
+  };
+
+  var total_time = tree[0]["forward_ms"] + tree[0]["backward_ms"];
+  var min_frac = 0.5;
+
+  var pick_expand = function(idx, expanded) {
+    let total = 1;
+    let num_children = tree[idx]["num_children"];
+
+    let node_time = tree[idx]["forward_ms"] + tree[idx]["backward_ms"];
+    let expand = true;
+    if (expanded || node_time > total_time * min_frac) {
+      expand = false;
+    }
+
+    tree[idx]["expand"] = expand;
+
+    for (let i = 0; i < num_children; i++) {
+      pick_expand(idx+total, expand | expanded);
+      total += tree[idx + total]["total"];
+    }
     return total;
   };
 
   tree[0]["depth"] = 0;
   tree_size(0);
+  pick_expand(0, false);
+
+  console.log("expand", tree);
 
   let coarseDecomposition = tree.filter((node) => {
     return node["depth"] === 1;
   });
-  for (let fineLevel = 1; ; fineLevel++) {
-    let fineDecomposition = tree.filter((node) => {
-      return node["depth"] === fineLevel;
-    });
-    console.log(`fineLevel: ${fineLevel}, length: ${fineDecomposition.length}`);
-    if (fineDecomposition.length === 0)
-      return { coarse: coarseDecomposition, fine: coarseDecomposition };
-    if (fineDecomposition.length >= 7)
-      return { coarse: coarseDecomposition, fine: fineDecomposition };
-  }
+
+  let fineDecomposition = tree.filter((node) => {
+    return node["expand"];
+  });
+
+  var ret = {
+    coarse: coarseDecomposition,
+    fine: fineDecomposition
+  };
+
+  return ret;
+
+  // for (let fineLevel = 1; ; fineLevel++) {
+  //   let fineDecomposition = tree.filter((node) => {
+  //     return node["depth"] === fineLevel;
+  //   });
+  //   console.log(`fineLevel: ${fineLevel}, length: ${fineDecomposition.length}`);
+  //   if (fineDecomposition.length === 0)
+  //     return { coarse: coarseDecomposition, fine: coarseDecomposition };
+  //   if (fineDecomposition.length >= 7)
+  //     return { coarse: coarseDecomposition, fine: fineDecomposition };
+  // }
 }
 
 export function computePercentage(operations, total_time) {
