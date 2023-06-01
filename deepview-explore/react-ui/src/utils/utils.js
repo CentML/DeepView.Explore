@@ -182,8 +182,6 @@ export function getTraceByLevel(tree) {
   tree_size(0);
   pick_expand(0, false);
 
-  console.log("expand", tree);
-
   let coarseDecomposition = tree.filter((node) => {
     return node["depth"] === 1;
   });
@@ -198,17 +196,6 @@ export function getTraceByLevel(tree) {
   };
 
   return ret;
-
-  // for (let fineLevel = 1; ; fineLevel++) {
-  //   let fineDecomposition = tree.filter((node) => {
-  //     return node["depth"] === fineLevel;
-  //   });
-  //   console.log(`fineLevel: ${fineLevel}, length: ${fineDecomposition.length}`);
-  //   if (fineDecomposition.length === 0)
-  //     return { coarse: coarseDecomposition, fine: coarseDecomposition };
-  //   if (fineDecomposition.length >= 7)
-  //     return { coarse: coarseDecomposition, fine: fineDecomposition };
-  // }
 }
 
 export function computePercentage(operations, total_time) {
