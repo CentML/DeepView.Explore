@@ -20,6 +20,7 @@ import { profiling_data } from "./data/mock_data";
 import EnergyConsumption from "./sections/EnergyConsumption";
 import Iterations from "./sections/Iterations";
 import MemThroughputContainer from "./sections/MemThroughputContainer";
+import SaveSession from "./sections/SaveSession";
 
 import { useSelector, useDispatch } from "react-redux";
 import { updateDeepviewState } from "./redux/slices/analysisStateSlice";
@@ -165,6 +166,7 @@ function App() {
               )}
             </Card.Body>
           </Card>
+          <SaveSession timeBreakDown={timeBreakDown} />
           <Iterations />
           <br></br>
           <Tabs defaultActiveKey="profiling" className="mb-3">
