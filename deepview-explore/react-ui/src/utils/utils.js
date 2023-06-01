@@ -1,27 +1,27 @@
 const GPU_POWER = {
   MIN_WATTS: {
-    "k520": 26,
-    "a10g": 18,
-    "t4": 8,
-    "m60": 35,
-    "k80": 35,
-    "v100": 35,
-    "a100": 46,
-    "p4": 9,
-    "p100": 36
-  },    
+    k520: 26,
+    a10g: 18,
+    t4: 8,
+    m60: 35,
+    k80: 35,
+    v100: 35,
+    a100: 46,
+    p4: 9,
+    p100: 36,
+  },
   MAX_WATTS: {
-    "k520": 229,
-    "a10g": 156,
-    "t4": 71,
-    "m60": 306,
-    "k80": 306,
-    "v100": 306,
-    "a100": 107,
-    "p4": 76.5,
-    "p100": 306
-  }
-}
+    k520: 229,
+    a10g: 156,
+    t4: 71,
+    m60: 306,
+    k80: 306,
+    v100: 306,
+    a100: 107,
+    p4: 76.5,
+    p100: 306,
+  },
+};
 
 const BYTE_UNITS = ["B", "KB", "MB", "GB"];
 
@@ -151,13 +151,13 @@ export function getTraceByLevel(tree) {
       tree[idx + total]["parent"] = tree[idx];
       total += tree_size(idx + total);
     }
-    return tree[idx]["total"] = total;
+    return (tree[idx]["total"] = total);
   };
 
   var total_time = tree[0]["forward_ms"] + tree[0]["backward_ms"];
   var min_frac = 0.5;
 
-  var pick_expand = function(idx, expanded) {
+  var pick_expand = function (idx, expanded) {
     let total = 1;
     let num_children = tree[idx]["num_children"];
 
@@ -170,7 +170,7 @@ export function getTraceByLevel(tree) {
     tree[idx]["expand"] = expand;
 
     for (let i = 0; i < num_children; i++) {
-      pick_expand(idx+total, expand | expanded);
+      pick_expand(idx + total, expand | expanded);
       total += tree[idx + total]["total"];
     }
     return total;
@@ -188,12 +188,7 @@ export function getTraceByLevel(tree) {
     return node["expand"];
   });
 
-  var ret = {
-    coarse: coarseDecomposition,
-    fine: fineDecomposition
-  };
-
-  return ret;
+  return { coarse: coarseDecomposition, fine: fineDecomposition };
 }
 
 export function computePercentage(operations, total_time) {
@@ -262,13 +257,21 @@ export function calculate_training_time(numIterations, instance) {
 }
 
 function getGPUAvgPower(gpuName) {
-  return (GPU_POWER.MAX_WATTS[gpuName] - GPU_POWER.MIN_WATTS[gpuName]) * 0.5 + GPU_POWER.MIN_WATTS[gpuName];
+  return (
+    (GPU_POWER.MAX_WATTS[gpuName] - GPU_POWER.MIN_WATTS[gpuName]) * 0.5 +
+    GPU_POWER.MIN_WATTS[gpuName]
+  );
 }
 
 export function getCarbonDataOfInstance(time, instance, cloudProvider) {
   let carbonData = [];
   for (let index = 0; index < instance.regions.length; index++) {
-    let instanceCarbonEmissions = getGPUAvgPower(instance.info.gpu) * instance.info.ngpus * time * cloudProvider.regions[instance.regions[index]].emissionsFactor * cloudProvider.pue;
+    let instanceCarbonEmissions =
+      getGPUAvgPower(instance.info.gpu) *
+      instance.info.ngpus *
+      time *
+      cloudProvider.regions[instance.regions[index]].emissionsFactor *
+      cloudProvider.pue;
     const miles = unitScale(
       instanceCarbonEmissions * ENERGY_CONVERSION_UNITS["miles"],
       "generic"
@@ -285,11 +288,11 @@ export function getCarbonDataOfInstance(time, instance, cloudProvider) {
       carbonEmissions: instanceCarbonEmissions,
       miles: `${miles.val} ${miles.scale}`,
       household: household,
-      phone: `${phone.val} ${phone.scale}`
+      phone: `${phone.val} ${phone.scale}`,
     });
   }
-  carbonData.sort(function(a, b) {
-    return ((a.carbonEmissions < b.carbonEmissions) ? -1 : ((a.x === b.x) ? 0 : 1));
+  carbonData.sort(function (a, b) {
+    return a.carbonEmissions < b.carbonEmissions ? -1 : a.x === b.x ? 0 : 1;
   });
   return carbonData;
 }
@@ -318,12 +321,12 @@ export function getErrMsgFromInvalidURL(type, response) {
     case "noJsonResponseFromUrl":
       return {
         msg: `no json data from url: ${response?.url}`,
-        code
+        code,
       };
-    default:  // url is not accesible
+    default: // url is not accesible
       return {
         msg: `url is not accesible: ${response?.url}`,
-        code
+        code,
       };
   }
 }
