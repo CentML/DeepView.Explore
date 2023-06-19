@@ -23,7 +23,9 @@ jobs:
           node-version: 18
       
       - name: Install Protoc
-        uses: arduino/setup-protoc@v1
+        uses: arduino/setup-protoc@v2
+        with:
+          version: 3.12.6
 
       - name: Install VSCE
         run: |
