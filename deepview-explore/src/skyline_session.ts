@@ -213,7 +213,7 @@ export class SkylineSession {
                     vscode.TextEditorRevealType.InCenter)
                 });
             });
-        } else if (msg['command'] === "save_profiling_session"){
+        } else if (msg['command'] === "encoding_start"){
             console.log(this.root_dir, msg);
             if(msg.file_names){
                 msg["fileContents"] = []; // array of objects {fileName: encode(fileContent)}
@@ -224,16 +224,20 @@ export class SkylineSession {
                       } catch (err) {
                         console.error(err);
                       }
-                })
+                });
             }
-            try {
-                fs.writeFileSync(path.join(this.root_dir,'output.json'), JSON.stringify(msg));
-            } catch (e) {
-                console.error(e);
-                if (e instanceof Error) {
-                    this.logError(e);
-                }
-            }
+            if (this.webviewPanel.active) {
+                this.webviewPanel.webview.postMessage({message_type:"encoded_files",fileContents:msg["fileContents"]});
+            }  
+
+            // try {
+            //     fs.writeFileSync(path.join(this.root_dir,'output.json'), JSON.stringify(msg));
+            // } catch (e) {
+            //     console.error(e);
+            //     if (e instanceof Error) {
+            //         this.logError(e);
+            //     }
+            // }
         }
     }
 
