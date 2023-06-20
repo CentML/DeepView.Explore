@@ -229,15 +229,6 @@ export class SkylineSession {
             if (this.webviewPanel.active) {
                 this.webviewPanel.webview.postMessage({message_type:"encoded_files",fileContents:msg["fileContents"]});
             }  
-
-            // try {
-            //     fs.writeFileSync(path.join(this.root_dir,'output.json'), JSON.stringify(msg));
-            // } catch (e) {
-            //     console.error(e);
-            //     if (e instanceof Error) {
-            //         this.logError(e);
-            //     }
-            // }
         }
     }
 
