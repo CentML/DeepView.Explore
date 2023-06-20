@@ -354,13 +354,21 @@ const ProviderPanel = () => {
                           <Table bordered hover>
                             <thead>
                               <tr>
-                                <th>GPU</th>
-                                <th>Num. GPU</th>
-                                <th>VRAM</th>
+                                <th>vCPUs</th>
+                                <th>RAM</th>
+                                <th>GPU Model</th>
+                                <th>Num. GPUs</th>
+                                <th>GPU RAM</th>
                               </tr>
                             </thead>
                             <tbody>
                               <tr>
+                                <th>
+                                  {providerPanelSettings.clicked.info.vcpus}
+                                </th>
+                                <th>
+                                  {providerPanelSettings.clicked.info.ram} GB
+                                </th>
                                 <th>
                                   {providerPanelSettings.clicked.info.gpu}
                                 </th>

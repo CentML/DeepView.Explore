@@ -48,7 +48,7 @@ const SaveSession = ({ timeBreakDown, encodedFiles }) => {
             <FontAwesomeIcon
               icon={faDownload}
               size="2x"
-              color="#138d75"
+              color=" #5dade2 "
               onClick={handleSubmit}
             />
           </div>

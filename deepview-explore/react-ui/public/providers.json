@@ -73,6 +73,8 @@
       {
         "name": "a2-highgpu-1g",
         "gpu": "a100",
+        "vcpus": 12,
+        "ram": 85,
         "ngpus": 1,
         "cost": 3.67,
         "regions": [
@@ -87,10 +89,12 @@
         ]
       },
       {
-        "name": "n1-standard-1",
+        "name": "n1-highmem-4",
         "gpu": "t4",
+        "vcpus": 4,
+        "ram": 26,
         "ngpus": 1,
-        "cost": 0.4,
+        "cost": 0.59,
         "regions": [
           "asia-east1",
           "asia-east2",
@@ -116,10 +120,12 @@
         ]
       },
       {
-        "name": "n1-standard-1",
+        "name": "n1-highmem-4",
         "gpu": "v100",
+        "vcpus": 4,
+        "ram": 26,
         "ngpus": 1,
-        "cost": 2.53,
+        "cost": 2.72,
         "regions": [
           "asia-east1",
           "europe-west4",
@@ -129,10 +135,12 @@
         ]
       },
       {
-        "name": "n1-standard-1",
+        "name": "n1-highmem-4",
         "gpu": "p100",
+        "vcpus": 4,
+        "ram": 26,
         "ngpus": 1,
-        "cost": 1.51,
+        "cost": 1.7,
         "regions": [
           "asia-east1",
           "australia-southeast1",
@@ -146,6 +154,8 @@
       {
         "name": "a2-highgpu-2g",
         "gpu": "a100",
+        "vcpus": 24,
+        "ram": 170,
         "ngpus": 2,
         "cost": 7.35,
         "regions": [
@@ -160,10 +170,12 @@
         ]
       },
       {
-        "name": "n1-standard-1",
+        "name": "n1-highmem-8",
         "gpu": "t4",
+        "vcpus": 8,
+        "ram": 52,
         "ngpus": 2,
-        "cost": 0.75,
+        "cost": 1.17,
         "regions": [
           "asia-east1",
           "asia-east2",
@@ -189,10 +201,12 @@
         ]
       },
       {
-        "name": "n1-standard-1",
+        "name": "n1-highmem-8",
         "gpu": "v100",
+        "vcpus": 8,
+        "ram": 52,
         "ngpus": 2,
-        "cost": 5.01,
+        "cost": 5.43,
         "regions": [
           "asia-east1",
           "europe-west4",
@@ -202,10 +216,12 @@
         ]
       },
       {
-        "name": "n1-standard-1",
+        "name": "n1-highmem-8",
         "gpu": "p100",
+        "vcpus": 8,
+        "ram": 52,
         "ngpus": 2,
-        "cost": 2.97,
+        "cost": 3.39,
         "regions": [
           "asia-east1",
           "australia-southeast1",
@@ -219,8 +235,10 @@
       {
         "name": "a2-highgpu-4g",
         "gpu": "a100",
+        "vcpus": 48,
+        "ram": 340,
         "ngpus": 4,
-        "cost": 14.7,
+        "cost": 14.69,
         "regions": [
           "asia-northeast1",
           "asia-northeast3",
@@ -233,10 +251,12 @@
         ]
       },
       {
-        "name": "n1-standard-1",
+        "name": "n1-highmem-16",
         "gpu": "t4",
+        "vcpus": 16,
+        "ram": 104,
         "ngpus": 4,
-        "cost": 1.45,
+        "cost": 2.35,
         "regions": [
           "asia-east1",
           "asia-east2",
@@ -262,10 +282,12 @@
         ]
       },
       {
-        "name": "n1-standard-1",
+        "name": "n1-highmem-16",
         "gpu": "v100",
+        "vcpus": 16,
+        "ram": 104,
         "ngpus": 4,
-        "cost": 9.97,
+        "cost": 10.87,
         "regions": [
           "asia-east1",
           "europe-west4",
@@ -275,10 +297,12 @@
         ]
       },
       {
-        "name": "n1-standard-1",
+        "name": "n1-highmem-16",
         "gpu": "p100",
+        "vcpus": 16,
+        "ram": 104,
         "ngpus": 4,
-        "cost": 5.89,
+        "cost": 6.79,
         "regions": [
           "asia-east1",
           "australia-southeast1",
@@ -376,6 +400,8 @@
     "instances": [
       {
         "name": "p3.2xlarge",
+        "vcpus": 8,
+        "ram": 61,
         "gpu": "v100",
         "ngpus": 1,
         "cost": 3.06,
@@ -395,6 +421,8 @@
       },
       {
         "name": "g4dn.xlarge",
+        "vcpus": 4,
+        "ram": 16,
         "gpu": "t4",
         "ngpus": 1,
         "cost": 0.526,
@@ -424,6 +452,8 @@
       },
       {
         "name": "g4dn.12xlarge",
+        "vcpus": 48,
+        "ram": 192,
         "gpu": "t4",
         "ngpus": 4,
         "cost": 3.912,
@@ -454,6 +484,8 @@
       {
         "name": "p3.8xlarge",
         "gpu": "v100",
+        "vcpus": 32,
+        "ram": 244,
         "ngpus": 4,
         "cost": 12.24,
         "regions": [
@@ -599,6 +631,8 @@
     "instances": [
       {
         "name": "NC6s v2",
+        "vcpus": 6,
+        "ram": 112,
         "gpu": "p100",
         "ngpus": 1,
         "cost": 2.07,
@@ -613,6 +647,8 @@
       {
         "name": "NC6s v3",
         "gpu": "v100",
+        "vcpus": 6,
+        "ram": 112,
         "ngpus": 1,
         "cost": 3.06,
         "regions": [
@@ -643,6 +679,8 @@
       {
         "name": "NC4as T4 v3",
         "gpu": "t4",
+        "vcpus": 4,
+        "ram": 28,
         "ngpus": 1,
         "cost": 0.526,
         "regions": [
@@ -668,6 +706,8 @@
       {
         "name": "NC12s v2",
         "gpu": "p100",
+        "vcpus": 12,
+        "ram": 224,
         "ngpus": 2,
         "cost": 4.14,
         "regions": [
@@ -681,6 +721,8 @@
       {
         "name": "NC12s v3",
         "gpu": "v100",
+        "vcpus": 12,
+        "ram": 224,
         "ngpus": 2,
         "cost": 6.12,
         "regions": [
@@ -711,6 +753,8 @@
       {
         "name": "NC24rs v2",
         "gpu": "p100",
+        "vcpus": 24,
+        "ram": 448,
         "ngpus": 4,
         "cost": 9.108,
         "regions": [
@@ -724,6 +768,8 @@
       {
         "name": "NC24rs v3",
         "gpu": "v100",
+        "vcpus": 24,
+        "ram": 448,
         "ngpus": 4,
         "cost": 13.46,
         "regions": [
@@ -754,6 +800,8 @@
       {
         "name": "NC64as T4 v3",
         "gpu": "t4",
+        "vcpus": 64,
+        "ram": 440,
         "ngpus": 4,
         "cost": 4.352,
         "regions": [

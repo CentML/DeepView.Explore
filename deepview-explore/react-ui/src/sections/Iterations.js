@@ -73,7 +73,7 @@ const Iterations = () => {
             <Form onSubmit={handleSubmit} className="mt-2">
               <Row>
                 <h5>Training Schedule</h5>
-                <Col md={5}>
+                <Col md={3}>
                   <FloatingLabel label="Number of Epochs" className="mb-3">
                     <Form.Control
                       type="text"
@@ -84,7 +84,7 @@ const Iterations = () => {
                     />
                   </FloatingLabel>
                 </Col>
-                <Col md={7}>
+                <Col md={4}>
                   <FloatingLabel
                     label="Number of iterations per epoch"
                     className="mb-3"
@@ -98,10 +98,10 @@ const Iterations = () => {
                     />
                   </FloatingLabel>
                 </Col>
-                <Col xs={12}>
+                <Col xs={12} md={3}>
                   <Form.Group className="mb-2">
                     <Form.Text className="iterations-text">
-                      Total number of iterations:{" "}
+                      Total number of iterations:<br/>
                       {numberFormat(
                         iterations.epochs * iterations.iterPerEpoch
                       )}
@@ -119,7 +119,7 @@ const Iterations = () => {
               </Row>
               <Row>
                 <Col>
-                  <Form.Group className="mt-1">
+                  <Form.Group>
                     <Button variant="outline-primary" type="submit">
                       {estimation ? "processing" : "submit"}
                     </Button>
