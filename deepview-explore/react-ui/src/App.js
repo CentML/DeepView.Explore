@@ -8,6 +8,8 @@ import Card from "react-bootstrap/Card";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 
 import ProjectInfo from "./components/ProjectInfo";
 import Habitat from "./sections/Habitat";
@@ -20,6 +22,7 @@ import { profiling_data } from "./data/mock_data";
 import EnergyConsumption from "./sections/EnergyConsumption";
 import Iterations from "./sections/Iterations";
 import MemThroughputContainer from "./sections/MemThroughputContainer";
+import SaveSession from "./sections/SaveSession";
 
 import { useSelector, useDispatch } from "react-redux";
 import { updateDeepviewState } from "./redux/slices/analysisStateSlice";
@@ -37,6 +40,7 @@ function App() {
   // eslint-disable-next-line
   const [errorText, setErrorText] = useState();
   const [connectionStatus, setConnectionStatus] = useState(false);
+  const [encodedFiles, setEncodedFiles] = useState(null);
 
   function restartProfiling() {
     console.log("restartProfiling");
@@ -87,6 +91,8 @@ function App() {
         setTextChanged(true);
       } else if (event.data["message_type"] === "error") {
         setErrorText(event.data["error_text"]);
+      } else if (event.data["message_type"] === "encoded_files") {
+        setEncodedFiles(event.data["fileContents"]);
       }
     });
 
@@ -165,7 +171,18 @@ function App() {
               )}
             </Card.Body>
           </Card>
-          <Iterations />
+          <Row>
+            <Col sm={8}>
+              <Iterations />
+            </Col>
+            <Col sm={4}>
+              <SaveSession
+                timeBreakDown={timeBreakDown}
+                encodedFiles={encodedFiles}
+              />
+            </Col>
+          </Row>
+
           <br></br>
           <Tabs defaultActiveKey="profiling" className="mb-3">
             <Tab eventKey="profiling" title="Profiling">

@@ -4,7 +4,7 @@ import {
   CENTML_CLOUD_PROVIDERS_URL,
   deploymentScatterGraphColorSize,
 } from "../data/properties";
-import {getErrMsgFromInvalidURL} from '../utils/utils';
+import { getErrMsgFromInvalidURL } from "../utils/utils";
 import { cloudProviderSchema } from "../schema/CloudProvidersSchema";
 
 const ajv = new Ajv({ allErrors: true }); // to report all validation errors (rather than failing on the first errors)
@@ -17,10 +17,8 @@ export const loadJsonFiles = async (habitatData, cloudProviderURLs) => {
   const errors = [];
 
   // const buffer = new cloudProviderAndInstancesBuilder();
-  let urlList = [
-    CENTML_CLOUD_PROVIDERS_URL,
-  ];
-  const additionalList = cloudProviderURLs ? cloudProviderURLs.split(","):[];
+  let urlList = [CENTML_CLOUD_PROVIDERS_URL];
+  const additionalList = cloudProviderURLs ? cloudProviderURLs.split(",") : [];
   urlList = urlList.concat(additionalList);
   const listOfPromises = urlList.map((url) =>
     fetch(url, { cache: "no-store" })
@@ -38,7 +36,7 @@ export const loadJsonFiles = async (habitatData, cloudProviderURLs) => {
               logo: cloudProvider.logo,
               color: cloudProvider.color,
               regions: cloudProvider.regions,
-              pue: cloudProvider.pue
+              pue: cloudProvider.pue,
             };
             for (const instanceData of cloudProvider.instances) {
               const found_in_habitat = habitatData.find(
@@ -57,6 +55,8 @@ export const loadJsonFiles = async (habitatData, cloudProviderURLs) => {
                 info: {
                   instance: instanceData.name.toLocaleLowerCase(),
                   gpu: instanceData.gpu.toLocaleLowerCase(),
+                  vcpus: instanceData.vcpus,
+                  ram: instanceData.ram,
                   ngpus: instanceData.ngpus,
                   cost: instanceData.cost,
                   provider: cloudProvider.name.toLocaleLowerCase(),
@@ -79,15 +79,16 @@ export const loadJsonFiles = async (habitatData, cloudProviderURLs) => {
           });
         }
       } catch (error) {
-        errors.push(getErrMsgFromInvalidURL("noJsonResponseFromUrl",resp));
+        errors.push(getErrMsgFromInvalidURL("noJsonResponseFromUrl", resp));
       }
     } else {
-      errors.push(getErrMsgFromInvalidURL("invalidUrl",resp));
+      errors.push(getErrMsgFromInvalidURL("invalidUrl", resp));
     }
   }
   return {
-    cloudProviders: Object.keys(cloudProviders).length > 0 ? cloudProviders: null,
-    instanceArray: instanceArray.length > 0 ? instanceArray:null,
-    errors: errors.length > 0 ? errors:null,
+    cloudProviders:
+      Object.keys(cloudProviders).length > 0 ? cloudProviders : null,
+    instanceArray: instanceArray.length > 0 ? instanceArray : null,
+    errors: errors.length > 0 ? errors : null,
   };
 };

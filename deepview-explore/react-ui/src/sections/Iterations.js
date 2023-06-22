@@ -10,13 +10,14 @@ import { useSelector, useDispatch } from "react-redux";
 import { setIterationsValues } from "../redux/slices/trainingScheduleSlice";
 
 const Iterations = () => {
-  
-  const {epochs, iterPerEpoch} = useSelector((state)=>state.trainingScheduleReducer);
+  const { epochs, iterPerEpoch } = useSelector(
+    (state) => state.trainingScheduleReducer
+  );
   const dispatch = useDispatch();
-  const [iterations,setIterations] = useState({
+  const [iterations, setIterations] = useState({
     epochs,
-    iterPerEpoch
-  })
+    iterPerEpoch,
+  });
 
   const [message, setMessage] = useState(null);
   const [estimation, setEstimation] = useState(false);
@@ -50,7 +51,12 @@ const Iterations = () => {
         setMessage("The total number of iterations should be less than 1e21");
       } else {
         setEstimation(true);
-        dispatch(setIterationsValues({epochs:iterations.epochs, iterPerEpoch:iterations.iterPerEpoch}));
+        dispatch(
+          setIterationsValues({
+            epochs: iterations.epochs,
+            iterPerEpoch: iterations.iterPerEpoch,
+          })
+        );
         setMessage(null);
         setTimeout(() => {
           setEstimation(false);
@@ -67,7 +73,7 @@ const Iterations = () => {
             <Form onSubmit={handleSubmit} className="mt-2">
               <Row>
                 <h5>Training Schedule</h5>
-                <Col>
+                <Col md={3}>
                   <FloatingLabel label="Number of Epochs" className="mb-3">
                     <Form.Control
                       type="text"
@@ -78,7 +84,7 @@ const Iterations = () => {
                     />
                   </FloatingLabel>
                 </Col>
-                <Col>
+                <Col md={4}>
                   <FloatingLabel
                     label="Number of iterations per epoch"
                     className="mb-3"
@@ -92,12 +98,12 @@ const Iterations = () => {
                     />
                   </FloatingLabel>
                 </Col>
-                <Col>
+                <Col xs={12} md={3}>
                   <Form.Group className="mb-2">
                     <Form.Text className="iterations-text">
-                      Total number of iterations:{" "}
+                      Total number of iterations:<br/>
                       {numberFormat(
-                        iterations.epochs*iterations.iterPerEpoch
+                        iterations.epochs * iterations.iterPerEpoch
                       )}
                     </Form.Text>
                   </Form.Group>
@@ -113,7 +119,7 @@ const Iterations = () => {
               </Row>
               <Row>
                 <Col>
-                  <Form.Group className="mt-1">
+                  <Form.Group>
                     <Button variant="outline-primary" type="submit">
                       {estimation ? "processing" : "submit"}
                     </Button>

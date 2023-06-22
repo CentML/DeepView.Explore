@@ -196,16 +196,16 @@ export class SkylineSession {
     webview_handle_message(msg: any) {
         console.log("webview_handle_message");
         console.log(msg);
-        if (msg['command'] == 'connect') {
+        if (msg['command'] === 'connect') {
             vscode.window.showInformationMessage("Attempting to connect to backend.");
             this.connect();
-        } else if (msg['command'] == 'begin_analysis_clicked') {
+        } else if (msg['command'] === 'begin_analysis_clicked') {
 			vscode.window.showInformationMessage("Sending analysis request.");
 			this.send_analysis_request();
-        } else if (msg['command'] == 'restart_profiling_clicked') {
+        } else if (msg['command'] === 'restart_profiling_clicked') {
 			vscode.window.showInformationMessage("Restarting profiling.");
             this.restart_profiling();
-        } else if (msg['command'] == "highlight_source_line") {
+        } else if (msg['command'] === "highlight_source_line") {
             const openPath = vscode.Uri.file(path.join(this.root_dir, msg["file"]));
             vscode.workspace.openTextDocument(openPath).then(doc => {
                 vscode.window.showTextDocument(doc).then(editor => {
@@ -213,6 +213,22 @@ export class SkylineSession {
                     vscode.TextEditorRevealType.InCenter)
                 });
             });
+        } else if (msg['command'] === "encoding_start"){
+            console.log(this.root_dir, msg);
+            if(msg.file_names){
+                msg["fileContents"] = []; // array of objects {fileName: encode(fileContent)}
+                msg.file_names.forEach((fileName:any)=>{
+                    try {
+                        const data = fs.readFileSync(path.join(this.root_dir, fileName), "base64");
+                        msg["fileContents"].push({name:fileName,content:data});
+                      } catch (err) {
+                        console.error(err);
+                      }
+                });
+            }
+            if (this.webviewPanel.active) {
+                this.webviewPanel.webview.postMessage({message_type:"encoded_files",fileContents:msg["fileContents"]});
+            }  
         }
     }
 
