@@ -2,7 +2,7 @@
   {
     "name": "gcp",
     "logo": "resources/google.png",
-    "color": "#ea4335",
+    "color": "#0f9d58",
     "pue": 1.1,
     "regions": {
       "us-central1": {
@@ -823,6 +823,69 @@
           "West US 2",
           "West US 3"
         ]
+      }
+    ]
+  },
+  {
+    "name": "oci",
+    "logo": "resources/oci.png",
+    "color": "#f80000",
+    "instances": [
+      {
+        "name": "BM.GPU4.8",
+        "gpu": "a100",
+        "vcpus": 64,
+        "ram": 2048,
+        "ngpus": 8,
+        "cost": 24.4
+      },
+      {
+        "name": "VM.GPU3.1",
+        "gpu": "v100",
+        "vcpus": 6,
+        "ram": 90,
+        "ngpus": 1,
+        "cost": 2.95
+      },
+      {
+        "name": "VM.GPU3.2",
+        "gpu": "v100",
+        "vcpus": 12,
+        "ram": 180,
+        "ngpus": 2,
+        "cost": 5.90
+      },
+      {
+        "name": "VM.GPU3.4",
+        "gpu": "v100",
+        "vcpus": 24,
+        "ram": 360,
+        "ngpus": 4,
+        "cost": 11.80
+      },
+      {
+        "name": "VM.GPU3.8",
+        "gpu": "v100",
+        "vcpus": 52,
+        "ram": 768,
+        "ngpus": 8,
+        "cost": 23.60
+      },
+      {
+        "name": "VM.GPU2.1",
+        "gpu": "p100",
+        "vcpus": 12,
+        "ram": 72,
+        "ngpus": 1,
+        "cost": 1.275
+      },
+      {
+        "name": "BM.GPU2.2",
+        "gpu": "p100",
+        "vcpus": 28,
+        "ram": 192,
+        "ngpus": 2,
+        "cost": 2.55
       }
     ]
   }
