@@ -825,5 +825,36 @@
         ]
       }
     ]
+  },
+  {
+    "name": "coreweave",
+    "logo": "resources/coreweave.png",
+    "color": "#1b1e37",
+    "instances": [
+      {
+        "name": "a100-1",
+        "gpu": "a100",
+        "vcpus": 48,
+        "ram": 40,
+        "ngpus": 1,
+        "cost": 2.075
+      },
+      {
+        "name": "a100-2",
+        "gpu": "a100",
+        "vcpus": 96,
+        "ram": 80,
+        "ngpus": 2,
+        "cost": 4.135
+      },
+      {
+        "name": "a100-4",
+        "gpu": "a100",
+        "vcpus": 192,
+        "ram": 160,
+        "ngpus": 4,
+        "cost": 8.255
+      }
+    ]
   }
 ]
