@@ -312,6 +312,14 @@
           "us-east1",
           "us-west1"
         ]
+      },
+      {
+        "name": "a2-highgpu-8g",
+        "gpu": "a100",
+        "vcpus": 96,
+        "ram": 680,
+        "ngpus": 8,
+        "cost": 29.39
       }
     ]
   },
@@ -501,6 +509,14 @@
           "eu-west-1",
           "eu-west-2"
         ]
+      },
+      {
+        "name": "p4d.24xlarge",
+        "gpu": "a100",
+        "vcpus": 96,
+        "ram": 1152,
+        "ngpus": 8,
+        "cost": 32.77
       }
     ]
   },
@@ -630,6 +646,14 @@
     },
     "instances": [
       {
+        "name": "NC24ads A100 v4",
+        "vcpus": 24,
+        "ram": 220,
+        "gpu": "a100",
+        "ngpus": 1,
+        "cost": 3.673
+      },
+      {
         "name": "NC6s v2",
         "vcpus": 6,
         "ram": 112,
@@ -704,6 +728,14 @@
         ]
       },
       {
+        "name": "NC48ads A100 v4",
+        "vcpus": 48,
+        "ram": 440,
+        "gpu": "a100",
+        "ngpus": 2,
+        "cost": 7.346
+      },
+      {
         "name": "NC12s v2",
         "gpu": "p100",
         "vcpus": 12,
@@ -749,6 +781,14 @@
           "West US 2",
           "West US 3"
         ]
+      },
+      {
+        "name": "NC96ads A100 v4",
+        "vcpus": 96,
+        "ram": 880,
+        "gpu": "a100",
+        "ngpus": 4,
+        "cost": 14.692
       },
       {
         "name": "NC24rs v2",
@@ -823,6 +863,14 @@
           "West US 2",
           "West US 3"
         ]
+      },
+      {
+        "name": "ND96asr A100 v4",
+        "vcpus": 96,
+        "ram": 900,
+        "gpu": "a100",
+        "ngpus": 8,
+        "cost": 27.197
       }
     ]
   }

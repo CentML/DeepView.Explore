@@ -57,7 +57,7 @@ const ProviderPanel = () => {
     estimated_time: 0,
   });
 
-  const MAX_GPU = [1, 2, 4, 0]; // 0 is all
+  const MAX_GPU = [1, 2, 4, 8, 0]; // 0 is all
 
   let gpuList = new Set();
   if (providerPanelSettings.initialData) {
