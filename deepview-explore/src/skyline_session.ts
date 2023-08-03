@@ -51,6 +51,7 @@ export class SkylineSession {
     msg_breakdown?: pb.BreakdownResponse;
     msg_habitat?: pb.HabitatResponse;
     msg_energy?: pb.EnergyResponse;
+    msg_utilization? : pb.UtilizationResponse;
 
     // Project information
     root_dir: string;
@@ -191,6 +192,7 @@ export class SkylineSession {
         this.msg_breakdown = undefined;
         this.msg_habitat = undefined;
         this.msg_energy = undefined;
+        this.msg_utilization = undefined;
     }
 
     webview_handle_message(msg: any) {
@@ -234,7 +236,7 @@ export class SkylineSession {
 
     async on_data(message: Uint8Array) {
         console.log("received data. length ", message.byteLength);
-
+        
         // Append new message
         // TODO: Make this less inefficient
         let newBuffer = new Uint8Array(this.message_buffer.byteLength + message.byteLength);
@@ -256,18 +258,21 @@ export class SkylineSession {
             if (this.message_buffer.byteLength >= this.last_length) {
                 console.log("Handling message of length", this.last_length);
                 let body = this.message_buffer.slice(0, this.last_length);
-                this.handle_message(body);
-
                 this.message_buffer = this.message_buffer.slice(this.last_length);
                 this.last_length = -1;
+                this.handle_message(body);
+            } else {
+                console.log("expecting message of length", this.last_length, ", however buffer is only", this.message_buffer.byteLength);
+                break;
             }
         }
+
     }
 
     async handle_message(message: Uint8Array) {
         try {
             let msg = pb.FromServer.deserializeBinary(message);
-            console.log(msg.getPayloadCase());
+            console.log("PAYLOAD CASE",msg.getPayloadCase());
             switch(msg.getPayloadCase()) {
                 case pb.FromServer.PayloadCase.ERROR:
                     break;
@@ -291,6 +296,10 @@ export class SkylineSession {
                     break;
                 case pb.FromServer.PayloadCase.ENERGY:
                     this.msg_energy = msg.getEnergy();
+                    break;
+                case pb.FromServer.PayloadCase.UTILIZATION:
+                    console.log("HIT CASE UTILIZATION LINE NUMBER 298");
+                    this.msg_utilization = msg.getUtilization();
                     break;
             };
             let eventType: string | undefined =  getObjectKeyNameFromValue(pb.FromServer.PayloadCase, msg.getPayloadCase());
@@ -430,7 +439,7 @@ export class SkylineSession {
             "habitat": {},
             "additionalProviders": this.providers,
             "energy": {},
-
+            "utilization": {},
         };
 
         if (this.msg_throughput) {
@@ -509,6 +518,38 @@ export class SkylineSession {
                 )),
                 error: this.msg_energy.getAnalysisError()?.getErrorMessage()
             };
+        }
+
+        if(this.msg_utilization){
+            console.log("I AM IN MESSAGE UTILIZATION");
+            const rootNode = this.msg_utilization.getRootnode();
+            if(rootNode)
+            {
+                const buildModelTree = (node: pb.UtilizationNode) =>{
+                    const newNode = {
+                        sliceId :node.getSliceId(),
+                        name: node.getName(),
+                        start: node.getStart(),
+                        end: node.getEnd(),
+                        cpuForward: node.getCpuForward(),
+                        cpuForwardSpan: node.getCpuBackwardSpan(),
+                        gpuForward: node.getGpuForward(),
+                        gpuForwardSpan: node.getCpuForwardSpan(),
+                        cpuBackward: node.getCpuBackward(),
+                        cpuBackwardSpan: node.getCpuBackwardSpan(),
+                        gpuBackward: node.getGpuBackward(),
+                        gpuBackwardSpan: node.getGpuBackwardSpan(),
+                        children : []
+                    };
+                    const arrChild = node.getChildrenList().map((child)=>{
+                            buildModelTree(child);
+                    });
+                    // if(arrChild.length > 0){newNode['children']= arrChild;}
+                    return newNode;
+                };
+                rootNode ? buildModelTree(rootNode): [];
+                fields['utilization'] = rootNode;
+            }             
         }
 
         return fields;
