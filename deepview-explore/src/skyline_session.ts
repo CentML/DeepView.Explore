@@ -262,7 +262,6 @@ export class SkylineSession {
                 this.last_length = -1;
                 this.handle_message(body);
             } else {
-                console.log("expecting message of length", this.last_length, ", however buffer is only", this.message_buffer.byteLength);
                 break;
             }
         }
@@ -298,7 +297,6 @@ export class SkylineSession {
                     this.msg_energy = msg.getEnergy();
                     break;
                 case pb.FromServer.PayloadCase.UTILIZATION:
-                    console.log("HIT CASE UTILIZATION LINE NUMBER 298");
                     this.msg_utilization = msg.getUtilization();
                     break;
             };
@@ -521,12 +519,26 @@ export class SkylineSession {
         }
 
         if(this.msg_utilization){
-            console.log("I AM IN MESSAGE UTILIZATION");
             const rootNode = this.msg_utilization.getRootnode();
+            interface NodeDataType {
+                sliceId : number,
+                name: string,
+                start: number,
+                end: number,
+                cpuForward: number,
+                cpuForwardSpan: number,
+                gpuForward: number,
+                gpuForwardSpan: number,
+                cpuBackward: number,
+                cpuBackwardSpan: number,
+                gpuBackward: number,
+                gpuBackwardSpan: number,
+                children: Array<NodeDataType>,
+            }
             if(rootNode)
             {
                 const buildModelTree = (node: pb.UtilizationNode) =>{
-                    const newNode = {
+                    const newNode: NodeDataType = {
                         sliceId :node.getSliceId(),
                         name: node.getName(),
                         start: node.getStart(),
@@ -539,17 +551,17 @@ export class SkylineSession {
                         cpuBackwardSpan: node.getCpuBackwardSpan(),
                         gpuBackward: node.getGpuBackward(),
                         gpuBackwardSpan: node.getGpuBackwardSpan(),
-                        children : []
+                        children:[]
                     };
-                    const arrChild = node.getChildrenList().map((child)=>{
-                            buildModelTree(child);
+                    const arrChild: Array<any> = node.getChildrenList().map((child)=>{
+                            return buildModelTree(child);
                     });
-                    // if(arrChild.length > 0){newNode['children']= arrChild;}
+                    if(arrChild.length > 0){newNode['children'] = arrChild;}
                     return newNode;
                 };
-                rootNode ? buildModelTree(rootNode): [];
-                fields['utilization'] = rootNode;
-            }             
+                fields['utilization'] = {rootNode: buildModelTree(rootNode)};
+            }
+            fields['utilization'] = {...fields['utilization'],error:this.msg_utilization.getAnalysisError()?.getErrorMessage(),tensor_core_usage: this.msg_utilization.getTensorUtilization()};             
         }
 
         return fields;
