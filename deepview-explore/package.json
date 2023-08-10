@@ -4,7 +4,7 @@
   "publisher": "centml",
   "repository": "https://github.com/CentML/DeepView.Explore",
   "description": "",
-  "version": "0.1.8",
+  "version": "0.1.7",
   "engines": {
     "vscode": "^1.76.0"
   },
