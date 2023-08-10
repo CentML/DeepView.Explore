@@ -544,9 +544,9 @@ export class SkylineSession {
                         start: node.getStart(),
                         end: node.getEnd(),
                         cpuForward: node.getCpuForward(),
-                        cpuForwardSpan: node.getCpuBackwardSpan(),
+                        cpuForwardSpan: node.getCpuForwardSpan(),
                         gpuForward: node.getGpuForward(),
-                        gpuForwardSpan: node.getCpuForwardSpan(),
+                        gpuForwardSpan: node.getGpuForwardSpan(),
                         cpuBackward: node.getCpuBackward(),
                         cpuBackwardSpan: node.getCpuBackwardSpan(),
                         gpuBackward: node.getGpuBackward(),
@@ -561,7 +561,10 @@ export class SkylineSession {
                 };
                 fields['utilization'] = {rootNode: buildModelTree(rootNode)};
             }
-            fields['utilization'] = {...fields['utilization'],error:this.msg_utilization.getAnalysisError()?.getErrorMessage(),tensor_core_usage: this.msg_utilization.getTensorUtilization()};             
+            fields['utilization'] = {...fields['utilization'],
+                error:this.msg_utilization.getAnalysisError()?.getErrorMessage(),
+                tensor_core_usage: this.msg_utilization.getTensorUtilization()
+            };             
         }
 
         return fields;

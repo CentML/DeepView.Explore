@@ -33,6 +33,8 @@ const correctData = [
       {
         name: "a2-highgpu-1g",
         gpu: "a100",
+        vcpus: 12,
+        ram: 85,
         ngpus: 1,
         cost: 36.67,
       },
