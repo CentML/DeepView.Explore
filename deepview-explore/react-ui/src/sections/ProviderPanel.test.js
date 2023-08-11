@@ -34,6 +34,8 @@ const correctData = [
       {
         name: "a2-highgpu-1g",
         gpu: "a100",
+        vcpus: 12,
+        ram: 85,
         ngpus: 1,
         cost: 3.67,
       },
@@ -47,6 +49,8 @@ const correctData = [
       {
         name: "p3.2xlarge",
         gpu: "v100",
+        vcpus: 8,
+        ram: 61,
         ngpus: 1,
         cost: 3.06,
       },

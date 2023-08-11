@@ -16,6 +16,7 @@ import Habitat from "./sections/Habitat";
 import DeploymentTab from "./sections/DeploymentTab";
 import WelcomeScreen from "./sections/WelcomeScreen";
 import PerfBarContainer from "./sections/PerfBarContainer";
+import ModelStructure from "./sections/ModelStructure";
 
 import { computePercentage, getTraceByLevel } from "./utils/utils";
 import { profiling_data } from "./data/mock_data";
@@ -210,6 +211,9 @@ function App() {
                   <EnergyConsumption />
                 </div>
               </div>
+            </Tab>
+            <Tab eventKey="model-breakdown" title="Model Breakdown">
+                <ModelStructure />
             </Tab>
             <Tab eventKey="deploy" title="Deployment">
               <DeploymentTab />

@@ -78,6 +78,7 @@ message FromServer {
 
     HabitatResponse habitat = 9;
     EnergyResponse energy = 10;
+    UtilizationResponse utilization = 11;
   }
 
   // Deprecated messages
@@ -105,8 +106,8 @@ message HabitatResponse {
 message EnergyResponse {
   float total_consumption = 1;
   repeated EnergyConsumptionComponent components = 2;
-
   int32 batch_size = 3;
+
   // A list of past energy measurements
   repeated EnergyResponse past_measurements = 4;
   AnalysisError analysis_error = 5;
@@ -124,7 +125,18 @@ message EnergyConsumptionComponent {
   float consumption_joules = 2;
 }
 
+// Utilization message
+// =====================================
+
+message UtilizationResponse {
+  UtilizationNode rootNode = 1;
+  AnalysisError analysis_error = 2;
+  float tensor_utilization = 3;
+}
+
 // Records past experiments
+
+
 
 // =======================================
 
@@ -246,6 +258,24 @@ message HardwareInfo {
   string hostname = 1;
   string os = 2;
   repeated string gpus = 3;
+}
+
+message UtilizationNode {
+  // node representation of a slice in perfetto (pytorch profiler)
+  uint32 slice_id = 1;
+  string name = 2;
+  uint64 start = 3;
+  uint64 end = 4;
+  uint64 cpu_forward = 5;
+  uint64 cpu_forward_span = 6;
+  uint64 gpu_forward = 7;
+  uint64 gpu_forward_span = 8;
+  uint64 cpu_backward = 9;
+  uint64 cpu_backward_span = 10;
+  uint64 gpu_backward = 11;
+  uint64 gpu_backward_span = 12;
+  repeated UtilizationNode children = 13;
+
 }
 
 // ========== Deprecated messages ==========
