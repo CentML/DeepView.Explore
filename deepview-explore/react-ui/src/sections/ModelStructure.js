@@ -187,13 +187,13 @@ const ModelStructure = () => {
             ) : (
               <Container fluid>
                 <div className="tensor-core-utilization">
-                  <h6 className="tensor-core-title">{`Tensor Core Usage is around ${parseFloat(
+                  <h6 className="tensor-core-title">{tensor_core_usage < 5 ? `We recommend using tensor cores`:`Tensor Core Utilization: ${parseFloat(
                     tensor_core_usage
                   ).toFixed(2)}%`}</h6>
                   <Button onClick={filterLayers} variant="outline-primary">{`${
                     filterButton
-                      ? "Show all layers"
-                      : "Filter non-significant layers"
+                      ? "Show all operations"
+                      : "Hide insignificant operations"
                   }`}</Button>
                 </div>
 
