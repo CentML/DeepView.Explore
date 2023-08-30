@@ -1,6 +1,3 @@
-[![Maintainability](https://api.codeclimate.com/v1/badges/0001287428a20bef03ad/maintainability)](https://codeclimate.com/github/CentML/DeepView.Explore/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/0001287428a20bef03ad/test_coverage)](https://codeclimate.com/github/CentML/DeepView.Explore/test_coverage)
-
 # DeepView Explore
 ![DeepView](https://raw.githubusercontent.com/CentML/DeepView.Explore/main/deepview-explore/react-ui/public/resources/deepview.png)
 
@@ -9,6 +6,8 @@ DeepView provides an integrated experience which allows ML practioners to
 - Perform rapid iterative profiling
 - Understand energy consumption and environmental impacts of training jobs
 - Predict deployment time and cost to cloud hardware
+
+![DeepView](https://docs.centml.ai/_images/deepview.gif)
 
 ### Backend Installation
 This plugin requires DeepView.Profile to be installed for which can be found [here](https://github.com/CentML/DeepView.Profile) **You need to launch `DeepView.Profile` before running this extension.**
