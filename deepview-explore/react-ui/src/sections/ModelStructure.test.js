@@ -155,8 +155,8 @@ test("Show correct information", () => {
     </Provider>
   );
   // ASSERT
-  expect(screen.getByText(/tensor core usage is around/i)).toBeTruthy();
-  expect(screen.getByText(/filter non-significant layers/i)).toBeTruthy();
+  expect(screen.getByText(/tensor core utilization/i)).toBeTruthy();
+  expect(screen.getByText(/hide insignificant operations/i)).toBeTruthy();
   expect(screen.getByText(/layer name/i)).toBeTruthy();
   expect(screen.getByText(/device utilization \(forward\)/i)).toBeTruthy();
   expect(screen.getByText(/device utilization \(backward\)/i)).toBeTruthy();

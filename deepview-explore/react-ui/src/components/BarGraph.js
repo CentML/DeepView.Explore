@@ -47,3 +47,24 @@ export const HorizontalBarGraph = ({ data, height, xlabel, ylabel, color }) => {
     </ResponsiveContainer>
   );
 };
+
+export const VerticalBarGraph = ({data, height, xlabel, ylabel, color}) =>{
+  return(
+    <ResponsiveContainer width="80%" height={height}>
+        <BarChart
+          data={data}
+          margin={{
+            top: 5,
+            right: 30,
+            left: 20,
+            bottom: 15,
+          }}
+        >
+          <XAxis dataKey="name" label={xlabel}/>
+          <YAxis label={ylabel} />
+          <Tooltip />
+          <Bar dataKey="value" fill={color}/>
+        </BarChart>
+      </ResponsiveContainer>
+  )
+}

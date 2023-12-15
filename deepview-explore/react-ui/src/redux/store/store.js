@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import trainingScheduleReducer from "../slices/trainingScheduleSlice";
 import vsCodeSliceReducer from "../slices/vsCodeSlice";
 import analysisStateSliceReducer from "../slices/analysisStateSlice";
+import passesStateReducer from '../slices/passesStateSlice';
 /**
  * Redux store:
  * Handles analysisStateSliceReducer - analysis state (all the information coming from deepview profile)
@@ -13,5 +14,6 @@ export default configureStore({
     analysisStateSliceReducer,
     trainingScheduleReducer,
     vsCodeSliceReducer,
+    passesStateReducer,
   },
 });
