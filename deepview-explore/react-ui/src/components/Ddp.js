@@ -40,12 +40,12 @@ const calculateBackwardTime = (linkType, bucketSizes, expectedMax, ngpus) => {
   let comm_start = 0;
   let comm_end = 0;
 
-  for (let i = 0; i < bucketSizes.length; i++) {
+  for (let i = 0; i < expectedMax.length; i++) {
     if (linkType === "pcie")
       pred_comm = pcieCommPredictor(bucketSizes[i], ngpus);
     else if (linkType === "nvlink")
       pred_comm = nvlinkCommPredictor(bucketSizes[i], ngpus);
-
+    
     pred_comp = expectedMax[i];
 
     comp_end = prev_comp_end + pred_comp;
@@ -55,6 +55,7 @@ const calculateBackwardTime = (linkType, bucketSizes, expectedMax, ngpus) => {
     prev_comp_end = comp_end;
     prev_comm_end = comm_end;
   }
+  
   return prev_comm_end;
 };
 
@@ -93,28 +94,28 @@ const generateDdpGraphData = (ddp, breakdown) => {
       {
         type: "gcp-pcie",
         ngpus: [
-          { name: "n1", value: (batch_size * 1000) / currRunTime },
+          { name: "n1", value: parseFloat((batch_size * 1000) / currRunTime).toFixed(2) },
           {
             name: "n2",
-            value: (2 * batch_size * 1000) / (fwTimeMsec + pcie2gpus),
+            value: parseFloat((2 * batch_size * 1000) / (fwTimeMsec + pcie2gpus)).toFixed(2),
           },
           {
             name: "n4",
-            value: (4 * batch_size * 1000) / (fwTimeMsec + pcie4gpus),
+            value: parseFloat((4 * batch_size * 1000) / (fwTimeMsec + pcie4gpus)).toFixed(2),
           },
         ],
       },
       {
         type: "gcp-nvlink",
         ngpus: [
-          { name: "n1", value: (batch_size * 1000) / currRunTime },
+          { name: "n1", value: parseFloat((batch_size * 1000) / currRunTime).toFixed(2) },
           {
             name: "n2",
-            value: (2 * batch_size * 1000) / (fwTimeMsec + nvlink2gpus),
+            value: parseFloat((2 * batch_size * 1000) / (fwTimeMsec + nvlink2gpus)).toFixed(2),
           },
           {
             name: "n4",
-            value: (4 * batch_size * 1000) / (fwTimeMsec + nvlink4gpus),
+            value: parseFloat((4 * batch_size * 1000) / (fwTimeMsec + nvlink4gpus)).toFixed(2),
           },
         ],
       },
@@ -232,11 +233,11 @@ const DDP = () => {
           <div className="innpv-memory innpv-subpanel">
             <Subheader icon="database">DDP</Subheader>
             <Container fluid>
-              <Row className="mt-4">
+              <Row className="mt-4 mb-4">
                 <Col md={12} className="ddp-css">
                   <VerticalBarGraph
                     data={graphData["data"]}
-                    height={600}
+                    height={800}
                     xlabel={{
                       value: "number of GPUS",
                       position: "insideBottom",

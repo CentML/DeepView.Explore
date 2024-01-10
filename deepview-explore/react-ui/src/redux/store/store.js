@@ -8,6 +8,7 @@ import passesStateReducer from '../slices/passesStateSlice';
  * Handles analysisStateSliceReducer - analysis state (all the information coming from deepview profile)
  * Handles trainingScheduleReducer   - training schedule (epochs and iterations per epoch)
  * Handles vsCodeSliceReducer        - vsCode connection (webview)
+ * Handles passesStateReducer        - keeps track if ddp pass was selected
  */
 export default configureStore({
   reducer: {

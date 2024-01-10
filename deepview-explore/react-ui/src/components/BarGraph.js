@@ -49,6 +49,13 @@ export const HorizontalBarGraph = ({ data, height, xlabel, ylabel, color }) => {
 };
 
 export const VerticalBarGraph = ({data, height, xlabel, ylabel, color}) =>{
+  let upperLimit = 0;
+  data.forEach((element) => {
+    const predictedTime = parseFloat(Number(element.value));
+    upperLimit = predictedTime > upperLimit ? predictedTime : upperLimit;
+  });
+  upperLimit *= 1.1;
+  data.sort((a, b) => a.x - b.x);
   return(
     <ResponsiveContainer width="80%" height={height}>
         <BarChart
@@ -61,7 +68,7 @@ export const VerticalBarGraph = ({data, height, xlabel, ylabel, color}) =>{
           }}
         >
           <XAxis dataKey="name" label={xlabel}/>
-          <YAxis label={ylabel} />
+          <YAxis label={ylabel} domain={[0, Math.floor(upperLimit)]}/>
           <Tooltip />
           <Bar dataKey="value" fill={color}/>
         </BarChart>
