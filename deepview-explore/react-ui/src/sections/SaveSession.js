@@ -19,7 +19,7 @@ const SaveSession = ({ timeBreakDown, encodedFiles }) => {
       fileNamesSet.add(elem.file_refs[0].path);
     }
   });
-  console.log(fileNamesSet);
+  
   const handleSubmit = (e) => {
     e.preventDefault();
     const link = document.createElement("a");
