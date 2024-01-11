@@ -480,7 +480,7 @@ export class SkylineSession {
                         size_bytes: elem.getOperation()?.getSizeBytes(),
                         file_refs: elem.getOperation()?.getContextInfoMapList().map((ctx) => {
                             return { 
-                                path: (ctx.getContext()?.getFilePath()?.toString())?.replace(',','/'),
+                                path: (ctx.getContext()?.getFilePath()?.toArray()[0].join("/")),
                                 line_no: ctx.getContext()?.getLineNumber(),
                                 run_time_ms: ctx.getRunTimeMs(),
                                 size_bytes: ctx.getSizeBytes(),
