@@ -237,7 +237,7 @@ const DDP = () => {
                 <Col md={12} className="ddp-css">
                   <VerticalBarGraph
                     data={graphData["data"]}
-                    height={800}
+                    height={500}
                     xlabel={{
                       value: "number of GPUS",
                       position: "insideBottom",

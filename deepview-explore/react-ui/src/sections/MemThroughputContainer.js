@@ -75,8 +75,10 @@ function updateSliders(
   return bs;
 }
 
-const MemThroughputContainer = ({  SENDMOCK }) => {
-  const {analysisState} = useSelector((state) => state.analysisStateSliceReducer);
+const MemThroughputContainer = ({ SENDMOCK }) => {
+  const { analysisState } = useSelector(
+    (state) => state.analysisStateSliceReducer
+  );
   const [sliderMemory, setSliderMemory] = useState([50, 69, 420]);
   const [sliderThroughput, setSliderThroughput] = useState([50, 69, 420]);
   const [curBatchSize, setCurBatchSize] = useState(0);
@@ -147,6 +149,20 @@ const MemThroughputContainer = ({  SENDMOCK }) => {
                 <>
                   <Alert variant="secondary" style={{ marginBottom: 0 }}>
                     Using predicted batch size <b>{Math.round(curBatchSize)}</b>
+                  </Alert>
+                </>
+              )}
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              {(!isFinite(sliderThroughput[2]) ||
+                isNaN(sliderThroughput[2])) && (
+                <>
+                  <Alert>
+                    We could not collect enough samples to make an accurate
+                    prediction.<br></br>
+                    Please change the batch size or model size.
                   </Alert>
                 </>
               )}
