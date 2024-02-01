@@ -84,30 +84,6 @@ const generateDdpGraphData = (ddp, breakdown) => {
       value: nvlink_value
     })
   }
-  // const pcie2gpus = calculateBackwardTime(
-  //   "pcie",
-  //   ddp["bucket_sizes"],
-  //   ddp["expected_max_2gpus"],
-  //   2
-  // );
-  // const pcie4gpus = calculateBackwardTime(
-  //   "pcie",
-  //   ddp["bucket_sizes"],
-  //   ddp["expected_max_4gpus"],
-  //   4
-  // );
-  // const nvlink2gpus = calculateBackwardTime(
-  //   "nvlink",
-  //   ddp["bucket_sizes"],
-  //   ddp["expected_max_2gpus"],
-  //   2
-  // );
-  // const nvlink4gpus = calculateBackwardTime(
-  //   "nvlink",
-  //   ddp["bucket_sizes"],
-  //   ddp["expected_max_4gpus"],
-  //   4
-  // );
 
   return {
     instances: [
@@ -120,37 +96,6 @@ const generateDdpGraphData = (ddp, breakdown) => {
         ngpus: nvlink_array
       }
     ]
-    // instances: [
-    //   {
-    //     type: "gcp-pcie",
-    //     ngpus: [
-    //       { name: "n1", value: parseFloat((batch_size * 1000) / currRunTime).toFixed(2) },
-    //       {
-    //         name: "n2",
-    //         value: parseFloat((2 * batch_size * 1000) / (fwTimeMsec + pcie2gpus)).toFixed(2),
-    //       },
-    //       {
-    //         name: "n4",
-    //         value: parseFloat((4 * batch_size * 1000) / (fwTimeMsec + pcie4gpus)).toFixed(2),
-    //       },
-    //     ],
-    //   },
-    //   {
-    //     type: "gcp-nvlink",
-    //     ngpus: [
-    //       { name: "n1", value: parseFloat((batch_size * 1000) / currRunTime).toFixed(2) },
-    //       {
-    //         name: "n2",
-    //         value: parseFloat((2 * batch_size * 1000) / (fwTimeMsec + nvlink2gpus)).toFixed(2),
-    //       },
-    //       {
-    //         name: "n4",
-    //         value: parseFloat((4 * batch_size * 1000) / (fwTimeMsec + nvlink4gpus)).toFixed(2),
-    //       },
-    //     ],
-    //   },
-    // ],
-
   };
 };
 
