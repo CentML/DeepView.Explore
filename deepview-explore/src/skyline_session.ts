@@ -52,7 +52,7 @@ export class SkylineSession {
     msg_habitat?: pb.HabitatResponse;
     msg_energy?: pb.EnergyResponse;
     msg_utilization? : pb.UtilizationResponse;
-    msg_ddp?: pb.DdpResponse;
+    msg_ddp?: pb.DDPBucketSizesComputationTimes;
 
     // Project information
     root_dir: string;
@@ -576,8 +576,10 @@ export class SkylineSession {
             fields['ddp'] = {
                 fw_time: this.msg_ddp.getForwardTimeMs(),
                 bucket_sizes: this.msg_ddp.getBucketSizesList(),
-                expected_max_2gpus: this.msg_ddp.getExpectedMax2gpusList(),
-                expected_max_4gpus: this.msg_ddp.getExpectedMax4gpusList(),
+                expected_max_compute_times_array: this.msg_ddp.getComputationTimesList()?.map((item)=>({
+                    ngpus: item.getNgpus(),
+                    expected_compute_times: item.getExpectedMaxTimesList()
+                })),
                 error: this.msg_ddp.getAnalysisError()?.getErrorMessage(),
             };
         }

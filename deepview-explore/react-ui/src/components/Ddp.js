@@ -63,63 +63,94 @@ const generateDdpGraphData = (ddp, breakdown) => {
   const batch_size = breakdown["batch_size"];
   const currRunTime = breakdown["iteration_run_time_ms"];
 
+  const pcie_array = [{ name: "n1", value: parseFloat((batch_size * 1000) / currRunTime).toFixed(2) }]
+  const nvlink_array = [{ name: "n1", value: parseFloat((batch_size * 1000) / currRunTime).toFixed(2) }]
+  
   const fwTimeMsec = ddp["fw_time"];
-  const pcie2gpus = calculateBackwardTime(
-    "pcie",
-    ddp["bucket_sizes"],
-    ddp["expected_max_2gpus"],
-    2
-  );
-  const pcie4gpus = calculateBackwardTime(
-    "pcie",
-    ddp["bucket_sizes"],
-    ddp["expected_max_4gpus"],
-    4
-  );
-  const nvlink2gpus = calculateBackwardTime(
-    "nvlink",
-    ddp["bucket_sizes"],
-    ddp["expected_max_2gpus"],
-    2
-  );
-  const nvlink4gpus = calculateBackwardTime(
-    "nvlink",
-    ddp["bucket_sizes"],
-    ddp["expected_max_4gpus"],
-    4
-  );
+  for (let i = 0; i < ddp["expected_max_compute_times_array"].length; i++) {
+    const ngpus = ddp["expected_max_compute_times_array"][i]["ngpus"];
+    const expected_max_compute_time = ddp["expected_max_compute_times_array"][i]["expected_compute_times"]
+    const pcie_time = calculateBackwardTime("pcie", ddp["bucket_sizes"], expected_max_compute_time, ngpus)
+    const nvlink_time = calculateBackwardTime("nvlink", ddp["bucket_sizes"], expected_max_compute_time, ngpus)
+    const pcie_value = parseFloat((ngpus * batch_size * 1000) / (fwTimeMsec + pcie_time)).toFixed(2)
+    const nvlink_value = parseFloat((ngpus * batch_size * 1000) / (fwTimeMsec + nvlink_time)).toFixed(2)
+
+    pcie_array.push({
+      name: "n"+ngpus,
+      value: pcie_value
+    })
+    nvlink_array.push({
+      name: "n"+ngpus,
+      value: nvlink_value
+    })
+  }
+  // const pcie2gpus = calculateBackwardTime(
+  //   "pcie",
+  //   ddp["bucket_sizes"],
+  //   ddp["expected_max_2gpus"],
+  //   2
+  // );
+  // const pcie4gpus = calculateBackwardTime(
+  //   "pcie",
+  //   ddp["bucket_sizes"],
+  //   ddp["expected_max_4gpus"],
+  //   4
+  // );
+  // const nvlink2gpus = calculateBackwardTime(
+  //   "nvlink",
+  //   ddp["bucket_sizes"],
+  //   ddp["expected_max_2gpus"],
+  //   2
+  // );
+  // const nvlink4gpus = calculateBackwardTime(
+  //   "nvlink",
+  //   ddp["bucket_sizes"],
+  //   ddp["expected_max_4gpus"],
+  //   4
+  // );
 
   return {
     instances: [
       {
-        type: "gcp-pcie",
-        ngpus: [
-          { name: "n1", value: parseFloat((batch_size * 1000) / currRunTime).toFixed(2) },
-          {
-            name: "n2",
-            value: parseFloat((2 * batch_size * 1000) / (fwTimeMsec + pcie2gpus)).toFixed(2),
-          },
-          {
-            name: "n4",
-            value: parseFloat((4 * batch_size * 1000) / (fwTimeMsec + pcie4gpus)).toFixed(2),
-          },
-        ],
+        type: "pcie",
+        ngpus: pcie_array,
       },
       {
-        type: "gcp-nvlink",
-        ngpus: [
-          { name: "n1", value: parseFloat((batch_size * 1000) / currRunTime).toFixed(2) },
-          {
-            name: "n2",
-            value: parseFloat((2 * batch_size * 1000) / (fwTimeMsec + nvlink2gpus)).toFixed(2),
-          },
-          {
-            name: "n4",
-            value: parseFloat((4 * batch_size * 1000) / (fwTimeMsec + nvlink4gpus)).toFixed(2),
-          },
-        ],
-      },
-    ],
+        type: "nvlink",
+        ngpus: nvlink_array
+      }
+    ]
+    // instances: [
+    //   {
+    //     type: "gcp-pcie",
+    //     ngpus: [
+    //       { name: "n1", value: parseFloat((batch_size * 1000) / currRunTime).toFixed(2) },
+    //       {
+    //         name: "n2",
+    //         value: parseFloat((2 * batch_size * 1000) / (fwTimeMsec + pcie2gpus)).toFixed(2),
+    //       },
+    //       {
+    //         name: "n4",
+    //         value: parseFloat((4 * batch_size * 1000) / (fwTimeMsec + pcie4gpus)).toFixed(2),
+    //       },
+    //     ],
+    //   },
+    //   {
+    //     type: "gcp-nvlink",
+    //     ngpus: [
+    //       { name: "n1", value: parseFloat((batch_size * 1000) / currRunTime).toFixed(2) },
+    //       {
+    //         name: "n2",
+    //         value: parseFloat((2 * batch_size * 1000) / (fwTimeMsec + nvlink2gpus)).toFixed(2),
+    //       },
+    //       {
+    //         name: "n4",
+    //         value: parseFloat((4 * batch_size * 1000) / (fwTimeMsec + nvlink4gpus)).toFixed(2),
+    //       },
+    //     ],
+    //   },
+    // ],
+
   };
 };
 
@@ -158,8 +189,7 @@ const DDP = () => {
     if (
       ddp["fw_time"] &&
       ddp["bucket_sizes"] &&
-      ddp["expected_max_2gpus"] &&
-      ddp["expected_max_4gpus"] &&
+      ddp["expected_max_compute_times_array"] &&
       breakdown
     ) {
       const ddpProfilingData = generateDdpGraphData(ddp, breakdown);
