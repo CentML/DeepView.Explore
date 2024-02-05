@@ -21,6 +21,7 @@ export default function Habitat() {
             <Container fluid className="mt-2">
               <Row className="justify-content-md-center">
                 <h6>There was an error generating Deepview Predictions</h6>
+                <p>{habitatData.error}</p>
               </Row>
             </Container>
           </div>
