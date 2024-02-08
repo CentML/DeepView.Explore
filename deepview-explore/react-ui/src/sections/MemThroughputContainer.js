@@ -237,9 +237,8 @@ const MemThroughputContainer = ({ SENDMOCK }) => {
                         bottom="samples/second"
                       />
                       <Alert className="mt-2">
-                        The training throughput of your model is unaffected by
-                        the batch size. Consider other options to increase
-                        training throughput.
+                      Further increasing the batch size will not increase throughput. 
+                      Consider other options to increase training throughput.
                         <br></br>
                         {/* Will enable this line after writing the docs */}
                         {/* To learn more,
