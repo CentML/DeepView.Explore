@@ -75,8 +75,10 @@ function updateSliders(
   return bs;
 }
 
-const MemThroughputContainer = ({  SENDMOCK }) => {
-  const {analysisState} = useSelector((state) => state.analysisStateSliceReducer);
+const MemThroughputContainer = ({ SENDMOCK }) => {
+  const { analysisState } = useSelector(
+    (state) => state.analysisStateSliceReducer
+  );
   const [sliderMemory, setSliderMemory] = useState([50, 69, 420]);
   const [sliderThroughput, setSliderThroughput] = useState([50, 69, 420]);
   const [curBatchSize, setCurBatchSize] = useState(0);
@@ -137,6 +139,9 @@ const MemThroughputContainer = ({  SENDMOCK }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const conditionalThroughputSlider =
+    !isFinite(sliderThroughput[2]) || isNaN(sliderThroughput[2]);
+
   return (
     <>
       <Wrapper>
@@ -168,12 +173,14 @@ const MemThroughputContainer = ({  SENDMOCK }) => {
                 </Subheader>
 
                 <div className="innpv-subpanel-content">
-                  <BarSlider
-                    percentage={sliderMemory[0]}
-                    limitPercentage="100"
-                    handleResize={onMemoryResize}
-                    style={{ height: "100%" }}
-                  />
+                  {!conditionalThroughputSlider && (
+                    <BarSlider
+                      percentage={sliderMemory[0]}
+                      limitPercentage="100"
+                      handleResize={onMemoryResize}
+                      style={{ height: "100%" }}
+                    />
+                  )}
 
                   <div className="innpv-subpanel-sidecontent">
                     <NumericDisplay
@@ -195,26 +202,56 @@ const MemThroughputContainer = ({  SENDMOCK }) => {
               <div className="innpv-memory innpv-subpanel">
                 <Subheader icon="database">Throughput</Subheader>
                 <div className="innpv-subpanel-content">
-                  <BarSlider
-                    percentage={sliderThroughput[0]}
-                    limitPercentage="100"
-                    handleResize={onThroughputResize}
-                    style={{ height: "100%" }}
-                  />
+                  {!conditionalThroughputSlider && (
+                    <BarSlider
+                      percentage={sliderThroughput[0]}
+                      limitPercentage="100"
+                      handleResize={onThroughputResize}
+                      style={{ height: "100%" }}
+                    />
+                  )}
 
-                  <div className="innpv-subpanel-sidecontent">
-                    <NumericDisplay
-                      top="Throughput"
-                      number={sliderThroughput[1]}
-                      bottom="samples/second"
-                    />
-                    <div className="innpv-separator" />
-                    <NumericDisplay
-                      top="Predicted Maximum"
-                      number={sliderThroughput[2]}
-                      bottom="samples/second"
-                    />
-                  </div>
+                  {!conditionalThroughputSlider && (
+                    <div className="innpv-subpanel-sidecontent">
+                      <NumericDisplay
+                        top="Throughput"
+                        number={sliderThroughput[1]}
+                        bottom="samples/second"
+                      />
+                      <div className="innpv-separator" />
+                      <NumericDisplay
+                        top="Predicted Maximum"
+                        number={sliderThroughput[2]}
+                        bottom="samples/second"
+                      />
+                    </div>
+                  )}
+                  {conditionalThroughputSlider && (
+                    <div className="innpv-subpanel-sidecontent">
+                      <NumericDisplay
+                        top="Throughput"
+                        number={Math.round(
+                          analysisState["throughput"]["samples_per_second"],
+                          0
+                        )}
+                        bottom="samples/second"
+                      />
+                      <Alert className="mt-2">
+                      Further increasing the batch size will not increase throughput. 
+                      Consider other options to increase training throughput.
+                        <br></br>
+                        {/* Will enable this line after writing the docs */}
+                        {/* To learn more,
+                        <a
+                          href="
+                          https://www.epa.gov/energy/greenhouse-gas-equivalencies-calculator"
+                          target="_blank"
+                        >
+                           click here.
+                        </a> */}
+                      </Alert>
+                    </div>
+                  )}
                 </div>
               </div>
             </Col>

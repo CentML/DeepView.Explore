@@ -595,3 +595,11 @@ atom-overlay.innpv-contexthighlight-overlay {
   animation-fill-mode: forwards;
   animation-direction: normal, alternate;
 }
+
+/**
+BOOSTRAP MODIFIERS
+**/
+
+input[type=checkbox]:checked{
+  background-color: #198754;
+}

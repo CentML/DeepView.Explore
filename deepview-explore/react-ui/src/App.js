@@ -24,6 +24,7 @@ import EnergyConsumption from "./sections/EnergyConsumption";
 import Iterations from "./sections/Iterations";
 import MemThroughputContainer from "./sections/MemThroughputContainer";
 import SaveSession from "./sections/SaveSession";
+import DistributedTraining from "./sections/DistributedTraining";
 
 import { useSelector, useDispatch } from "react-redux";
 import { updateDeepviewState } from "./redux/slices/analysisStateSlice";
@@ -214,6 +215,9 @@ function App() {
             </Tab>
             <Tab eventKey="model-breakdown" title="Model Breakdown">
                 <ModelStructure />
+            </Tab>
+            <Tab eventKey="distributed-training" title="Distributed Training">
+              <DistributedTraining />
             </Tab>
             <Tab eventKey="deploy" title="Deployment">
               <DeploymentTab />

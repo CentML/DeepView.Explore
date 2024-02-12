@@ -52,6 +52,7 @@ export class SkylineSession {
     msg_habitat?: pb.HabitatResponse;
     msg_energy?: pb.EnergyResponse;
     msg_utilization? : pb.UtilizationResponse;
+    msg_ddp?: pb.DDPBucketSizesComputationTimes;
 
     // Project information
     root_dir: string;
@@ -100,9 +101,9 @@ export class SkylineSession {
     send_message(message: any, payloadName: string) {
         let msg = new pb.FromClient();
         msg.setSequenceNumber(this.seq_num ++);
-        if (payloadName == "Initialize") {
+        if (payloadName === "Initialize") {
             msg.setInitialize(message);
-        } else if (payloadName == "Analysis") {
+        } else if (payloadName === "Analysis") {
             msg.setAnalysis(message);
         } else {
             msg.setGeneric(message);
@@ -134,11 +135,12 @@ export class SkylineSession {
         this.send_message(message, "Initialize");
     }
 
-    send_analysis_request() {
+    send_analysis_request(ddp_request:boolean) {
         // Send skyline analysis request
         console.log("Sending analysis request");
         const message = new pb.AnalysisRequest();
         message.setMockResponse(false);
+        message.setDdpAnalysisRequest(ddp_request);
         this.send_message(message, "Analysis");
     }
 
@@ -193,6 +195,7 @@ export class SkylineSession {
         this.msg_habitat = undefined;
         this.msg_energy = undefined;
         this.msg_utilization = undefined;
+        this.msg_ddp = undefined;
     }
 
     webview_handle_message(msg: any) {
@@ -203,7 +206,7 @@ export class SkylineSession {
             this.connect();
         } else if (msg['command'] === 'begin_analysis_clicked') {
 			vscode.window.showInformationMessage("Sending analysis request.");
-			this.send_analysis_request();
+			this.send_analysis_request(msg['ddpFlag']);
         } else if (msg['command'] === 'restart_profiling_clicked') {
 			vscode.window.showInformationMessage("Restarting profiling.");
             this.restart_profiling();
@@ -298,6 +301,9 @@ export class SkylineSession {
                     break;
                 case pb.FromServer.PayloadCase.UTILIZATION:
                     this.msg_utilization = msg.getUtilization();
+                    break;
+                case pb.FromServer.PayloadCase.DDP:
+                    this.msg_ddp = msg.getDdp();
                     break;
             };
             let eventType: string | undefined =  getObjectKeyNameFromValue(pb.FromServer.PayloadCase, msg.getPayloadCase());
@@ -430,14 +436,13 @@ export class SkylineSession {
                 "os": this.msg_initialize?.getHardware()?.getOs(),
                 "gpus": this.msg_initialize?.getHardware()?.getGpusList(),
             },
-
             "throughput": {},
             "breakdown": {},
-
             "habitat": {},
             "additionalProviders": this.providers,
             "energy": {},
             "utilization": {},
+            "ddp": {},
         };
 
         if (this.msg_throughput) {
@@ -475,7 +480,7 @@ export class SkylineSession {
                         size_bytes: elem.getOperation()?.getSizeBytes(),
                         file_refs: elem.getOperation()?.getContextInfoMapList().map((ctx) => {
                             return { 
-                                path: ctx.getContext()?.getFilePath()?.toString(),
+                                path: (ctx.getContext()?.getFilePath()?.toArray()[0].join("/")),
                                 line_no: ctx.getContext()?.getLineNumber(),
                                 run_time_ms: ctx.getRunTimeMs(),
                                 size_bytes: ctx.getSizeBytes(),
@@ -565,6 +570,18 @@ export class SkylineSession {
                 error:this.msg_utilization.getAnalysisError()?.getErrorMessage(),
                 tensor_core_usage: this.msg_utilization.getTensorUtilization()
             };             
+        }
+
+        if(this.msg_ddp){
+            fields['ddp'] = {
+                fw_time: this.msg_ddp.getForwardTimeMs(),
+                bucket_sizes: this.msg_ddp.getBucketSizesList(),
+                expected_max_compute_times_array: this.msg_ddp.getComputationTimesList()?.map((item)=>({
+                    ngpus: item.getNgpus(),
+                    expected_compute_times: item.getExpectedMaxTimesList()
+                })),
+                error: this.msg_ddp.getAnalysisError()?.getErrorMessage(),
+            };
         }
 
         return fields;
