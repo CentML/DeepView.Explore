@@ -391,9 +391,9 @@ export class SkylineSession {
         const buildPath = resolve(this.reactProjectRoot);
         console.log("resolved buildPath", buildPath);
 
-		const manifest = require(path.join(buildPath, 'build', 'asset-manifest.json'));
-		const mainScript = manifest['files']['main.js'];
-		const mainStyle = manifest['files']['main.css'];
+		const manifest = require(path.join(buildPath, 'build', 'manifest.json'));
+		const mainScript = manifest['index.html']['file'];
+		const mainStyle = manifest['index.html']['css'][0];
 
         const buildPathOnDisk = vscode.Uri.file(path.join(buildPath, 'build'));
         const buildUri = this.webviewPanel.webview.asWebviewUri(buildPathOnDisk);
@@ -410,21 +410,21 @@ export class SkylineSession {
 			<head>
 				<meta charset="utf-8">
 				<meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
-				<meta name="theme-color" content="#000000">
+				<meta http-equiv="Content-Security-Policy" content="default-src 'none'; connect-src *; img-src vscode-resource: http: https: data:; script-src 'unsafe-eval' 'nonce-${nonce}'; style-src vscode-resource: 'unsafe-inline' http: https: data:; font-src https:;">
 				<title>DeepView</title>
+                <script type="module" nonce="${nonce}" src="${scriptUri}"></script>
 				<link rel="stylesheet" type="text/css" href="${styleUri}">
-				<meta http-equiv="Content-Security-Policy" content="default-src 'none'; connect-src *; img-src vscode-resource: https:; script-src 'unsafe-eval' 'nonce-${nonce}';style-src vscode-resource: 'unsafe-inline' http: https: data:;">
-				<base href="${ buildUri }/">
-			</head>
-			<body>
+                <link rel="preconnect" href="https://fonts.googleapis.com">
+                <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+                <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet">
+                <base href="${ buildUri }/">
+                </head>
+                <body>
 				<noscript>You need to enable JavaScript to run this app.</noscript>
 				<div id="root"></div>
-				
-				<script nonce="${nonce}" src="${scriptUri}"></script>
-			</body>
+                </body>
 			</html>`;
 	}
-
     async generateStateJson() {
         let fields = {
             "message_type": "analysis",
