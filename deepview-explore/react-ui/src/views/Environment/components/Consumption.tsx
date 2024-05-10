@@ -5,19 +5,23 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faGlobeAmericas as Globe, faCar as Car, faHome as Home, faMobileAlt as Phone, faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
 import { useAnalysis } from '@context/useAnalysis';
 import Card from '@components/Card';
-import { ProfilingData } from '@interfaces/ProfileData';
 import { getUnitScale } from '@utils/getUnitScale';
 import { getEnergyData } from '@utils/getEnergyData';
+import LoadingSpinner from '@components/LoadingSpinner';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-interface ConsumptionProps {
-	analysis: ProfilingData;
-}
-
-export const Consumption = ({ analysis }: ConsumptionProps) => {
-	const { epochs, iterations } = useAnalysis();
+export const Consumption = () => {
+	const { analysis, epochs, iterations } = useAnalysis();
 	const totalIterations = epochs * iterations;
+
+	if (!analysis || !Object.keys(analysis.energy)) {
+		return (
+			<Card title="Energy consumption">
+				<LoadingSpinner />
+			</Card>
+		);
+	}
 
 	const { energy } = analysis;
 

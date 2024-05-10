@@ -5,20 +5,24 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
 import { useAnalysis } from '@context/useAnalysis';
 import Card from '@components/Card';
-import { ProfilingData } from '@interfaces/ProfileData';
+import LoadingSpinner from '@components/LoadingSpinner';
 import { getUnitScale } from '@utils/getUnitScale';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const CURRENT_LABEL = 'Current profiling';
 
-interface RelativeImpactProps {
-	analysis: ProfilingData;
-}
-
-export const RelativeImpact = ({ analysis }: RelativeImpactProps) => {
-	const { epochs, iterations } = useAnalysis();
+export const RelativeImpact = () => {
+	const { analysis, epochs, iterations } = useAnalysis();
 	const totalIterations = epochs * iterations;
+
+	if (!analysis || !Object.keys(analysis.energy)) {
+		return (
+			<Card title="Energy consumption">
+				<LoadingSpinner />
+			</Card>
+		);
+	}
 
 	const { energy } = analysis;
 

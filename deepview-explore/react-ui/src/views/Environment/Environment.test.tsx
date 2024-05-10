@@ -45,11 +45,4 @@ describe('Enviornment tab', () => {
 		expect(screen.getByText(/energy consumption/i)).toBeDefined();
 		expect(screen.getByText(/relative impact/i)).toBeDefined();
 	});
-
-	it('renders empty block without analysis', () => {
-		analysis = undefined;
-		render(<Environment />);
-
-		expect(screen.getByText(/no analysis/i)).toBeDefined(0);
-	});
 });

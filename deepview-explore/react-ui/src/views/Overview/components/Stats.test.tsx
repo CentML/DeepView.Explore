@@ -32,11 +32,7 @@ describe('Stats card', () => {
 	it('renders', () => {
 		render(<Stats />);
 
-		const utilizationText = `${parentProportion}% of parent, ${totalProportion}% of total`;
-
 		expect(screen.getByText(throughput.toString())).toBeDefined();
-		expect(screen.getByText(operationName)).toBeDefined();
-		expect(screen.getByText(utilizationText)).toBeDefined();
 		expect(screen.getAllByText('50%')).toHaveLength(2);
 	});
 

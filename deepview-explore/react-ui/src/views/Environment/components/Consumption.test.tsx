@@ -1,6 +1,5 @@
 import { render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { ProfilingData } from '@interfaces/ProfileData';
 import { Consumption } from './Consumption';
 
 const energy = {
@@ -25,18 +24,26 @@ const energy = {
 	past_measurements: []
 };
 
+let error = false;
+
 describe('Consumption card', () => {
 	beforeEach(() => {
 		vi.mock('@context/useAnalysis', () => ({
 			useAnalysis: () => ({
 				epochs: 500,
-				iterations: 1000
+				iterations: 1000,
+				analysis: {
+					energy: {
+						...energy,
+						error
+					}
+				}
 			})
 		}));
 	});
 
 	it('renders', () => {
-		render(<Consumption analysis={{ energy }} />);
+		render(<Consumption />);
 
 		expect(screen.getByText(/total consumption/i)).toBeDefined();
 		expect(screen.getByText(/emissions released/i)).toBeDefined();
@@ -48,13 +55,8 @@ describe('Consumption card', () => {
 	});
 
 	it('renders an error view', () => {
-		const analysis = {
-			energy: {
-				error: true
-			}
-		};
-
-		render(<Consumption analysis={analysis as ProfilingData} />);
+		error = true;
+		render(<Consumption />);
 
 		expect(screen.getByText(/error/i)).toBeDefined();
 	});

@@ -10,6 +10,7 @@ import { ProfilingData } from '@interfaces/ProfileData';
 import { gpuPropertyList } from '@data/properties';
 import GraphTooltip from '@components/GraphTooltip';
 import { useGraphTooltip } from '@components/GraphTooltip/GraphTooltip';
+import LoadingSpinner from '@components/LoadingSpinner';
 
 ChartJS.register(LinearScale, PointElement, LineElement, Tooltip, Legend, ChartDataLabels);
 
@@ -89,6 +90,16 @@ export const Habitat = ({ analysis }: HabitatProps) => {
 
 		setGraphData(data);
 	}, []);
+
+	if (!Object.keys(habitat).length) {
+		return (
+			<Card title="DeepView Predict">
+				<div className="flex min-h-[500px] items-center justify-center">
+					<LoadingSpinner />
+				</div>
+			</Card>
+		);
+	}
 
 	if (habitat.isDemo) {
 		return (

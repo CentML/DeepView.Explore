@@ -7,6 +7,8 @@ import RangeInput from '@components/RangeInput';
 import { ProfilingData } from '@interfaces/ProfileData';
 import { GPU_MAX_CAPACITY_LIMIT } from '@data/properties';
 import { RANGE_HEIGHT } from '@components/RangeInput/RangeInput';
+import LoadingSpinner from '@components/LoadingSpinner';
+import { MIN_HEIGHT } from './constants';
 
 interface MemoryBatchSizeProps {
 	analysis: ProfilingData;
@@ -100,9 +102,19 @@ export const MemoryBatchSize = ({ analysis }: MemoryBatchSizeProps) => {
 
 	const showThroughputSlider = !isFinite(usageData.throughput[2]) || isNaN(usageData.throughput[2]);
 
+	if (!Object.keys(analysis.throughput).length || !Object.keys(analysis.breakdown).length) {
+		return (
+			<Card title="Memory and batch size">
+				<div className={`flex items-center justify-center ${MIN_HEIGHT}`}>
+					<LoadingSpinner />
+				</div>
+			</Card>
+		);
+	}
+
 	return (
 		<Card title="Memory and batch size">
-			<div className="flex min-h-[500px] flex-col justify-between">
+			<div className={`flex flex-col justify-between ${MIN_HEIGHT}`}>
 				<div className="flex items-center justify-around">
 					<div className="flex gap-4" style={{ height: !showThroughputSlider ? RANGE_HEIGHT : 'auto' }}>
 						{!showThroughputSlider && (
@@ -140,16 +152,19 @@ export const MemoryBatchSize = ({ analysis }: MemoryBatchSizeProps) => {
 								</div>
 							</>
 						) : (
-							<>
-								<UsageDisplay title="Throughput" value={Math.round(analysis.throughput.samples_per_second)} unit="samples/second" />
-								<Alert variant="warning">
-									<Icon icon={faWarning} size="1x" className="mr-1" />
-									Further increasing the batch size will not increase throughput. Consider other options to increase training throughput.
-								</Alert>
-							</>
+							<UsageDisplay title="Throughput" value={Math.round(analysis.throughput.samples_per_second)} unit="samples/second" />
 						)}
 					</div>
 				</div>
+
+				{!!showThroughputSlider && (
+					<div className="flex items-center justify-center">
+						<Alert variant="warning">
+							<Icon icon={faWarning} size="1x" className="mr-1" />
+							Further increasing the batch size will not increase throughput. Consider other options to increase training throughput.
+						</Alert>
+					</div>
+				)}
 
 				<p className="text-center text-sm" style={{ opacity: usageData.batchSize === 0 ? 0 : 1 }}>
 					Using predicted batch size <strong>{Math.round(usageData.batchSize)}</strong>

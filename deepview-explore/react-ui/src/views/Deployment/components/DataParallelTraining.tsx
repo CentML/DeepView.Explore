@@ -8,6 +8,7 @@ import Card from '@components/Card';
 import Select from '@components/Select';
 import type { Ddp, ProfilingData } from '@interfaces/ProfileData';
 import { getDdpGraphData } from '@utils/ddpHelpers';
+import LoadingSpinner from '@components/LoadingSpinner';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip);
 
@@ -22,9 +23,14 @@ export const DataParallelTraining = ({ analysis, isUsingDdp }: DataParallelTrain
 	const { ddp } = analysis;
 	const { breakdown } = analysis;
 
-	let graphData;
-	if (Object.keys(ddp).length && !ddp.error && Object.keys(breakdown).length) {
-		graphData = getDdpGraphData(ddp as Ddp, breakdown);
+	if (isUsingDdp && (!analysis || !Object.keys(analysis).length || !Object.keys(breakdown).length || !Object.keys(ddp).length)) {
+		return (
+			<Card title="Data-Parallel training">
+				<div className="flex min-h-[500px] items-center justify-center">
+					<LoadingSpinner message="Loading DDP analysis data" />
+				</div>
+			</Card>
+		);
 	}
 
 	if (!isUsingDdp) {
@@ -38,6 +44,11 @@ export const DataParallelTraining = ({ analysis, isUsingDdp }: DataParallelTrain
 				</div>
 			</Card>
 		);
+	}
+
+	let graphData;
+	if (Object.keys(ddp).length && !ddp.error && Object.keys(breakdown).length) {
+		graphData = getDdpGraphData(ddp as Ddp, breakdown);
 	}
 
 	if (ddp.error) {

@@ -17,6 +17,7 @@ let analysis = {
 		batch_size_context: 'ctx',
 		can_manipulate_batch_size: false
 	},
+	breakdown: {},
 	epochs: 50,
 	iterations: 2000,
 	timeBreakDown: {
@@ -62,7 +63,7 @@ describe('App component', () => {
 		const { rerender } = render(<App />);
 		expect(screen.getByRole('button', { name: /begin analysis/i })).toBeDefined();
 
-		analysis.throughput = undefined;
+		analysis.throughput = {};
 		rerender(<App />);
 		expect(screen.getByRole('button', { name: /begin analysis/i })).toBeDefined();
 

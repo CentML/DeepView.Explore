@@ -6,6 +6,7 @@ import Card from '@components/Card';
 import { ProfilingData } from '@interfaces/ProfileData';
 import { NodeData, UtilizationTableData, getUtilizationColor } from '@utils/getUtilizationData';
 import Switch from '@components/Switch';
+import LoadingSpinner from '@components/LoadingSpinner';
 
 interface ComputeUtilizationProps {
 	analysis: ProfilingData;
@@ -20,6 +21,14 @@ export const ComputeUtilization = ({ analysis, utilizationData }: ComputeUtiliza
 
 	const filter = hideInsignificantOperations ? 'hideInsignificant' : 'allOperations';
 
+	if (!Object.keys(utilization).length) {
+		return (
+			<Card title="Compute utilization (Model structure)">
+				<LoadingSpinner />
+			</Card>
+		);
+	}
+
 	return (
 		<Card title="Compute utilization (Model structure)">
 			<div className="flex flex-col">
@@ -28,7 +37,7 @@ export const ComputeUtilization = ({ analysis, utilizationData }: ComputeUtiliza
 						<h2 className="font-semibold text-error-500">We recommend using tensor cores.</h2>
 					) : (
 						<h2 className="text-xl">
-							Tensor core utilization: <strong>{tensor_core_usage}%</strong>
+							Tensor core utilization: <strong>{tensor_core_usage.toFixed(2)}%</strong>
 						</h2>
 					)}
 

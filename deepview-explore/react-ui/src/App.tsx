@@ -1,9 +1,9 @@
-import { Spinner } from 'react-bootstrap';
 import ErrorView from '@views/Error';
 import Welcome from '@views/Welcome';
 import Layout from '@layout/Layout';
 import Views from '@views/index';
 import { useAnalysis } from '@context/useAnalysis';
+import LoadingSpinner from '@components/LoadingSpinner';
 
 function App() {
 	const { analysis, error, handleConnection, isLoading } = useAnalysis();
@@ -18,10 +18,8 @@ function App() {
 
 	if (isLoading)
 		return (
-			<div className="flex h-screen items-center justify-center text-primary-500">
-				<Spinner animation="border" role="status">
-					<p className="sr-only">Loading...</p>
-				</Spinner>
+			<div className="flex h-screen items-center justify-center">
+				<LoadingSpinner />
 			</div>
 		);
 

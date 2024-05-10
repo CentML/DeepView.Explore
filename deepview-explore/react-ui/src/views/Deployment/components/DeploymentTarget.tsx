@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Alert } from 'react-bootstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import LoadingSpinner from '@components/LoadingSpinner';
 import Card from '@components/Card';
 import { ProfilingData } from '@interfaces/ProfileData';
 import { getTrainingTime } from '@utils/getTrainingTime';
@@ -81,6 +82,14 @@ export const DeploymentTarget = ({ analysis, totalIterations }: DeploymentTarget
 
 		parseData();
 	}, []);
+
+	if (!Object.keys(analysis.habitat).length) {
+		return (
+			<Card title="Deployment target">
+				<LoadingSpinner />
+			</Card>
+		);
+	}
 
 	return (
 		<Card title="Deployment target">

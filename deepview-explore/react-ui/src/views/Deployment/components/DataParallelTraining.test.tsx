@@ -36,9 +36,9 @@ describe('Data parallel training card', () => {
 		expect(screen.getByRole('combobox')).toHaveProperty('value', 'pcie');
 	});
 
-	it('renders empty state', () => {
-		render(<DataParallelTraining analysis={{ ddp: {} }} isUsingDdp />);
-		expect(screen.getByText(/no ddp/i)).toBeDefined();
+	it('renders loading state', () => {
+		render(<DataParallelTraining analysis={{ ddp: {}, breakdown: {} }} isUsingDdp />);
+		expect(screen.getAllByText(/loading/i)).toBeDefined();
 	});
 
 	it('renders message if user not using ddp', () => {

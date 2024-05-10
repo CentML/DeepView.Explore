@@ -8,6 +8,10 @@
 	@apply border-0 bg-primary-500 text-white hover:bg-primary-500 hover:brightness-110 active:bg-primary-500;
 }
 
+.btn:active {
+	@apply !bg-primary-700;
+}
+
 .btn:disabled {
 	@apply border-0 bg-primary-500 text-white;
 }

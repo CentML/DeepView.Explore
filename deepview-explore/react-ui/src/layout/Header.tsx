@@ -2,6 +2,7 @@ import { useAnalysis } from '@context/useAnalysis';
 import { Alert, Button, Container } from 'react-bootstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
+import { vscode } from '@utils/vscode';
 
 function Header() {
 	const { hasTextChanged } = useAnalysis();
@@ -21,7 +22,7 @@ function Header() {
 								</Alert>
 							)}
 
-							<Button variant="primary" className="px-8">
+							<Button onClick={() => vscode.restart()} variant="primary" className="px-8">
 								Restart
 							</Button>
 						</div>
