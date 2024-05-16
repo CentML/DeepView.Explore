@@ -5,6 +5,9 @@ export default {
 	content: ['./src/**/*.{html,js,tsx}'],
 	theme: {
 		extend: {
+			backgroundImage: {
+				login: "url('assets/login_bg.jpg')"
+			},
 			colors: {
 				primary: {
 					50: 'rgba(var(--color-primary-50))',

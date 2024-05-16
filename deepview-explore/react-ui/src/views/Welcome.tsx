@@ -8,11 +8,11 @@ const Welcome = () => {
 	const { analysis, isUsingDdp, updateDdp } = useAnalysis();
 
 	return (
-		<div className="h-screen bg-[url('/assets/login_bg.jpg')] bg-cover bg-center bg-no-repeat">
+		<div className="h-screen bg-login bg-cover bg-center bg-no-repeat">
 			<Container fluid className="flex h-screen grow flex-col items-center justify-center">
 				<Card className="border-0">
 					<Card.Header className="flex bg-primary-800 p-4">
-						<img src="/assets/logo.png" className="max-w-[500px]" alt="DeepView logo" />
+						<img src="assets/logo.png" className="max-w-[500px]" alt="DeepView logo" />
 					</Card.Header>
 					<Card.Body>
 						{analysis && (
