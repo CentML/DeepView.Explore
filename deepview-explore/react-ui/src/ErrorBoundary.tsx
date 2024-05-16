@@ -31,7 +31,7 @@ class ErrorBoundary extends Component<PropsWithChildren, State> {
 				<div className="flex h-screen flex-col items-center justify-center gap-2">
 					<Card>
 						<Card.Header className="flex bg-primary-800 p-4">
-							<img src="assets/logo.png" className="max-w-[500px]" alt="DeepView logo" />
+							<img src="/assets/logo.png" className="max-w-[500px]" alt="DeepView logo" />
 						</Card.Header>
 						<Card.Body className="flex flex-col items-center gap-4">
 							<div>

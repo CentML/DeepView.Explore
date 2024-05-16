@@ -6,7 +6,7 @@ export const simpleDecoration = vscode.window.createTextEditorDecorationType({
     // borderStyle: 'solid',
     overviewRulerColor: 'blue',
     overviewRulerLane: vscode.OverviewRulerLane.Right,
-    gutterIconPath: 'resources/right-arrow.png', 
+    gutterIconPath: 'assets/right-arrow.png',
     gutterIconSize: 'auto',
     light: {
         // this color will be used in light color themes
