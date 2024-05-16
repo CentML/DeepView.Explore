@@ -6,7 +6,7 @@ export default {
 	theme: {
 		extend: {
 			backgroundImage: {
-				login: "url('assets/login_bg.jpg')"
+				login: "url('/assets/login_bg.jpg')"
 			},
 			colors: {
 				primary: {
