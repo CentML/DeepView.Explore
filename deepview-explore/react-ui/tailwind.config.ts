@@ -6,7 +6,7 @@ export default {
 	theme: {
 		extend: {
 			backgroundImage: {
-				login: "url('/assets/login_bg.jpg')"
+				login: "url('https://centml-resources-dev.s3.amazonaws.com/login_bg.jpg')"
 			},
 			colors: {
 				primary: {
