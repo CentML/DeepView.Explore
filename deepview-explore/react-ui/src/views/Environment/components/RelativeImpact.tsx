@@ -14,17 +14,16 @@ const CURRENT_LABEL = 'Current profiling';
 
 export const RelativeImpact = () => {
 	const { analysis, epochs, iterations } = useAnalysis();
+	const { energy } = analysis;
 	const totalIterations = epochs * iterations;
 
-	if (!analysis || !Object.keys(analysis.energy)) {
+	if (!Object.keys(energy).length) {
 		return (
 			<Card title="Energy consumption">
 				<LoadingSpinner />
 			</Card>
 		);
 	}
-
-	const { energy } = analysis;
 
 	if (energy.error) {
 		return (

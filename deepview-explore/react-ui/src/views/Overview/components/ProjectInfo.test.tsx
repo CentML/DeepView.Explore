@@ -46,12 +46,4 @@ describe('Project information card', () => {
 		expect(vscode.startEncoding).toHaveBeenCalled();
 		expect(vscode.startEncoding).toHaveBeenCalledWith([path]);
 	});
-
-	it('renders an empty analysis state', () => {
-		analysis = undefined;
-
-		render(<ProjectInfo />);
-
-		expect(screen.getByText(/no analysis/i)).toBeDefined();
-	});
 });

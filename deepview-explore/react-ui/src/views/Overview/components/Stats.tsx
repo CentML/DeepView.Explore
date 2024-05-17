@@ -10,12 +10,12 @@ const useMockData = import.meta.env.MODE === 'development' || import.meta.env.VI
 
 export const Stats = () => {
 	const { analysis, utilizationData, throughput } = useAnalysis();
+	const { throughput: analysisThroughput, breakdown } = analysis;
 	const noUtilization = !utilizationData || Object.keys(utilizationData.allOperations).length === 0;
 
 	function getMemoryUsage(memoryPercentage: number | null, useBatchSize = false) {
-		if (!analysis || !Object.keys(analysis.breakdown).length || !Object.keys(analysis.throughput).length) return [0, 0];
+		if (!Object.keys(breakdown).length || !Object.keys(throughput).length) return [0, 0];
 
-		const { throughput: analysisThroughput, breakdown } = analysis;
 		const memoryModel = analysisThroughput.peak_usage_bytes;
 		const maxBatch = Math.floor((GPU_MAX_CAPACITY_LIMIT * breakdown.memory_capacity_bytes - memoryModel[1]) / memoryModel[0]);
 		const maxMemory = breakdown.memory_capacity_bytes;
@@ -47,7 +47,7 @@ export const Stats = () => {
 
 					<div className="flex grow flex-col items-center justify-center">
 						{!throughput || isNaN(throughput) || throughput === Infinity ? (
-							<p className="text-sm opacity-60">No throughput data</p>
+							<p className="text-sm italic">No throughput data</p>
 						) : (
 							<>
 								<p className="text-8xl">
@@ -62,22 +62,30 @@ export const Stats = () => {
 				<div className="flex flex-col items-center">
 					<h3 className="font-semibold">Memory Usage</h3>
 					<div className="border-1 my-2 w-[100px] border-surface-200" />
-					<Doughnut
-						className="max-h-[150px] p-2"
-						options={{ locale: 'en-us', responsive: true, plugins: { datalabels: { display: false }, legend: { display: false } } }}
-						data={{
-							labels: ['Peak Usage', 'Total Memory'],
-							datasets: [{ label: '', data: memory, backgroundColor: ['rgba(0, 67, 49, 1)', 'rgba(0, 168, 123, 0.3)'] }]
-						}}
-					/>
-					<p className="text-sm opacity-60">{memory ? memory[0] : ''} megabytes</p>
+					{!memory[0] && !memory[1] ? (
+						<p className="text-sm italic">No memory usage</p>
+					) : (
+						<>
+							<Doughnut
+								className="max-h-[150px] p-2"
+								options={{ locale: 'en-us', responsive: true, plugins: { datalabels: { display: false }, legend: { display: false } } }}
+								data={{
+									labels: ['Peak Usage', 'Total Memory'],
+									datasets: [{ label: '', data: memory, backgroundColor: ['rgba(0, 67, 49, 1)', 'rgba(0, 168, 123, 0.3)'] }]
+								}}
+							/>
+							<p className="text-sm opacity-60">{memory ? memory[0] : ''} megabytes</p>
+						</>
+					)}
 				</div>
 
 				{noUtilization ? (
-					<div className="flex grow flex-col">
-						<h3 className="mb-2">Utilization</h3>
+					<div className="flex grow flex-col items-center">
+						<h3 className="mb-2 font-semibold">Utilization</h3>
 						<div className="border-1 w-25 m-auto my-2 border-surface-200" />
-						<p className="text-sm opacity-60">No utilization data</p>
+						<div className="flex grow flex-col items-center justify-center">
+							<p className="text-sm italic">No utilization data</p>
+						</div>
 					</div>
 				) : (
 					<div className="flex flex-col items-center">

@@ -3,17 +3,13 @@ import { ProgressBar, Table } from 'react-bootstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 import Card from '@components/Card';
-import { ProfilingData } from '@interfaces/ProfileData';
-import { NodeData, UtilizationTableData, getUtilizationColor } from '@utils/getUtilizationData';
+import { NodeData, getUtilizationColor } from '@utils/getUtilizationData';
 import Switch from '@components/Switch';
 import LoadingSpinner from '@components/LoadingSpinner';
+import { useAnalysis } from '@context/useAnalysis';
 
-interface ComputeUtilizationProps {
-	analysis: ProfilingData;
-	utilizationData: UtilizationTableData;
-}
-
-export const ComputeUtilization = ({ analysis, utilizationData }: ComputeUtilizationProps) => {
+export const ComputeUtilization = () => {
+	const { analysis, utilizationData } = useAnalysis();
 	const [hideInsignificantOperations, setHideInsignificantOperations] = useState(false);
 
 	const { utilization } = analysis;
@@ -21,7 +17,7 @@ export const ComputeUtilization = ({ analysis, utilizationData }: ComputeUtiliza
 
 	const filter = hideInsignificantOperations ? 'hideInsignificant' : 'allOperations';
 
-	if (!Object.keys(utilization).length) {
+	if (!Object.keys(utilization).length || !utilizationData) {
 		return (
 			<Card title="Compute utilization (Model structure)">
 				<LoadingSpinner />

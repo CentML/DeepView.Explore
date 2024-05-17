@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ComputeUtilization } from './ComputeUtilization';
 
 const analysis = {
@@ -8,7 +8,7 @@ const analysis = {
 	}
 };
 
-const data = {
+const utilizationData = {
 	allOperations: {
 		name: 'nn.Module:GPT_0',
 		parentProportion: 100,
@@ -63,8 +63,17 @@ const data = {
 };
 
 describe('Compute utilization card', () => {
+	beforeEach(() => {
+		vi.mock('@context/useAnalysis', () => ({
+			useAnalysis: () => ({
+				analysis,
+				utilizationData
+			})
+		}));
+	});
+
 	it('renders', () => {
-		render(<ComputeUtilization analysis={analysis} utilizationData={data} />);
+		render(<ComputeUtilization />);
 
 		expect(screen.getByText(/tensor core utilization/i)).toBeDefined();
 		expect(screen.getByRole('checkbox')).toHaveProperty('checked', false);
@@ -72,35 +81,35 @@ describe('Compute utilization card', () => {
 	});
 
 	it('can expand rows', () => {
-		render(<ComputeUtilization analysis={analysis} utilizationData={data} />);
+		render(<ComputeUtilization />);
 
 		fireEvent.click(screen.getByRole('button'));
-		expect(screen.getAllByRole('row')).toHaveLength(2 + data.allOperations.children.length);
+		expect(screen.getAllByRole('row')).toHaveLength(2 + utilizationData.allOperations.children.length);
 	});
 
 	it('can hide insignificant operations', () => {
-		render(<ComputeUtilization analysis={analysis} utilizationData={data} />);
+		render(<ComputeUtilization />);
 
 		fireEvent.click(screen.getByRole('checkbox'));
 		expect(screen.getByRole('checkbox')).toHaveProperty('checked', true);
 		expect(screen.getAllByRole('row')).toHaveLength(2); // includes table head
 
 		fireEvent.click(screen.getByRole('button'));
-		expect(screen.getAllByRole('row')).toHaveLength(2 + data.hideInsignificant.children.length);
+		expect(screen.getAllByRole('row')).toHaveLength(2 + utilizationData.hideInsignificant.children.length);
 	});
 
 	it('only renders row buttons for nodes with children', () => {
-		render(<ComputeUtilization analysis={analysis} utilizationData={data} />);
+		render(<ComputeUtilization />);
 		fireEvent.click(screen.getByRole('button'));
 
-		const childButtons = data.allOperations.children.reduce((acc, curr) => (acc += curr.children.length > 0 ? 1 : 0), 0);
+		const childButtons = utilizationData.allOperations.children.reduce((acc, curr) => (acc += curr.children.length > 0 ? 1 : 0), 0);
 
 		expect(screen.getAllByRole('button')).toHaveLength(1 + childButtons);
 	});
 
 	it('recommends to use tensor cores for low usage', () => {
 		analysis.utilization.tensor_core_usage = 1;
-		render(<ComputeUtilization analysis={analysis} utilizationData={data} />);
+		render(<ComputeUtilization />);
 
 		expect(screen.getByText(/recommend using tensor cores/i)).toBeDefined();
 	});

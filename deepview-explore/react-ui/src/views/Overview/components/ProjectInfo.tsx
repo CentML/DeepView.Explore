@@ -10,7 +10,7 @@ export const ProjectInfo = () => {
 	const { analysis, encodedFiles, epochs, iterations, timeBreakDown } = useAnalysis();
 
 	useEffect(() => {
-		if (analysis && Object.keys(analysis).length) {
+		if (Object.keys(analysis).length) {
 			const fileNames = (timeBreakDown?.fine ?? [])
 				.filter((t) => t.file_refs && t.file_refs.length)
 				.map((t) => (t.file_refs ? t.file_refs[0].path : ''))
@@ -21,8 +21,6 @@ export const ProjectInfo = () => {
 	}, [analysis]);
 
 	const handleExport = () => {
-		if (!analysis) return;
-
 		try {
 			const blob = new Blob([JSON.stringify({ analysis, epochs, iterations, encodedFiles })]);
 			const url = URL.createObjectURL(blob);
@@ -41,14 +39,6 @@ export const ProjectInfo = () => {
 			console.error(error);
 		}
 	};
-
-	if (!analysis) {
-		return (
-			<Card title="Project information">
-				<p className="text-center">No analysis</p>
-			</Card>
-		);
-	}
 
 	const { project_root, project_entry_point, hardware_info } = analysis;
 

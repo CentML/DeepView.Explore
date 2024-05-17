@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 import { Alert } from 'react-bootstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import { useAnalysis } from '@context/useAnalysis';
 import LoadingSpinner from '@components/LoadingSpinner';
 import Card from '@components/Card';
-import { ProfilingData } from '@interfaces/ProfileData';
 import { getTrainingTime } from '@utils/getTrainingTime';
 import { formatNumber } from '@utils/formatNumber';
 import { loadJsonFiles, type CloudProviders, type ParseError as ParseErrorType } from '@utils/parsers';
@@ -12,12 +12,10 @@ import { ParseError } from './ParseError';
 import { GraphData, TargetScatterGraph } from './TargetScatterGraph';
 import { DeploymentPlan, type Instance } from './DeploymentPlan';
 
-interface DeploymentTargetProps {
-	analysis: ProfilingData;
-	totalIterations: number;
-}
+export const DeploymentTarget = () => {
+	const { analysis, epochs, iterations } = useAnalysis();
+	const totalIterations = epochs * iterations;
 
-export const DeploymentTarget = ({ analysis, totalIterations }: DeploymentTargetProps) => {
 	const [rawData, setRawData] = useState<Instance[]>([]);
 	const [graphData, setGraphData] = useState<GraphData[]>([]);
 	const [selectedInstance, setSelectedInstance] = useState<Instance | undefined>(undefined);
@@ -28,8 +26,6 @@ export const DeploymentTarget = ({ analysis, totalIterations }: DeploymentTarget
 
 	useEffect(() => {
 		async function parseData() {
-			if (!analysis) return;
-
 			const {
 				habitat: { predictions },
 				additionalProviders

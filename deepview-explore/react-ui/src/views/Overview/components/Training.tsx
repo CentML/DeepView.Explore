@@ -36,22 +36,26 @@ export const Training = () => {
 	return (
 		<Card title="Training schedule">
 			<form className="flex flex-col gap-2" onSubmit={handleSubmit}>
-				<div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center">
-					<div className="flex gap-4 sm:gap-2">
+				<div className="flex gap-2">
+					<div className="grow">
 						<NumberInput id="epochs" label="Epochs" value={training.epochs} onChange={handleChange} />
+					</div>
+					<div className="grow">
 						<NumberInput id="iterations" label="Iterations per epoch" value={training.iterations} onChange={handleChange} />
 					</div>
-					<div className="mdplus:flex-row flex gap-1 sm:flex-col">
-						{error ? (
-							<p className="text-error-500">{error}</p>
-						) : (
-							<>
-								<p className="opacity-60">Total number of iterations:</p>
-								<p className="font-semibold">{formatNumber(training.epochs * training.iterations)}</p>
-							</>
-						)}
-					</div>
 				</div>
+
+				{error ? (
+					<p className="text-sm font-semibold text-error-500">{error}</p>
+				) : (
+					<>
+						<p>
+							<span className="text-sm opacity-60">Total number of iterations:</span>{' '}
+							<span className="font-semibold">{formatNumber(training.epochs * training.iterations)}</span>
+						</p>
+					</>
+				)}
+
 				<div>
 					<Button variant="primary" type="submit" disabled={!!error}>
 						Submit

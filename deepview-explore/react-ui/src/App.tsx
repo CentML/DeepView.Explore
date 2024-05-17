@@ -12,16 +12,17 @@ function App() {
 		return <ErrorView error={error} handleConnection={handleConnection} />;
 	}
 
-	if (!analysis || !analysis?.throughput || Object.keys(analysis.throughput).length === 0) {
-		return <Welcome />;
-	}
-
-	if (isLoading)
+	if (isLoading) {
 		return (
 			<div className="flex h-screen items-center justify-center">
 				<LoadingSpinner />
 			</div>
 		);
+	}
+
+	if (!Object.keys(analysis).length || !Object.keys(analysis.breakdown).length) {
+		return <Welcome />;
+	}
 
 	return (
 		<Layout>

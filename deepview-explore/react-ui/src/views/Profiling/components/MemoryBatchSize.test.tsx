@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { MemoryBatchSize } from './MemoryBatchSize';
 
 const analysis = {
@@ -23,8 +23,16 @@ const analysis = {
 };
 
 describe('Memory and batch size card', () => {
+	beforeEach(() => {
+		vi.mock('@context/useAnalysis', () => ({
+			useAnalysis: () => ({
+				analysis
+			})
+		}));
+	});
+
 	it('renders', () => {
-		render(<MemoryBatchSize analysis={analysis} />);
+		render(<MemoryBatchSize />);
 
 		expect(screen.getAllByRole('slider')).toHaveLength(2);
 		screen.getAllByRole('slider').forEach((s) => expect(s).toHaveProperty('max', '100'));

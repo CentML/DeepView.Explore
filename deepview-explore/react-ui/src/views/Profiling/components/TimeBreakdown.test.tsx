@@ -7,7 +7,7 @@ const DATA_LABEL = 'label';
 const path = './path';
 const line = 100;
 
-const breakdown = {
+const timeBreakDown = {
 	coarse: [
 		{
 			name: DATA_LABEL,
@@ -74,6 +74,12 @@ const breakdown = {
 
 describe('Time breakdown', () => {
 	beforeEach(() => {
+		vi.mock('@context/useAnalysis', () => ({
+			useAnalysis: () => ({
+				timeBreakDown
+			})
+		}));
+
 		vi.mock('@utils/vscode');
 	});
 
@@ -82,7 +88,7 @@ describe('Time breakdown', () => {
 	});
 
 	it('renders', () => {
-		render(<TimeBreakdown timeBreakDown={breakdown} />);
+		render(<TimeBreakdown />);
 
 		expect(screen.getByRole('checkbox')).toBeDefined();
 		expect(screen.getAllByText('untracked')).toBeDefined();
@@ -93,7 +99,7 @@ describe('Time breakdown', () => {
 	});
 
 	it('calls highligh code handler', () => {
-		render(<TimeBreakdown timeBreakDown={breakdown} />);
+		render(<TimeBreakdown />);
 
 		fireEvent.click(screen.getByRole('button', { name: /label/ }));
 		expect(vscode.highlightCode).toHaveBeenCalledTimes(1);
@@ -101,22 +107,16 @@ describe('Time breakdown', () => {
 	});
 
 	it('does not call highlight code handler for items without files', () => {
-		render(<TimeBreakdown timeBreakDown={breakdown} />);
+		render(<TimeBreakdown />);
 
 		fireEvent.click(screen.getByRole('button', { name: /untracked/i }));
 		expect(vscode.highlightCode).not.toHaveBeenCalled();
 	});
 
 	it('can hide untracked breakdown', () => {
-		render(<TimeBreakdown timeBreakDown={breakdown} />);
+		render(<TimeBreakdown />);
 
 		fireEvent.click(screen.getByRole('checkbox'));
 		expect(screen.queryByText('untracked')).toBe(null);
-	});
-
-	it('renders empty card', () => {
-		render(<TimeBreakdown timeBreakDown={null} />);
-
-		expect(screen.getByText(/no time breakdown/i)).toBeDefined();
 	});
 });

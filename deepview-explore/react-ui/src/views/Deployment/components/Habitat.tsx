@@ -5,19 +5,14 @@ import { Scatter } from 'react-chartjs-2';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faCircleExclamation, faWarning } from '@fortawesome/free-solid-svg-icons';
+import { useAnalysis } from '@context/useAnalysis';
 import Card from '@components/Card';
-import { ProfilingData } from '@interfaces/ProfileData';
 import { gpuPropertyList } from '@data/properties';
 import GraphTooltip from '@components/GraphTooltip';
 import { useGraphTooltip } from '@components/GraphTooltip/GraphTooltip';
 import LoadingSpinner from '@components/LoadingSpinner';
 
 ChartJS.register(LinearScale, PointElement, LineElement, Tooltip, Legend, ChartDataLabels);
-
-interface HabitatProps {
-	analysis: ProfilingData;
-}
-
 interface CardData {
 	time: number;
 	card: string;
@@ -33,16 +28,17 @@ interface GraphData {
 
 const NUMBER_OF_COLUMNS = 5;
 
-export const Habitat = ({ analysis }: HabitatProps) => {
+export const Habitat = () => {
+	const { analysis } = useAnalysis();
+	const { habitat } = analysis;
+
 	const [graphData, setGraphData] = useState<GraphData>({ consumer: [], server: [], source: [] });
 	const [cardInfo, setCardInfo] = useState<CardData | undefined>(undefined);
 
 	const { chartRef, showTooltip, toggleTooltip } = useGraphTooltip();
 
-	const { habitat } = analysis;
-
 	useEffect(() => {
-		if (habitat.error || habitat.isDemo) return;
+		if (!Object.keys(habitat).length || habitat.error || habitat.isDemo) return;
 
 		const sortedPrediction = habitat.predictions.slice().sort((a, b) => a[1] - b[1]);
 		const data = sortedPrediction.reduce(
@@ -94,9 +90,7 @@ export const Habitat = ({ analysis }: HabitatProps) => {
 	if (!Object.keys(habitat).length) {
 		return (
 			<Card title="DeepView Predict">
-				<div className="flex min-h-[500px] items-center justify-center">
-					<LoadingSpinner />
-				</div>
+				<LoadingSpinner />
 			</Card>
 		);
 	}

@@ -1,13 +1,11 @@
 import { useEffect, useState } from 'react';
+import { useAnalysis } from '@context/useAnalysis';
 import Card from '@components/Card';
 import Switch from '@components/Switch';
-import type { FileRef, TimeBreakDown } from '@interfaces/ProfileData';
+import LoadingSpinner from '@components/LoadingSpinner';
+import type { FileRef } from '@interfaces/ProfileData';
 import { vscode } from '@utils/vscode';
 import { MIN_HEIGHT } from './constants';
-
-interface TimeBreakdownProps {
-	timeBreakDown: { coarse: TimeBreakDown[]; fine: TimeBreakDown[] } | null;
-}
 
 function getBarColor(index: number) {
 	switch (index) {
@@ -45,7 +43,9 @@ interface GraphData {
 	backgroundColor: string;
 }
 
-export const TimeBreakdown = ({ timeBreakDown }: TimeBreakdownProps) => {
+export const TimeBreakdown = () => {
+	const { timeBreakDown } = useAnalysis();
+
 	const [graphData, setGraphData] = useState<GraphData[]>([]);
 	const [labels, setLabels] = useState<{ name: string; percentage: number }[]>([]);
 	const [hideUntracked, setHideUntracked] = useState(false);
@@ -84,7 +84,7 @@ export const TimeBreakdown = ({ timeBreakDown }: TimeBreakdownProps) => {
 	if (!timeBreakDown) {
 		return (
 			<Card title="Time breakdown">
-				<h2 className="text-center">No time breakdown data available</h2>
+				<LoadingSpinner />
 			</Card>
 		);
 	}

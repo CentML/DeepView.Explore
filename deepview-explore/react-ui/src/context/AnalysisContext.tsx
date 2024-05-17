@@ -1,6 +1,6 @@
 import { createContext, PropsWithChildren, useEffect, useMemo, useState } from 'react';
 import { vscode } from '@utils/vscode';
-import { profiling_data } from '@mocks/mock_data';
+import { initial_mock } from '@mocks/mock_init';
 import { GPU_MAX_CAPACITY_LIMIT } from '@data/properties';
 import type { ProfilingData, TimeBreakDown } from '@interfaces/ProfileData';
 import type { ErrorState } from '@interfaces/ErrorState';
@@ -16,7 +16,7 @@ interface TimeBreakDownState {
 }
 
 interface AnalysisContext {
-	analysis: ProfilingData | null;
+	analysis: ProfilingData;
 	encodedFiles: unknown;
 	epochs: number;
 	error: ErrorState | undefined;
@@ -32,8 +32,24 @@ interface AnalysisContext {
 	utilizationData: UtilizationTableData | null;
 }
 
+const initialAnalysis: ProfilingData = {
+	message_type: '',
+	hardware_info: {
+		gpus: []
+	},
+	project_root: '',
+	project_entry_point: '',
+	additionalProviders: '',
+	throughput: {},
+	breakdown: {},
+	habitat: {},
+	energy: {},
+	utilization: {},
+	ddp: {}
+};
+
 const initialState: AnalysisContext = {
-	analysis: null,
+	analysis: initialAnalysis,
 	encodedFiles: undefined,
 	epochs: 50,
 	error: undefined,
@@ -54,7 +70,7 @@ const useMockData = import.meta.env.MODE === 'development' || import.meta.env.VI
 export const AnalysisContext = createContext(initialState);
 
 export const AnalysisProvider = ({ children }: PropsWithChildren) => {
-	const [analysis, setAnalysis] = useState<ProfilingData | null>(null);
+	const [analysis, setAnalysis] = useState<ProfilingData>(initialAnalysis);
 	const [encodedFiles, setEncodedFiles] = useState<unknown | undefined>(undefined);
 	const [epochs, setEpochs] = useState(50);
 	const [hasTextChanged, setHasTextChanged] = useState(false);
@@ -69,7 +85,7 @@ export const AnalysisProvider = ({ children }: PropsWithChildren) => {
 		setIsLoading(true);
 
 		if (useMockData) {
-			updateAnalysis(profiling_data);
+			updateAnalysis(initial_mock);
 			setIsLoading(false);
 			return;
 		} else {
@@ -112,7 +128,7 @@ export const AnalysisProvider = ({ children }: PropsWithChildren) => {
 		if (error) setError(undefined);
 
 		if (type === 'connect') {
-			setAnalysis(null);
+			setAnalysis(initialAnalysis);
 			vscode.connect();
 			return;
 		}
@@ -164,11 +180,8 @@ export const AnalysisProvider = ({ children }: PropsWithChildren) => {
 	return <AnalysisContext.Provider value={value}>{children}</AnalysisContext.Provider>;
 };
 
-function getThroughput(analysis: ProfilingData | null, useBatchSize = false) {
-	if (!analysis) return 0;
-
+function getThroughput(analysis: ProfilingData, useBatchSize = false) {
 	const { throughput, breakdown } = analysis;
-
 	if (!Object.keys(throughput).length || !Object.keys(breakdown).length) return 0;
 
 	const memoryModel = throughput.peak_usage_bytes;

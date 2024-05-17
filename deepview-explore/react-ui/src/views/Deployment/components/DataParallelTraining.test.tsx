@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { DataParallelTraining } from './DataParallelTraining';
 
-const analysis = {
+let analysis = {
 	ddp: {
 		fw_time: 25.26932,
 		bucket_sizes: [
@@ -28,21 +28,36 @@ const analysis = {
 	}
 };
 
+let isUsingDdp = true;
+
 describe('Data parallel training card', () => {
+	beforeEach(() => {
+		vi.mock('@context/useAnalysis', () => ({
+			useAnalysis: () => ({
+				analysis,
+				isUsingDdp
+			})
+		}));
+	});
+
 	it('renders', () => {
-		render(<DataParallelTraining analysis={analysis} isUsingDdp />);
+		render(<DataParallelTraining />);
 
 		expect(screen.getByRole('combobox')).toBeDefined();
 		expect(screen.getByRole('combobox')).toHaveProperty('value', 'pcie');
 	});
 
-	it('renders loading state', () => {
-		render(<DataParallelTraining analysis={{ ddp: {}, breakdown: {} }} isUsingDdp />);
-		expect(screen.getAllByText(/loading/i)).toBeDefined();
+	it('renders message if user not using ddp', () => {
+		isUsingDdp = false;
+		render(<DataParallelTraining />);
+		expect(screen.getByText(/not included/i)).toBeDefined();
+
+		isUsingDdp = true;
 	});
 
-	it('renders message if user not using ddp', () => {
-		render(<DataParallelTraining analysis={analysis} isUsingDdp={false} />);
-		expect(screen.getByText(/not included/i)).toBeDefined();
+	it('renders loading state', () => {
+		analysis = { ddp: {}, breakdown: {} };
+		render(<DataParallelTraining />);
+		expect(screen.getAllByText(/loading/i)).toBeDefined();
 	});
 });

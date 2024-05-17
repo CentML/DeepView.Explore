@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Button, Container, Card, Form, Spinner } from 'react-bootstrap';
+import { Button, Container, Card, Form } from 'react-bootstrap';
 import { vscode } from '@utils/vscode';
 import { useAnalysis } from '@context/useAnalysis';
+import LoadingSpinner from '@components/LoadingSpinner';
 
 const Welcome = () => {
 	const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -12,25 +13,20 @@ const Welcome = () => {
 			<Container fluid className="flex h-screen grow flex-col items-center justify-center">
 				<Card className="border-0">
 					<Card.Header className="flex bg-primary-800 p-4">
-						<img src="assets/logo.png" className="max-w-[500px]" alt="DeepView logo" />
+						<img src="/assets/logo.png" className="max-w-[500px]" alt="DeepView logo" />
 					</Card.Header>
 					<Card.Body>
-						{analysis && (
-							<div className="my-2">
-								<p>
-									<strong>Project Root:</strong> {analysis.project_root}
-								</p>
-								<p>
-									<strong>Entry Point:</strong> {analysis.project_entry_point}
-								</p>
-							</div>
-						)}
+						<div className="my-2">
+							<p>
+								<strong>Project Root:</strong> {analysis.project_root}
+							</p>
+							<p>
+								<strong>Entry Point:</strong> {analysis.project_entry_point}
+							</p>
+						</div>
 
 						{isAnalyzing ? (
-							<div className="flex flex-col items-center justify-center gap-2 text-primary-500">
-								<Spinner animation="border" role="status" />
-								<p className="text-xs">Analyzing project...</p>
-							</div>
+							<LoadingSpinner message="Analyzing project..." />
 						) : (
 							<div className="flex flex-col gap-2">
 								<Form.Check

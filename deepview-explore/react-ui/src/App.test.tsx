@@ -58,17 +58,23 @@ describe('App component', () => {
 	});
 
 	it('renders welcome page without analysis', () => {
-		analysis = {};
+		analysis = {
+			message_type: 'analysis',
+			hardware_info: {
+				gpus: ['Test GPU']
+			},
+			project_root: '/home/ubuntu/habitat-a100/skyline/samples/resnet',
+			project_entry_point: 'entry_point.py',
+			additionalProviders: '',
+			throughput: {},
+			breakdown: {},
+			habitat: {},
+			energy: {},
+			utilization: {},
+			ddp: {}
+		};
 
-		const { rerender } = render(<App />);
-		expect(screen.getByRole('button', { name: /begin analysis/i })).toBeDefined();
-
-		analysis.throughput = {};
-		rerender(<App />);
-		expect(screen.getByRole('button', { name: /begin analysis/i })).toBeDefined();
-
-		analysis.throughput = {};
-		rerender(<App />);
+		render(<App />);
 		expect(screen.getByRole('button', { name: /begin analysis/i })).toBeDefined();
 	});
 });

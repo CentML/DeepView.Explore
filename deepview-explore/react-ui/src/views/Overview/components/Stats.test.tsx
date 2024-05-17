@@ -22,7 +22,10 @@ describe('Stats card', () => {
 		vi.mock('@context/useAnalysis', () => ({
 			useAnalysis: () => ({
 				throughput,
-				utilizationData
+				utilizationData,
+				analysis: {
+					breakdown: {}
+				}
 			})
 		}));
 
