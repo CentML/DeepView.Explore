@@ -1,6 +1,6 @@
 import { createContext, PropsWithChildren, useEffect, useMemo, useState } from 'react';
 import { vscode } from '@utils/vscode';
-import { initial_mock } from '@mocks/mock_init';
+import { profiling_data } from '@mocks/mock_data';
 import { GPU_MAX_CAPACITY_LIMIT } from '@data/properties';
 import type { ProfilingData, TimeBreakDown } from '@interfaces/ProfileData';
 import type { ErrorState } from '@interfaces/ErrorState';
@@ -85,7 +85,7 @@ export const AnalysisProvider = ({ children }: PropsWithChildren) => {
 		setIsLoading(true);
 
 		if (useMockData) {
-			updateAnalysis(initial_mock);
+			updateAnalysis(profiling_data);
 			setIsLoading(false);
 			return;
 		} else {
