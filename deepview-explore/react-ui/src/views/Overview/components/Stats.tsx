@@ -28,7 +28,7 @@ export const Stats = () => {
 						) : (
 							<>
 								<p className="text-8xl">
-									<strong>{Math.round(throughput[0])}</strong>
+									<strong>{Math.round(throughput[1])}</strong>
 								</p>
 								<p className="text-sm opacity-60">samples/second</p>
 							</>
@@ -48,10 +48,10 @@ export const Stats = () => {
 								options={{ locale: 'en-us', responsive: true, plugins: { datalabels: { display: false }, legend: { display: false } } }}
 								data={{
 									labels: ['Peak Usage', 'Total Memory'],
-									datasets: [{ label: '', data: memory, backgroundColor: ['rgba(0, 67, 49, 1)', 'rgba(0, 168, 123, 0.3)'] }]
+									datasets: [{ label: '', data: memory.map((m) => Math.round(m)), backgroundColor: ['rgba(0, 67, 49, 1)', 'rgba(0, 168, 123, 0.3)'] }]
 								}}
 							/>
-							<p className="text-sm opacity-60">{memory ? memory[0] : ''} megabytes</p>
+							<p className="text-sm opacity-60">{memory ? Math.round(memory[1]) : ''} megabytes</p>
 						</>
 					)}
 				</div>

@@ -1,13 +1,13 @@
 import { createContext, PropsWithChildren, useEffect, useMemo, useState } from 'react';
 import { vscode } from '@utils/vscode';
 import { profiling_data } from '@mocks/mock_data';
-import { GPU_MAX_CAPACITY_LIMIT } from '@data/properties';
 import type { ProfilingData, TimeBreakDown } from '@interfaces/ProfileData';
 import type { ErrorState } from '@interfaces/ErrorState';
 import { getTraceByLevel } from '@utils/getTraceByLevel';
 import { computePercentage } from '@utils/computePercentage';
 import { getUtilizationData, type UtilizationTableData } from '@utils/getUtilizationData';
 import { verifyHabitatData } from '@utils/verifyHabitatData';
+import { getUsageData } from '@utils/getUsageData';
 import type { Message } from './message.types';
 
 interface TimeBreakDownState {
@@ -15,7 +15,7 @@ interface TimeBreakDownState {
 	fine: TimeBreakDown[];
 }
 
-type Usage = [number, number];
+type Usage = [number, number, number];
 
 interface AnalysisContext {
 	analysis: ProfilingData;
@@ -95,7 +95,7 @@ export const AnalysisProvider = ({ children }: PropsWithChildren) => {
 
 		if (useMockData) {
 			updateAnalysis(profiling_data);
-			setStatsUsage(getUsage(profiling_data, profiling_data.breakdown.batch_size));
+			setStatsUsage(getUsageData(profiling_data, 0.5, null, undefined));
 			setIsLoading(false);
 			return;
 		} else {
@@ -110,7 +110,7 @@ export const AnalysisProvider = ({ children }: PropsWithChildren) => {
 					break;
 				case 'analysis':
 					updateAnalysis(data as ProfilingData);
-					setStatsUsage(getUsage(data as ProfilingData, profiling_data.breakdown.batch_size));
+					setStatsUsage(getUsageData(data as ProfilingData, null, null, profiling_data.breakdown.batch_size));
 					break;
 				case 'text_change':
 					setHasTextChanged(true);
@@ -205,31 +205,3 @@ export const AnalysisProvider = ({ children }: PropsWithChildren) => {
 
 	return <AnalysisContext.Provider value={value}>{children}</AnalysisContext.Provider>;
 };
-
-function getUsage(analysis: ProfilingData, batchSize: number | undefined) {
-	const { throughput, breakdown } = analysis;
-	if (!Object.keys(throughput).length || !Object.keys(breakdown).length) {
-		return {
-			memory: [0, 0] as Usage,
-			throughput: [0, 0] as Usage
-		};
-	}
-
-	const memoryModel = throughput.peak_usage_bytes;
-	const throughputModel = throughput.run_time_ms;
-	const maxBatch = Math.floor((GPU_MAX_CAPACITY_LIMIT * breakdown.memory_capacity_bytes - memoryModel[1]) / memoryModel[0]);
-	const maxMemory = breakdown.memory_capacity_bytes;
-	const maxThroughput = (maxBatch * 1000.0) / (maxBatch * throughputModel[0] + throughputModel[1]);
-
-	if (!batchSize) {
-		batchSize = Math.max(1, Math.min(batchSize ?? 0, maxBatch));
-	}
-
-	const m = batchSize * memoryModel[0] + memoryModel[1];
-	const tp = (batchSize * 1000.0) / (batchSize * throughputModel[0] + throughputModel[1]);
-
-	return {
-		memory: [Math.round(m / 1e6), Math.round(maxMemory / 1e6)] as Usage,
-		throughput: [tp, Math.max(maxThroughput, tp)] as Usage
-	};
-}
