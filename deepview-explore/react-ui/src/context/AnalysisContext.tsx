@@ -136,6 +136,8 @@ export const AnalysisProvider = ({ children }: PropsWithChildren) => {
 		vscode.restart();
 	};
 
+	const throughput = getThroughput(analysis, !useMockData);
+
 	const updateAnalysis = (data: ProfilingData) => {
 		setAnalysis(verifyHabitatData(data) as ProfilingData);
 
@@ -169,12 +171,27 @@ export const AnalysisProvider = ({ children }: PropsWithChildren) => {
 			isUsingDdp,
 			iterations,
 			timeBreakDown,
-			throughput: getThroughput(analysis, !useMockData),
+			throughput,
 			updateDdp,
 			updateTraining,
 			utilizationData
 		}),
-		[analysis, encodedFiles, epochs, error, handleConnection, hasTextChanged, isLoading, isUsingDdp, iterations, updateDdp, updateTraining]
+		[
+			analysis,
+			encodedFiles,
+			epochs,
+			error,
+			handleConnection,
+			hasTextChanged,
+			isLoading,
+			isUsingDdp,
+			iterations,
+			timeBreakDown,
+			throughput,
+			updateDdp,
+			updateTraining,
+			utilizationData
+		]
 	);
 
 	return <AnalysisContext.Provider value={value}>{children}</AnalysisContext.Provider>;

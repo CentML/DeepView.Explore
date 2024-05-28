@@ -13,7 +13,7 @@ const Welcome = () => {
 			<Container fluid className="flex h-screen grow flex-col items-center justify-center">
 				<Card className="border-0">
 					<Card.Header className="flex bg-primary-800 p-4">
-						<img src="/assets/logo.png" className="max-w-[500px]" alt="DeepView logo" />
+						<img src="assets/logo.png" className="max-w-[500px]" alt="DeepView logo" />
 					</Card.Header>
 					<Card.Body>
 						<div className="my-2">
