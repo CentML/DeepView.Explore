@@ -15,6 +15,8 @@ interface TimeBreakDownState {
 	fine: TimeBreakDown[];
 }
 
+type Usage = [number, number];
+
 interface AnalysisContext {
 	analysis: ProfilingData;
 	encodedFiles: unknown;
@@ -25,8 +27,11 @@ interface AnalysisContext {
 	isLoading: boolean;
 	iterations: number;
 	isUsingDdp: boolean;
+	statsUsage: {
+		memory: Usage;
+		throughput: Usage;
+	};
 	timeBreakDown: TimeBreakDownState | null;
-	throughput: number;
 	updateDdp: () => void;
 	updateTraining: (training: { epochs: number; iterations: number }) => void;
 	utilizationData: UtilizationTableData | null;
@@ -58,8 +63,11 @@ const initialState: AnalysisContext = {
 	isLoading: false,
 	isUsingDdp: true,
 	iterations: 2000,
+	statsUsage: {
+		memory: [0, 0],
+		throughput: [0, 0]
+	},
 	timeBreakDown: null,
-	throughput: 0,
 	updateDdp: () => undefined,
 	updateTraining: () => undefined,
 	utilizationData: {} as UtilizationTableData
@@ -79,7 +87,7 @@ export const AnalysisProvider = ({ children }: PropsWithChildren) => {
 	const [iterations, setIterations] = useState(2000);
 	const [error, setError] = useState<ErrorState | undefined>(undefined);
 	const [timeBreakDown, setTimeBreakDown] = useState<TimeBreakDownState | null>(null);
-	const [throughput, setThroughput] = useState<number | undefined>(undefined);
+	const [statsUsage, setStatsUsage] = useState({ memory: [0, 0] as Usage, throughput: [0, 0] as Usage });
 	const [utilizationData, setUtilizationData] = useState<UtilizationTableData | null>(null);
 
 	useEffect(() => {
@@ -87,7 +95,7 @@ export const AnalysisProvider = ({ children }: PropsWithChildren) => {
 
 		if (useMockData) {
 			updateAnalysis(profiling_data);
-			setThroughput(getThroughput(profiling_data, true));
+			setStatsUsage(getUsage(profiling_data, false));
 			setIsLoading(false);
 			return;
 		} else {
@@ -102,7 +110,7 @@ export const AnalysisProvider = ({ children }: PropsWithChildren) => {
 					break;
 				case 'analysis':
 					updateAnalysis(data as ProfilingData);
-					setThroughput(getThroughput(profiling_data, false));
+					setStatsUsage(getUsage(data as ProfilingData, true));
 					break;
 				case 'text_change':
 					setHasTextChanged(true);
@@ -171,8 +179,8 @@ export const AnalysisProvider = ({ children }: PropsWithChildren) => {
 			isLoading,
 			isUsingDdp,
 			iterations,
+			statsUsage,
 			timeBreakDown,
-			throughput,
 			updateDdp,
 			updateTraining,
 			utilizationData
@@ -187,8 +195,8 @@ export const AnalysisProvider = ({ children }: PropsWithChildren) => {
 			isLoading,
 			isUsingDdp,
 			iterations,
+			statsUsage,
 			timeBreakDown,
-			throughput,
 			updateDdp,
 			updateTraining,
 			utilizationData
@@ -198,18 +206,31 @@ export const AnalysisProvider = ({ children }: PropsWithChildren) => {
 	return <AnalysisContext.Provider value={value}>{children}</AnalysisContext.Provider>;
 };
 
-function getThroughput(analysis: ProfilingData, useBatchSize = false) {
+function getUsage(analysis: ProfilingData, useBatchSize = false) {
 	const { throughput, breakdown } = analysis;
-	if (!Object.keys(throughput).length || !Object.keys(breakdown).length) return 0;
+	if (!Object.keys(throughput).length || !Object.keys(breakdown).length) {
+		return {
+			memory: [0, 0] as Usage,
+			throughput: [0, 0] as Usage
+		};
+	}
 
 	const memoryModel = throughput.peak_usage_bytes;
 	const throughputModel = throughput.run_time_ms;
 	const maxBatch = Math.floor((GPU_MAX_CAPACITY_LIMIT * breakdown.memory_capacity_bytes - memoryModel[1]) / memoryModel[0]);
+	const maxMemory = breakdown.memory_capacity_bytes;
+	const maxThroughput = (maxBatch * 1000.0) / (maxBatch * throughputModel[0] + throughputModel[1]);
 
 	let batchSize = 0;
 	if (!useBatchSize) {
 		batchSize = Math.max(1, Math.min(batchSize, maxBatch));
 	}
 
-	return Math.round((batchSize * 1000.0) / (batchSize * throughputModel[0] + throughputModel[1]));
+	const m = batchSize * memoryModel[0] + memoryModel[1];
+	const tp = (batchSize * 1000.0) / (batchSize * throughputModel[0] + throughputModel[1]);
+
+	return {
+		memory: [m / 1e6, maxMemory / 1e6] as Usage,
+		throughput: [tp, Math.max(maxThroughput, tp)] as Usage
+	};
 }
