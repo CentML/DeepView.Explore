@@ -6,7 +6,7 @@ import { useAnalysis } from '@context/useAnalysis';
 ChartJS.register(ArcElement, Tooltip);
 
 export const Stats = () => {
-	const { statsUsage, utilizationData } = useAnalysis();
+	const { analysis, statsUsage, utilizationData } = useAnalysis();
 	const { memory, throughput } = statsUsage;
 	const noUtilization = !utilizationData || Object.keys(utilizationData.allOperations).length === 0;
 
@@ -19,7 +19,12 @@ export const Stats = () => {
 
 					<div className="flex grow flex-col items-center justify-center">
 						{!throughput[0] || isNaN(throughput[0]) || throughput[0] === Infinity ? (
-							<p className="text-sm italic">No throughput data</p>
+							<>
+								<p className="text-6xl">
+									<strong>{Math.round(analysis.throughput.samples_per_second)}</strong>
+								</p>
+								<p className="text-sm opacity-60">samples/second</p>
+							</>
 						) : (
 							<>
 								<p className="text-8xl">
@@ -46,7 +51,7 @@ export const Stats = () => {
 									datasets: [{ label: '', data: memory, backgroundColor: ['rgba(0, 67, 49, 1)', 'rgba(0, 168, 123, 0.3)'] }]
 								}}
 							/>
-							<p className="text-sm opacity-60">{memory ? Math.round(memory[0]) : ''} megabytes</p>
+							<p className="text-sm opacity-60">{memory ? memory[0] : ''} megabytes</p>
 						</>
 					)}
 				</div>

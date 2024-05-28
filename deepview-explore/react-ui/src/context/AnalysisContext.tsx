@@ -95,7 +95,7 @@ export const AnalysisProvider = ({ children }: PropsWithChildren) => {
 
 		if (useMockData) {
 			updateAnalysis(profiling_data);
-			setStatsUsage(getUsage(profiling_data, false));
+			setStatsUsage(getUsage(profiling_data, profiling_data.breakdown.batch_size));
 			setIsLoading(false);
 			return;
 		} else {
@@ -110,7 +110,7 @@ export const AnalysisProvider = ({ children }: PropsWithChildren) => {
 					break;
 				case 'analysis':
 					updateAnalysis(data as ProfilingData);
-					setStatsUsage(getUsage(data as ProfilingData, true));
+					setStatsUsage(getUsage(data as ProfilingData, profiling_data.breakdown.batch_size));
 					break;
 				case 'text_change':
 					setHasTextChanged(true);
@@ -206,7 +206,7 @@ export const AnalysisProvider = ({ children }: PropsWithChildren) => {
 	return <AnalysisContext.Provider value={value}>{children}</AnalysisContext.Provider>;
 };
 
-function getUsage(analysis: ProfilingData, useBatchSize = false) {
+function getUsage(analysis: ProfilingData, batchSize: number | undefined) {
 	const { throughput, breakdown } = analysis;
 	if (!Object.keys(throughput).length || !Object.keys(breakdown).length) {
 		return {
@@ -221,16 +221,15 @@ function getUsage(analysis: ProfilingData, useBatchSize = false) {
 	const maxMemory = breakdown.memory_capacity_bytes;
 	const maxThroughput = (maxBatch * 1000.0) / (maxBatch * throughputModel[0] + throughputModel[1]);
 
-	let batchSize = 0;
-	if (!useBatchSize) {
-		batchSize = Math.max(1, Math.min(batchSize, maxBatch));
+	if (!batchSize) {
+		batchSize = Math.max(1, Math.min(batchSize ?? 0, maxBatch));
 	}
 
 	const m = batchSize * memoryModel[0] + memoryModel[1];
 	const tp = (batchSize * 1000.0) / (batchSize * throughputModel[0] + throughputModel[1]);
 
 	return {
-		memory: [m / 1e6, maxMemory / 1e6] as Usage,
+		memory: [Math.round(m / 1e6), Math.round(maxMemory / 1e6)] as Usage,
 		throughput: [tp, Math.max(maxThroughput, tp)] as Usage
 	};
 }

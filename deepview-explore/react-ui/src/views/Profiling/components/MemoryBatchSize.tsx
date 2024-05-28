@@ -28,7 +28,7 @@ export const MemoryBatchSize = () => {
 		if (!Object.keys(breakdown).length || !Object.keys(throughput).length) return;
 
 		if (useMockData) {
-			const data = handleUpdate(0.5, null);
+			const data = handleUpdate(0.5, null, undefined);
 			if (!data) return;
 
 			const { memory, throughput } = data;
@@ -38,7 +38,7 @@ export const MemoryBatchSize = () => {
 				throughput
 			}));
 		} else {
-			const data = handleUpdate(null, null, true);
+			const data = handleUpdate(null, null, breakdown.batch_size);
 			if (!data) return;
 
 			const { memory, throughput } = data;
@@ -50,15 +50,14 @@ export const MemoryBatchSize = () => {
 		}
 	}, []);
 
-	function handleUpdate(memoryPercentage: number | null, throughputPercentage: number | null, useBatchSize = false) {
+	function handleUpdate(memoryPercentage: number | null, throughputPercentage: number | null, batchSize: number | undefined) {
 		const memoryModel = throughput.peak_usage_bytes;
 		const throughputModel = throughput.run_time_ms;
 		const maxBatch = Math.floor((GPU_MAX_CAPACITY_LIMIT * breakdown.memory_capacity_bytes - memoryModel[1]) / memoryModel[0]);
 		const maxMemory = breakdown.memory_capacity_bytes;
 		const maxThroughput = (maxBatch * 1000.0) / (maxBatch * throughputModel[0] + throughputModel[1]);
 
-		let batchSize = 0;
-		if (!useBatchSize) {
+		if (!batchSize) {
 			if (!memoryPercentage && !throughputPercentage) return;
 
 			if (memoryPercentage) {
@@ -70,7 +69,7 @@ export const MemoryBatchSize = () => {
 				batchSize = Math.floor(tp * throughputModel[1]) / (1000.0 - tp * throughputModel[0]);
 			}
 
-			batchSize = Math.max(1, Math.min(batchSize, maxBatch));
+			batchSize = Math.max(1, Math.min(batchSize ?? 0, maxBatch));
 		}
 
 		const m = batchSize * memoryModel[0] + memoryModel[1];
@@ -86,11 +85,11 @@ export const MemoryBatchSize = () => {
 	const handleUpdateSlider = (percentage: number, type: 'memory' | 'throughput') => {
 		let data;
 		if (type === 'memory') {
-			data = handleUpdate(percentage, null);
+			data = handleUpdate(percentage, null, undefined);
 		}
 
 		if (type === 'throughput') {
-			data = handleUpdate(null, percentage);
+			data = handleUpdate(null, percentage, undefined);
 		}
 
 		if (!data) return;
