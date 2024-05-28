@@ -79,6 +79,7 @@ export const AnalysisProvider = ({ children }: PropsWithChildren) => {
 	const [iterations, setIterations] = useState(2000);
 	const [error, setError] = useState<ErrorState | undefined>(undefined);
 	const [timeBreakDown, setTimeBreakDown] = useState<TimeBreakDownState | null>(null);
+	const [throughput, setThroughput] = useState<number | undefined>(undefined);
 	const [utilizationData, setUtilizationData] = useState<UtilizationTableData | null>(null);
 
 	useEffect(() => {
@@ -86,6 +87,7 @@ export const AnalysisProvider = ({ children }: PropsWithChildren) => {
 
 		if (useMockData) {
 			updateAnalysis(profiling_data);
+			setThroughput(getThroughput(profiling_data, true));
 			setIsLoading(false);
 			return;
 		} else {
@@ -100,6 +102,7 @@ export const AnalysisProvider = ({ children }: PropsWithChildren) => {
 					break;
 				case 'analysis':
 					updateAnalysis(data as ProfilingData);
+					setThroughput(getThroughput(profiling_data, false));
 					break;
 				case 'text_change':
 					setHasTextChanged(true);
@@ -135,8 +138,6 @@ export const AnalysisProvider = ({ children }: PropsWithChildren) => {
 
 		vscode.restart();
 	};
-
-	const throughput = getThroughput(analysis, !useMockData);
 
 	const updateAnalysis = (data: ProfilingData) => {
 		setAnalysis(verifyHabitatData(data) as ProfilingData);

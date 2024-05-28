@@ -12,7 +12,7 @@ function Header() {
 			<div className="app-bar flex flex-col space-y-2 bg-primary-800 p-2 py-4 shadow-md">
 				<Container fluid>
 					<div className="flex flex-row items-center justify-between">
-						<img className="h-12" src="/assets/logo.png" alt="DeepView logo" />
+						<img className="h-12" src="assets/logo.png" alt="DeepView logo" />
 
 						<div className="flex items-center gap-2">
 							{hasTextChanged && (
