@@ -7,15 +7,13 @@ import { getTraceByLevel } from '@utils/getTraceByLevel';
 import { computePercentage } from '@utils/computePercentage';
 import { getUtilizationData, type UtilizationTableData } from '@utils/getUtilizationData';
 import { verifyHabitatData } from '@utils/verifyHabitatData';
-import { getUsageData } from '@utils/getUsageData';
+import { getUsageData, INITIAL_SLIDER_STATE } from '@utils/getUsageData';
 import type { Message } from './message.types';
 
 interface TimeBreakDownState {
 	coarse: TimeBreakDown[];
 	fine: TimeBreakDown[];
 }
-
-type Usage = [number, number, number];
 
 interface AnalysisContext {
 	analysis: ProfilingData;
@@ -28,8 +26,9 @@ interface AnalysisContext {
 	iterations: number;
 	isUsingDdp: boolean;
 	statsUsage: {
-		memory: Usage;
-		throughput: Usage;
+		breakdown: number;
+		memory: [number, number, number];
+		throughput: [number, number, number];
 	};
 	timeBreakDown: TimeBreakDownState | null;
 	updateDdp: () => void;
@@ -64,8 +63,9 @@ const initialState: AnalysisContext = {
 	isUsingDdp: true,
 	iterations: 2000,
 	statsUsage: {
-		memory: [0, 0],
-		throughput: [0, 0]
+		breakdown: 0,
+		memory: INITIAL_SLIDER_STATE,
+		throughput: INITIAL_SLIDER_STATE
 	},
 	timeBreakDown: null,
 	updateDdp: () => undefined,
@@ -87,7 +87,12 @@ export const AnalysisProvider = ({ children }: PropsWithChildren) => {
 	const [iterations, setIterations] = useState(2000);
 	const [error, setError] = useState<ErrorState | undefined>(undefined);
 	const [timeBreakDown, setTimeBreakDown] = useState<TimeBreakDownState | null>(null);
-	const [statsUsage, setStatsUsage] = useState({ memory: [0, 0] as Usage, throughput: [0, 0] as Usage });
+	const [statsUsage, setStatsUsage] = useState({
+		breakdown: 0,
+		batchSize: 0,
+		memory: INITIAL_SLIDER_STATE,
+		throughput: INITIAL_SLIDER_STATE
+	});
 	const [utilizationData, setUtilizationData] = useState<UtilizationTableData | null>(null);
 
 	useEffect(() => {

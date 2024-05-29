@@ -1,6 +1,8 @@
 import { GPU_MAX_CAPACITY_LIMIT } from '@data/properties';
 import { ProfilingData } from '@interfaces/ProfileData';
 
+export const INITIAL_SLIDER_STATE = [50, 69, 420] as [number, number, number];
+
 export function getUsageData(
 	analysis: ProfilingData,
 	memoryPercentage: number | null,
@@ -8,6 +10,14 @@ export function getUsageData(
 	batchSize: number | undefined
 ) {
 	const { throughput, breakdown } = analysis;
+
+	if (!Object.keys(throughput).length || !Object.keys(breakdown).length) {
+		return {
+			batchSize: 0,
+			memory: 0,
+			throughput: 0
+		};
+	}
 
 	const memoryModel = throughput.peak_usage_bytes;
 	const throughputModel = throughput.run_time_ms;
@@ -35,7 +45,7 @@ export function getUsageData(
 
 	return {
 		batchSize,
-		memory: [(100.0 * m) / maxMemory, m / 1e6, maxMemory / 1e6],
-		throughput: [(100.0 * tp) / maxThroughput, tp, Math.max(maxThroughput, tp)]
+		memory: [(100.0 * m) / maxMemory, m / 1e6, maxMemory / 1e6] as [number, number, number],
+		throughput: [(100.0 * tp) / maxThroughput, tp, Math.max(maxThroughput, tp)] as [number, number, number]
 	};
 }

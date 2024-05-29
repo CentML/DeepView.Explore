@@ -19,12 +19,16 @@ export const Stats = () => {
 
 					<div className="flex grow flex-col items-center justify-center">
 						{!throughput[0] || isNaN(throughput[0]) || throughput[0] === Infinity ? (
-							<>
-								<p className="text-6xl">
-									<strong>{Math.round(analysis.throughput.samples_per_second)}</strong>
-								</p>
-								<p className="text-sm opacity-60">samples/second</p>
-							</>
+							isNaN(analysis.throughput.samples_per_second) ? (
+								<p className="text-sm italic">No throughput data</p>
+							) : (
+								<>
+									<p className="text-6xl">
+										<strong>{Math.round(analysis.throughput.samples_per_second)}</strong>
+									</p>
+									<p className="text-sm opacity-60">samples/second</p>
+								</>
+							)
 						) : (
 							<>
 								<p className="text-8xl">
@@ -39,7 +43,7 @@ export const Stats = () => {
 				<div className="flex grow flex-col items-center justify-center">
 					<h3 className="font-semibold">Memory Usage</h3>
 					<div className="border-1 my-2 w-[100px] border-surface-200" />
-					{!memory[0] && !memory[1] ? (
+					{!memory[1] && !memory[2] ? (
 						<p className="text-sm italic">No memory usage</p>
 					) : (
 						<>
@@ -48,7 +52,13 @@ export const Stats = () => {
 								options={{ locale: 'en-us', responsive: true, plugins: { datalabels: { display: false }, legend: { display: false } } }}
 								data={{
 									labels: ['Peak Usage', 'Total Memory'],
-									datasets: [{ label: '', data: memory.map((m) => Math.round(m)), backgroundColor: ['rgba(0, 67, 49, 1)', 'rgba(0, 168, 123, 0.3)'] }]
+									datasets: [
+										{
+											label: '',
+											data: [Math.round(memory[1]), Math.round(memory[2])],
+											backgroundColor: ['rgba(0, 67, 49, 1)', 'rgba(0, 168, 123, 0.3)']
+										}
+									]
 								}}
 							/>
 							<p className="text-sm opacity-60">{memory ? Math.round(memory[1]) : ''} megabytes</p>

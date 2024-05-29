@@ -7,16 +7,14 @@ import Card from '@components/Card';
 import RangeInput from '@components/RangeInput';
 import { RANGE_HEIGHT } from '@components/RangeInput/RangeInput';
 import LoadingSpinner from '@components/LoadingSpinner';
-import { getUsageData } from '@utils/getUsageData';
+import { getUsageData, INITIAL_SLIDER_STATE } from '@utils/getUsageData';
 import { MIN_HEIGHT } from './constants';
 
 interface MemoryUsageData {
 	batchSize: number;
-	memory: number[];
-	throughput: number[];
+	memory: [number, number, number];
+	throughput: [number, number, number];
 }
-
-const INITIAL_SLIDER_STATE = [50, 69, 420];
 
 const useMockData = import.meta.env.MODE === 'development' || import.meta.env.VITE_USE_MOCKS;
 

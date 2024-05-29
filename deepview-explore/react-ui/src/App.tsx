@@ -20,7 +20,7 @@ function App() {
 		);
 	}
 
-	if (!Object.keys(analysis).length || !Object.keys(analysis.breakdown).length) {
+	if (!Object.keys(analysis).length || !Object.keys(analysis.breakdown).length || !Object.keys(analysis.throughput).length) {
 		return <Welcome />;
 	}
 
