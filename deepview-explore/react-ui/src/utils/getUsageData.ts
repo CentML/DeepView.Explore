@@ -14,8 +14,8 @@ export function getUsageData(
 	if (!Object.keys(throughput).length || !Object.keys(breakdown).length) {
 		return {
 			batchSize: 0,
-			memory: 0,
-			throughput: 0
+			memory: [0, 0, 0],
+			throughput: [0, 0, 0]
 		};
 	}
 
