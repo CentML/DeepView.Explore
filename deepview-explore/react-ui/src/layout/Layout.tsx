@@ -10,7 +10,7 @@ export type TAB = (typeof TABS)[number];
 const Nav = () => {
 	return (
 		<BootstrapNav variant="underline" className="bg-surface-500">
-			<Container className="flex items-center justify-between" fluid>
+			<Container className="flex items-center justify-between px-4" fluid>
 				<div className="flex items-center gap-4 pt-2">
 					{TABS.map((tab) => (
 						<BootstrapNav.Item key={tab} className="[&>.active]:!border-surface-100 [&>a:hover]:!border-surface-100">
@@ -33,13 +33,7 @@ export interface TabPanelProps extends PropsWithChildren {
 }
 
 export const TabPanel: React.FC<TabPanelProps> = ({ children, name }: TabPanelProps) => {
-	return (
-		<Tab.Pane eventKey={name}>
-			<Container className="py-2" fluid>
-				{children}
-			</Container>
-		</Tab.Pane>
-	);
+	return <Tab.Pane eventKey={name}>{children}</Tab.Pane>;
 };
 
 interface LayoutProps extends PropsWithChildren {
@@ -50,7 +44,7 @@ const Layout = ({ children, defaultTab = 'overview' }: LayoutProps) => {
 	return (
 		<div className="flex h-screen flex-col">
 			<Header />
-			<div className="flex grow flex-col p-2">
+			<div className="flex grow flex-col">
 				<Tab.Container mountOnEnter defaultActiveKey={defaultTab} transition={false}>
 					<Nav />
 					<Tab.Content className="flex-1 bg-surface-100 px-6 py-4">{children}</Tab.Content>

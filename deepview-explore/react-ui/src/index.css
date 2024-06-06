@@ -4,6 +4,10 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+	@apply p-0 m-0;
+}
+
 .btn-primary {
 	@apply border-0 bg-primary-500 text-white hover:bg-primary-500 hover:brightness-110 active:bg-primary-500;
 }
