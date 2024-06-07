@@ -24,19 +24,16 @@ export const DeploymentTarget = () => {
 	const [gpus, setGpus] = useState<string[]>([]);
 	const [errors, setErrors] = useState<ParseErrorType[]>([]);
 
+	const {
+		habitat: { predictions },
+		additionalProviders
+	} = analysis;
+
 	useEffect(() => {
 		async function parseData() {
-			const {
-				habitat: { predictions },
-				additionalProviders
-			} = analysis;
-
 			const { cloudProviders, instanceArray, errors } = await loadJsonFiles(predictions, additionalProviders);
 
-			if (errors) {
-				setErrors(errors);
-				return;
-			}
+			if (errors) setErrors(errors);
 
 			setCloudProviders(cloudProviders);
 
@@ -77,7 +74,7 @@ export const DeploymentTarget = () => {
 		}
 
 		parseData();
-	}, []);
+	}, [analysis]);
 
 	if (!Object.keys(analysis.habitat).length) {
 		return (
@@ -89,32 +86,29 @@ export const DeploymentTarget = () => {
 
 	return (
 		<Card title="Deployment target">
-			{errors.length ? (
-				<ParseError errors={errors} />
-			) : (
-				<div className="mb-4 flex flex-col gap-4">
-					<h2 className="text-xl">
-						Estimation for <strong>{formatNumber(totalIterations)}</strong> total iterations.
-					</h2>
+			{errors.length && <ParseError errors={errors} />}
+			<div className="mb-4 flex flex-col gap-4">
+				<h2 className="text-xl">
+					Estimation for <strong>{formatNumber(totalIterations)}</strong> total iterations.
+				</h2>
 
-					<TargetScatterGraph
-						cloudProviders={cloudProviders.map(({ name }) => name)}
-						gpus={gpus}
-						handleSelection={(selectedId) => {
-							if (!selectedId) {
-								setSelectedInstance(undefined);
-								return;
-							}
+				<TargetScatterGraph
+					cloudProviders={cloudProviders.map(({ name }) => name)}
+					gpus={gpus}
+					handleSelection={(selectedId) => {
+						if (!selectedId) {
+							setSelectedInstance(undefined);
+							return;
+						}
 
-							if (isMultipleSelected) setIsMultipleSelected(false);
+						if (isMultipleSelected) setIsMultipleSelected(false);
 
-							setSelectedInstance(rawData.find(({ id }) => id === selectedId));
-						}}
-						data={graphData}
-						handleMultipleSelected={() => setIsMultipleSelected(true)}
-					/>
-				</div>
-			)}
+						setSelectedInstance(rawData.find(({ id }) => id === selectedId));
+					}}
+					data={graphData}
+					handleMultipleSelected={() => setIsMultipleSelected(true)}
+				/>
+			</div>
 
 			<h3 className="border-px	mb-4 border-b pb-1 text-lg font-semibold">Deployment plan</h3>
 			{!selectedInstance ? (

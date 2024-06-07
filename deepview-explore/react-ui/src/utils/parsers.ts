@@ -33,14 +33,13 @@ export const loadJsonFiles = async (habitatData: unknown, cloudProviderURLs: str
 	const cloudProviders: CloudProviders[] = [];
 	const errors: ParseError[] = [];
 
-	let urlList = [CENTML_CLOUD_PROVIDERS_URL];
-	const additionalList = cloudProviderURLs ? cloudProviderURLs.split(',') : [];
-	urlList = urlList.concat(additionalList);
+	const urls = cloudProviderURLs ? cloudProviderURLs.split(',') : [];
+	const urlList = [CENTML_CLOUD_PROVIDERS_URL, ...urls];
 	const listOfPromises = urlList.map((url) => fetch(url, { cache: 'no-store' }));
 	const responses = await Promise.all(listOfPromises);
 
 	for (const resp of responses) {
-		if (resp.ok) {
+		if (resp.ok || resp.status === 200) {
 			try {
 				const res = await resp.json();
 				const valid = validate(res);
