@@ -5,7 +5,7 @@
 	"type": "module",
 	"scripts": {
 		"dev": "vite",
-		"build": "rm -rf build && vite build",
+		"build": "rm -rf build && vite build && rm ./build/providers.json",
 		"lint": "prettier . --check . && eslint .",
 		"format": "prettier . --write .",
 		"preview": "vite preview",

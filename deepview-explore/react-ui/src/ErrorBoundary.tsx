@@ -19,7 +19,7 @@ class ErrorBoundary extends Component<PropsWithChildren, State> {
 	}
 
 	handleReconnect() {
-		vscode.connect();
+		this.setState({ hasError: false }, () => vscode.restart());
 	}
 
 	render() {
@@ -41,7 +41,7 @@ class ErrorBoundary extends Component<PropsWithChildren, State> {
 
 							<div>
 								<Button onClick={this.handleReconnect} variant="primary" className="px-8">
-									Reconnect
+									Restart
 								</Button>
 							</div>
 						</Card.Body>

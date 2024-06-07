@@ -85,7 +85,7 @@ export const Habitat = () => {
 		);
 
 		setGraphData(data);
-	}, []);
+	}, [habitat]);
 
 	if (!Object.keys(habitat).length) {
 		return (

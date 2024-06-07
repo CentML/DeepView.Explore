@@ -24,14 +24,9 @@ export const DeploymentTarget = () => {
 	const [gpus, setGpus] = useState<string[]>([]);
 	const [errors, setErrors] = useState<ParseErrorType[]>([]);
 
-	const {
-		habitat: { predictions },
-		additionalProviders
-	} = analysis;
-
 	useEffect(() => {
 		async function parseData() {
-			const { cloudProviders, instanceArray, errors } = await loadJsonFiles(predictions, additionalProviders);
+			const { cloudProviders, instanceArray, errors } = await loadJsonFiles(analysis.habitat.predictions, analysis.additionalProviders);
 
 			if (errors) setErrors(errors);
 
@@ -73,7 +68,7 @@ export const DeploymentTarget = () => {
 			setRawData(instanceArray);
 		}
 
-		parseData();
+		if (Object.keys(analysis.habitat).length) parseData();
 	}, [analysis]);
 
 	if (!Object.keys(analysis.habitat).length) {
@@ -86,7 +81,6 @@ export const DeploymentTarget = () => {
 
 	return (
 		<Card title="Deployment target">
-			{errors.length && <ParseError errors={errors} />}
 			<div className="mb-4 flex flex-col gap-4">
 				<h2 className="text-xl">
 					Estimation for <strong>{formatNumber(totalIterations)}</strong> total iterations.
@@ -109,6 +103,8 @@ export const DeploymentTarget = () => {
 					handleMultipleSelected={() => setIsMultipleSelected(true)}
 				/>
 			</div>
+
+			{errors.length && <ParseError errors={errors} />}
 
 			<h3 className="border-px	mb-4 border-b pb-1 text-lg font-semibold">Deployment plan</h3>
 			{!selectedInstance ? (

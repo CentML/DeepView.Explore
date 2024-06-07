@@ -90,6 +90,7 @@ export const loadJsonFiles = async (habitatData: unknown, cloudProviderURLs: str
 					});
 				}
 			} catch (error) {
+				console.error(error);
 				errors.push(getInvalidUrlError('noJsonResponseFromUrl', resp));
 			}
 		} else {
