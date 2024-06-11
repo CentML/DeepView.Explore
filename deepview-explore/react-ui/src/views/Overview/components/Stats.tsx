@@ -15,7 +15,7 @@ export const Stats = () => {
 			<div className="grid grid-cols-1 gap-6 mdplus:grid-cols-3 mdplus:gap-0">
 				<div className="flex flex-col items-center">
 					<h3 className="font-semibold">Throughput</h3>
-					<div className="border-1 my-2 w-[100px] border-surface-200" />
+					<div className="border-1 my-2 w-[200px] border-surface-200" />
 
 					<div className="flex grow flex-col items-center justify-center">
 						{!throughput[0] || isNaN(throughput[0]) || throughput[0] === Infinity ? (
@@ -31,7 +31,7 @@ export const Stats = () => {
 							)
 						) : (
 							<>
-								<p className="text-8xl">
+								<p className="text-7xl">
 									<strong>{Math.round(throughput[1])}</strong>
 								</p>
 								<p className="text-sm opacity-60">samples/second</p>
@@ -42,7 +42,7 @@ export const Stats = () => {
 
 				<div className="flex grow flex-col items-center justify-center">
 					<h3 className="font-semibold">Memory Usage</h3>
-					<div className="border-1 my-2 w-[100px] border-surface-200" />
+					<div className="border-1 my-2 w-[200px] border-surface-200" />
 					{!memory[1] && !memory[2] ? (
 						<p className="text-sm italic">No memory usage</p>
 					) : (
@@ -77,18 +77,18 @@ export const Stats = () => {
 				) : (
 					<div className="flex flex-col items-center">
 						<h3 className="font-semibold">Utilization</h3>
-						<div className="border-1 my-2 w-[100px] border-surface-200" />
+						<div className="border-1 my-2 w-[200px] border-surface-200" />
 
-						<div className="flex grow items-center gap-8 text-center">
+						<div className="flex grow items-center gap-8 text-center md:flex-col md:justify-center md:gap-4">
 							<div>
-								<p className="text-6xl">
+								<p className="text-6xl md:text-5xl">
 									<strong>{utilizationData.allOperations.forward}%</strong>
 								</p>
 								<p className="text-sm opacity-60">Forward</p>
 							</div>
 
 							<div>
-								<p className="text-6xl">
+								<p className="text-6xl md:text-5xl">
 									<strong>{utilizationData.allOperations.backward}%</strong>
 								</p>
 								<p className="text-sm opacity-60">Backward</p>

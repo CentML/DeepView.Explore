@@ -6,7 +6,6 @@ const operationName = 'fancy_name';
 const parentProportion = 5;
 const totalProportion = 95;
 
-let throughput = 10;
 const utilizationData = {
 	allOperations: {
 		name: operationName,
@@ -17,14 +16,24 @@ const utilizationData = {
 	}
 };
 
+let throughput = 100;
+let statsUsage = {
+	breakdown: 0,
+	memory: [0, 0, 0],
+	throughput: [0, throughput, 0]
+};
+
 describe('Stats card', () => {
 	beforeEach(() => {
 		vi.mock('@context/useAnalysis', () => ({
 			useAnalysis: () => ({
-				throughput,
 				utilizationData,
+				statsUsage,
 				analysis: {
-					breakdown: {}
+					breakdown: {},
+					throughput: {
+						samples_per_second: throughput ? 100 : NaN
+					}
 				}
 			})
 		}));

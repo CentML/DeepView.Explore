@@ -91,10 +91,10 @@ export const TimeBreakdown = () => {
 
 	return (
 		<Card title="Time breakdown">
-			<div className={MIN_HEIGHT}>
-				<div className="flex flex-col gap-4">
+			<div className={`${MIN_HEIGHT} relative`}>
+				<div>
 					{timeBreakDown.fine.find(({ name }) => name === 'untracked') && (
-						<div className="flex justify-end">
+						<div className="absolute bottom-0 right-0">
 							<Switch id="untracked" checked={hideUntracked} onChange={() => setHideUntracked(!hideUntracked)} label="Hide untracked" />
 						</div>
 					)}
