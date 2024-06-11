@@ -28,12 +28,7 @@ export const ProjectInfo = () => {
 			const downloadLink = document.createElement('a');
 			downloadLink.href = URL.createObjectURL(blob);
 			downloadLink.download = 'profiling_session.json';
-
-			document.body.appendChild(downloadLink);
 			downloadLink.click();
-
-			// clean up
-			downloadLink.parentNode?.removeChild(downloadLink);
 			URL.revokeObjectURL(url);
 		} catch (error) {
 			console.error(error);
@@ -59,7 +54,7 @@ export const ProjectInfo = () => {
 				)}
 			</div>
 			<div className="mt-2">
-				<Button variant="primary" className="px-2" onClick={() => handleExport()}>
+				<Button variant="primary" className="px-2" onClick={handleExport}>
 					<Icon icon={faDownload} size="1x" className="mr-2" />
 					Export session
 				</Button>

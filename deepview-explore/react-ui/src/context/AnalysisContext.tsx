@@ -115,7 +115,7 @@ export const AnalysisProvider = ({ children }: PropsWithChildren) => {
 					break;
 				case 'analysis':
 					updateAnalysis(data as ProfilingData);
-					setStatsUsage(getUsageData(data as ProfilingData, null, null, profiling_data.breakdown.batch_size));
+					setStatsUsage(getUsageData(data as ProfilingData, null, null, data.breakdown.batch_size));
 					break;
 				case 'text_change':
 					setHasTextChanged(true);

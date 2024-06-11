@@ -104,7 +104,7 @@ export const DeploymentTarget = () => {
 				/>
 			</div>
 
-			{errors.length && <ParseError errors={errors} />}
+			{errors.length > 0 && <ParseError errors={errors} />}
 
 			<h3 className="border-px	mb-4 border-b pb-1 text-lg font-semibold">Deployment plan</h3>
 			{!selectedInstance ? (
