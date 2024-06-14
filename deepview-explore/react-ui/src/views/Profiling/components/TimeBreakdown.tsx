@@ -90,11 +90,13 @@ export const TimeBreakdown = () => {
 	}
 
 	return (
-		<Card title="Time breakdown">
+		<Card title="Time breakdown" tip="Hover to view detailed timing information. Where applicable, double click area to view related code. ">
 			<div className={`${MIN_HEIGHT} relative`}>
 				<div>
 					{timeBreakDown.fine.find(({ name }) => name === 'untracked') && (
-						<div className="absolute bottom-0 right-0">
+						<div className="absolute bottom-0 right-0 flex w-full flex-col-reverse items-start justify-between timelg:flex-row timelg:items-center">
+							<p className="text-xs italic">Breakdown is available as inline code annotations.</p>
+
 							<Switch id="untracked" checked={hideUntracked} onChange={() => setHideUntracked(!hideUntracked)} label="Hide untracked" />
 						</div>
 					)}
@@ -114,7 +116,7 @@ export const TimeBreakdown = () => {
 											backward,
 											forward,
 											total,
-											top: e.clientY + scrollY,
+											top: e.clientY + scrollY - 20,
 											left: e.clientX
 										})
 									}
@@ -141,24 +143,20 @@ export const TimeBreakdown = () => {
 						</div>
 					</div>
 				</div>
-
-				{tip && (
-					<div
-						className="border-1 z-100 absolute rounded-md border-surface-500 bg-white p-2 shadow-2xl"
-						style={{ top: tip.top, left: tip.left + 20 }}
-					>
-						<p className="font-semibold">{tip.label}</p>
-						{tip.label === 'untracked' ? (
-							<p className="text-sm">Time {tip.total?.toFixed(2)} ms</p>
-						) : (
-							<>
-								<p className="text-sm">Forward: {tip.forward?.toFixed(2)} ms</p>
-								<p className="text-sm">Backward: {tip.backward?.toFixed(2)} ms</p>
-							</>
-						)}
-					</div>
-				)}
 			</div>
+			{tip && (
+				<div className="border-1 z-100 absolute rounded-md border-surface-500 bg-white p-2 shadow-2xl" style={{ top: tip.top, left: tip.left + 20 }}>
+					<p className="font-semibold">{tip.label}</p>
+					{tip.label === 'untracked' ? (
+						<p className="text-sm">Time {tip.total?.toFixed(2)} ms</p>
+					) : (
+						<>
+							<p className="text-sm">Forward: {tip.forward?.toFixed(2)} ms</p>
+							<p className="text-sm">Backward: {tip.backward?.toFixed(2)} ms</p>
+						</>
+					)}
+				</div>
+			)}
 		</Card>
 	);
 };

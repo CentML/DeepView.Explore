@@ -8,11 +8,11 @@ const Profiling = () => {
 		<TabPanel name="profiling">
 			<div className="flex flex-col gap-4">
 				<div className="flex flex-col gap-4 mdplus:flex-row">
-					<div className="w-full lg:w-[30%]">
+					<div className="w-full lg:w-[35%]">
 						<TimeBreakdown />
 					</div>
 
-					<div className="w-full lg:w-[70%]">
+					<div className="w-full lg:w-[65%]">
 						<MemoryBatchSize />
 					</div>
 				</div>

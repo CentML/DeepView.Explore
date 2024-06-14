@@ -1,5 +1,5 @@
 import { useAnalysis } from '@context/useAnalysis';
-import { Alert, Button, Container } from 'react-bootstrap';
+import { Alert, Button } from 'react-bootstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
 import { vscode } from '@utils/vscode';

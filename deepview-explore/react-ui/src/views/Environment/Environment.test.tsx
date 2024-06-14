@@ -24,7 +24,7 @@ const energy = {
 	past_measurements: []
 };
 
-let analysis = {
+const analysis = {
 	energy
 };
 

@@ -47,7 +47,8 @@ export default {
 				}
 			},
 			screens: {
-				mdplus: '930px'
+				mdplus: '930px',
+				timelg: '1500px'
 			}
 		}
 	},

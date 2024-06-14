@@ -17,7 +17,7 @@ const utilizationData = {
 };
 
 let throughput = 100;
-let statsUsage = {
+const statsUsage = {
 	breakdown: 0,
 	memory: [0, 0, 0],
 	throughput: [0, throughput, 0]

@@ -33,7 +33,7 @@ export const DataParallelTraining = () => {
 				<div className="flex items-center justify-center">
 					<Alert variant="info">
 						<Icon icon={faInfoCircle} size="1x" className="mr-1" />
-						DDP Analysis was not included
+						DDP Analysis was not enabled. Please include DDP before starting analysis to enable.
 					</Alert>
 				</div>
 			</Card>

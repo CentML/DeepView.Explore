@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { vscode } from '@utils/vscode';
 import { ProjectInfo } from './ProjectInfo';
 
-let analysis = {
+const analysis = {
 	project_root: 'root',
 	project_entry_point: 'entry',
 	hardware_info: {
