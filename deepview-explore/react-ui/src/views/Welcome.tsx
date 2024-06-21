@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Button, Container, Card, Form } from 'react-bootstrap';
+import { LoadingSpinner } from '@centml/deepview-ui';
 import { vscode } from '@utils/vscode';
 import { useAnalysis } from '@context/useAnalysis';
-import LoadingSpinner from '@components/LoadingSpinner';
 
 const Welcome = () => {
 	const [isAnalyzing, setIsAnalyzing] = useState(false);

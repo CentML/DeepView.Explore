@@ -2,7 +2,7 @@ import {} from 'tailwindcss';
 import type { Config } from 'tailwindcss';
 
 export default {
-	content: ['./src/**/*.{html,js,tsx}'],
+	content: ['./src/**/*.{html,js,tsx}', './node_modules/@centml/deepview-ui/dist/**/*.js'],
 	theme: {
 		extend: {
 			backgroundImage: {

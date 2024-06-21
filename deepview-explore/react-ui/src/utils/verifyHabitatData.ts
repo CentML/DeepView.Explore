@@ -1,4 +1,4 @@
-import { ProfilingData } from '@interfaces/ProfileData';
+import type { ProfilingData } from '@centml/deepview-ui';
 import { profiling_data } from '@mocks/mock_data';
 
 export const verifyHabitatData = (data: ProfilingData) => {

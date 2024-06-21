@@ -20,13 +20,10 @@
 		"noFallthroughCasesInSwitch": true,
 		"baseUrl": "./src",
 		"paths": {
-			"@components/*": ["./components/*"],
 			"@context/*": ["./context/*"],
-			"@data/*": ["./data/*"],
 			"@interfaces/*": ["./interfaces/*"],
 			"@layout/*": ["./layout/*"],
 			"@mocks/*": ["./mocks/*"],
-			"@schema/*": ["./schema/*"],
 			"@utils/*": ["./utils/*"],
 			"@views/*": ["./views/*"]
 		}

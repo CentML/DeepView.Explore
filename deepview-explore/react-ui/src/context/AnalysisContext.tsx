@@ -1,18 +1,21 @@
 import { createContext, PropsWithChildren, useEffect, useMemo, useState } from 'react';
-import { vscode } from '@utils/vscode';
+import { computePercentage, getTraceByLevel, getUtilizationData, getUsageData } from '@centml/deepview-ui';
+import type { NodeData, ProfilingData, TimeBreakDown } from '@centml/deepview-ui';
 import { profiling_data } from '@mocks/mock_data';
-import type { ProfilingData, TimeBreakDown } from '@interfaces/ProfileData';
 import type { ErrorState } from '@interfaces/ErrorState';
-import { getTraceByLevel } from '@utils/getTraceByLevel';
-import { computePercentage } from '@utils/computePercentage';
-import { getUtilizationData, type UtilizationTableData } from '@utils/getUtilizationData';
+import { vscode } from '@utils/vscode';
 import { verifyHabitatData } from '@utils/verifyHabitatData';
-import { getUsageData, INITIAL_SLIDER_STATE } from '@utils/getUsageData';
 import type { Message } from './message.types';
+
+export const INITIAL_SLIDER_STATE = [50, 69, 420] as [number, number, number];
 
 interface TimeBreakDownState {
 	coarse: TimeBreakDown[];
 	fine: TimeBreakDown[];
+}
+export interface UtilizationTableData {
+	allOperations: NodeData;
+	hideInsignificant: NodeData;
 }
 
 interface AnalysisContext {

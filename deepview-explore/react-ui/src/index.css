@@ -5,7 +5,7 @@
 @tailwind utilities;
 
 body {
-	@apply p-0 m-0;
+	@apply m-0 p-0;
 }
 
 .btn-primary {
@@ -31,7 +31,7 @@ input[type='range'] {
 	outline: none;
 
 	overflow: hidden;
-  border-radius: 5px;
+	border-radius: 5px;
 }
 
 input[type='range']::-webkit-slider-runnable-track {

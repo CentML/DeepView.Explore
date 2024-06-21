@@ -1,9 +1,9 @@
+import { LoadingSpinner } from '@centml/deepview-ui';
 import ErrorView from '@views/Error';
 import Welcome from '@views/Welcome';
 import Layout from '@layout/Layout';
 import Views from '@views/index';
 import { useAnalysis } from '@context/useAnalysis';
-import LoadingSpinner from '@components/LoadingSpinner';
 
 function App() {
 	const { analysis, error, handleConnection, isLoading } = useAnalysis();
