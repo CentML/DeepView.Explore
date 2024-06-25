@@ -103,7 +103,7 @@ export const AnalysisProvider = ({ children }: PropsWithChildren) => {
 
 		if (useMockData) {
 			updateAnalysis(profiling_data);
-			setStatsUsage(getUsageData(profiling_data, 0.5, null, undefined));
+			setStatsUsage(getUsageData(profiling_data, 0.5, null, profiling_data.breakdown.batch_size));
 			setIsLoading(false);
 			return;
 		} else {
