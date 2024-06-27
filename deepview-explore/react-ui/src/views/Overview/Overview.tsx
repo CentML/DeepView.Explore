@@ -8,7 +8,7 @@ const Overview = () => {
 
 	const handleExport = () => {
 		try {
-			const blob = new Blob([JSON.stringify({ analysis, epochs, iterations, encodedFiles })]);
+			const blob = new Blob([JSON.stringify({ analysis, epochs, iterations, encodedFiles: encodedFiles ?? [] })]);
 			const url = URL.createObjectURL(blob);
 
 			const downloadLink = document.createElement('a');
