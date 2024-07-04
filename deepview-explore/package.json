@@ -70,6 +70,7 @@
   "scripts": {
     "vscode:prepublish": "npm run clean && node esbuild.mjs production",
     "esbuild": "npm run clean && node esbuild.mjs base",
+    "build": "cd react-ui && npm run build && cd .. && npm run esbuild",
     "watch": "npm run clean && node esbuild.mjs debug",
     "clean": "rm -rf ./out",
     "test": "mocha"

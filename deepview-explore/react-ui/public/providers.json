@@ -1,877 +1,790 @@
 ﻿[
-  {
-    "name": "gcp",
-    "logo": "resources/google.png",
-    "color": "#ea4335",
-    "pue": 1.1,
-    "regions": {
-      "us-central1": {
-        "emissionsFactor": 0.00003178
-      },
-      "us-east1": {
-        "emissionsFactor": 0.0003504
-      },
-      "us-east4": {
-        "emissionsFactor": 0.00015162
-      },
-      "us-west1": {
-        "emissionsFactor": 0.0000078
-      },
-      "us-west2": {
-        "emissionsFactor": 0.00011638
-      },
-      "us-west4": {
-        "emissionsFactor": 0.00036855
-      },
-      "asia-east1": {
-        "emissionsFactor": 0.0004428
-      },
-      "asia-east2": {
-        "emissionsFactor": 0.000453
-      },
-      "asia-northeast1": {
-        "emissionsFactor": 0.00048752
-      },
-      "asia-northeast3": {
-        "emissionsFactor": 0.00031533
-      },
-      "asia-south1": {
-        "emissionsFactor": 0.00063448
-      },
-      "asia-southeast1": {
-        "emissionsFactor": 0.00047328
-      },
-      "asia-southeast2": {
-        "emissionsFactor": 0.000647
-      },
-      "australia-southeast1": {
-        "emissionsFactor": 0.00064703
-      },
-      "europe-central2": {
-        "emissionsFactor": 0.000622
-      },
-        "europe-west1": {
-        "emissionsFactor": 0.00004452
-      },
-      "europe-west2": {
-        "emissionsFactor": 0.00009471
-      },
-      "europe-west3": {
-        "emissionsFactor": 0.00010841
-      },
-      "europe-west4": {
-        "emissionsFactor": 0.000164
-      },
-      "northamerica-northeast1": {
-        "emissionsFactor": 0.000027
-      },
-      "southamerica-east1": {
-        "emissionsFactor": 0.00001236
-      }
-    },
-    "instances": [
-      {
-        "name": "a2-highgpu-1g",
-        "gpu": "a100",
-        "vcpus": 12,
-        "ram": 85,
-        "ngpus": 1,
-        "cost": 3.67,
-        "regions": [
-          "asia-northeast1",
-          "asia-northeast3",
-          "asia-southeast1",
-          "europe-west4",
-          "us-central1",
-          "us-east1",
-          "us-west1",
-          "us-west4"
-        ]
-      },
-      {
-        "name": "n1-highmem-4",
-        "gpu": "t4",
-        "vcpus": 4,
-        "ram": 26,
-        "ngpus": 1,
-        "cost": 0.59,
-        "regions": [
-          "asia-east1",
-          "asia-east2",
-          "asia-northeast1",
-          "asia-northeast3",
-          "asia-south1",
-          "asia-southeast1",
-          "asia-southeast2",
-          "australia-southeast1",
-          "europe-central2",
-          "europe-west1",
-          "europe-west2",
-          "europe-west3",
-          "europe-west4",
-          "northamerica-northeast1",
-          "southamerica-east1",
-          "us-central1",
-          "us-east1",
-          "us-east4",
-          "us-west1",
-          "us-west2",
-          "us-west4"
-        ]
-      },
-      {
-        "name": "n1-highmem-4",
-        "gpu": "v100",
-        "vcpus": 4,
-        "ram": 26,
-        "ngpus": 1,
-        "cost": 2.72,
-        "regions": [
-          "asia-east1",
-          "europe-west4",
-          "us-central1",
-          "us-east1",
-          "us-west1"
-        ]
-      },
-      {
-        "name": "n1-highmem-4",
-        "gpu": "p100",
-        "vcpus": 4,
-        "ram": 26,
-        "ngpus": 1,
-        "cost": 1.7,
-        "regions": [
-          "asia-east1",
-          "australia-southeast1",
-          "europe-west1",
-          "europe-west4",
-          "us-central1",
-          "us-east1",
-          "us-west1"
-        ]
-      },
-      {
-        "name": "a2-highgpu-2g",
-        "gpu": "a100",
-        "vcpus": 24,
-        "ram": 170,
-        "ngpus": 2,
-        "cost": 7.35,
-        "regions": [
-          "asia-northeast1",
-          "asia-northeast3",
-          "asia-southeast1",
-          "europe-west4",
-          "us-central1",
-          "us-east1",
-          "us-west1",
-          "us-west4"
-        ]
-      },
-      {
-        "name": "n1-highmem-8",
-        "gpu": "t4",
-        "vcpus": 8,
-        "ram": 52,
-        "ngpus": 2,
-        "cost": 1.17,
-        "regions": [
-          "asia-east1",
-          "asia-east2",
-          "asia-northeast1",
-          "asia-northeast3",
-          "asia-south1",
-          "asia-southeast1",
-          "asia-southeast2",
-          "australia-southeast1",
-          "europe-central2",
-          "europe-west1",
-          "europe-west2",
-          "europe-west3",
-          "europe-west4",
-          "northamerica-northeast1",
-          "southamerica-east1",
-          "us-central1",
-          "us-east1",
-          "us-east4",
-          "us-west1",
-          "us-west2",
-          "us-west4"
-        ]
-      },
-      {
-        "name": "n1-highmem-8",
-        "gpu": "v100",
-        "vcpus": 8,
-        "ram": 52,
-        "ngpus": 2,
-        "cost": 5.43,
-        "regions": [
-          "asia-east1",
-          "europe-west4",
-          "us-central1",
-          "us-east1",
-          "us-west1"
-        ]
-      },
-      {
-        "name": "n1-highmem-8",
-        "gpu": "p100",
-        "vcpus": 8,
-        "ram": 52,
-        "ngpus": 2,
-        "cost": 3.39,
-        "regions": [
-          "asia-east1",
-          "australia-southeast1",
-          "europe-west1",
-          "europe-west4",
-          "us-central1",
-          "us-east1",
-          "us-west1"
-        ]
-      },
-      {
-        "name": "a2-highgpu-4g",
-        "gpu": "a100",
-        "vcpus": 48,
-        "ram": 340,
-        "ngpus": 4,
-        "cost": 14.69,
-        "regions": [
-          "asia-northeast1",
-          "asia-northeast3",
-          "asia-southeast1",
-          "europe-west4",
-          "us-central1",
-          "us-east1",
-          "us-west1",
-          "us-west4"
-        ]
-      },
-      {
-        "name": "n1-highmem-16",
-        "gpu": "t4",
-        "vcpus": 16,
-        "ram": 104,
-        "ngpus": 4,
-        "cost": 2.35,
-        "regions": [
-          "asia-east1",
-          "asia-east2",
-          "asia-northeast1",
-          "asia-northeast3",
-          "asia-south1",
-          "asia-southeast1",
-          "asia-southeast2",
-          "australia-southeast1",
-          "europe-central2",
-          "europe-west1",
-          "europe-west2",
-          "europe-west3",
-          "europe-west4",
-          "northamerica-northeast1",
-          "southamerica-east1",
-          "us-central1",
-          "us-east1",
-          "us-east4",
-          "us-west1",
-          "us-west2",
-          "us-west4"
-        ]
-      },
-      {
-        "name": "n1-highmem-16",
-        "gpu": "v100",
-        "vcpus": 16,
-        "ram": 104,
-        "ngpus": 4,
-        "cost": 10.87,
-        "regions": [
-          "asia-east1",
-          "europe-west4",
-          "us-central1",
-          "us-east1",
-          "us-west1"
-        ]
-      },
-      {
-        "name": "n1-highmem-16",
-        "gpu": "p100",
-        "vcpus": 16,
-        "ram": 104,
-        "ngpus": 4,
-        "cost": 6.79,
-        "regions": [
-          "asia-east1",
-          "australia-southeast1",
-          "europe-west1",
-          "europe-west4",
-          "us-central1",
-          "us-east1",
-          "us-west1"
-        ]
-      },
-      {
-        "name": "a2-highgpu-8g",
-        "gpu": "a100",
-        "vcpus": 96,
-        "ram": 680,
-        "ngpus": 8,
-        "cost": 29.39
-      }
-    ]
-  },
-  {
-    "name": "aws",
-    "logo": "resources/aws.png",
-    "color": "#ff9900",
-    "pue": 1.135,
-    "regions": {
-      "us-east-1": {
-        "emissionsFactor": 0.000379069
-      },
-      "us-east-2": {
-        "emissionsFactor": 0.000410608
-      },
-      "us-west-1":{ 
-        "emissionsFactor": 0.000322167
-      },
-      "us-west-2": {
-        "emissionsFactor": 0.000322167
-      },
-      "af-south-1": {
-        "emissionsFactor": 0.0009006
-      },
-      "ap-east-1": {
-        "emissionsFactor": 0.00071
-      },
-      "ap-south-1": {
-        "emissionsFactor": 0.0007082
-      },
-      "ap-northeast-3": {
-        "emissionsFactor": 0.0004658
-      },
-      "ap-northeast-2": {
-        "emissionsFactor": 0.0004156
-      },
-      "ap-southeast-1": {
-        "emissionsFactor": 0.000408
-      },
-      "ap-southeast-2": {
-        "emissionsFactor": 0.00076
-      },
-      "ap-southeast-3": {
-        "emissionsFactor": 0.0007177
-      },
-      "ap-northeast-1": {
-        "emissionsFactor": 0.0004658
-      },
-      "ca-central-1": {
-        "emissionsFactor": 0.00012
-      },
-      "cn-north-1": {
-        "emissionsFactor": 0.0005374
-      },
-      "cn-northwest-1": {
-        "emissionsFactor": 0.0005374
-      },
-      "eu-central-1": {
-        "emissionsFactor": 0.000311
-      },
-      "eu-west-1": {
-        "emissionsFactor": 0.0002786
-      },
-      "eu-west-2": {
-        "emissionsFactor": 0.000225
-      },
-      "eu-south-1": {
-        "emissionsFactor": 0.0002134
-      },
-      "eu-west-3": {
-        "emissionsFactor": 0.0000511
-      },
-      "eu-north-1": {
-        "emissionsFactor": 0.0000088
-      },
-      "me-south-1": {
-        "emissionsFactor": 0.0005059
-      },
-      "me-central-1": {
-        "emissionsFactor": 0.0004041
-      },
-      "sa-east-1": {
-        "emissionsFactor": 0.0000617
-      }
-    },
-    "instances": [
-      {
-        "name": "p3.2xlarge",
-        "vcpus": 8,
-        "ram": 61,
-        "gpu": "v100",
-        "ngpus": 1,
-        "cost": 3.06,
-        "regions": [
-          "us-east-1",
-          "us-east-2",
-          "us-west-2",
-          "ap-northeast-1",
-          "ap-northeast-2",
-          "ap-southeast-1",
-          "ap-southeast-2",
-          "ca-central-1",
-          "eu-central-1",
-          "eu-west-1",
-          "eu-west-2"
-        ]
-      },
-      {
-        "name": "g4dn.xlarge",
-        "vcpus": 4,
-        "ram": 16,
-        "gpu": "t4",
-        "ngpus": 1,
-        "cost": 0.526,
-        "regions": [
-          "us-east-1",
-          "af-south-1",
-          "ap-east-1",
-          "ap-south-1",
-          "ap-northeast-3",
-          "ap-northeast-2",
-          "ap-southeast-1",
-          "ap-southeast-2",
-          "ap-northeast-1",
-          "ca-central-1",
-          "eu-central-1",
-          "eu-west-1",
-          "eu-west-2",
-          "eu-west-3",
-          "eu-north-1",
-          "eu-south-1",
-          "me-south-1",
-          "sa-east-1",
-          "us-east-2",
-          "us-west-1",
-          "us-west-2"
-        ]
-      },
-      {
-        "name": "g4dn.12xlarge",
-        "vcpus": 48,
-        "ram": 192,
-        "gpu": "t4",
-        "ngpus": 4,
-        "cost": 3.912,
-        "regions": [
-          "us-east-1",
-          "af-south-1",
-          "ap-east-1",
-          "ap-south-1",
-          "ap-northeast-3",
-          "ap-northeast-2",
-          "ap-southeast-1",
-          "ap-southeast-2",
-          "ap-northeast-1",
-          "ca-central-1",
-          "eu-central-1",
-          "eu-west-1",
-          "eu-west-2",
-          "eu-west-3",
-          "eu-north-1",
-          "eu-south-1",
-          "me-south-1",
-          "sa-east-1",
-          "us-east-2",
-          "us-west-1",
-          "us-west-2"
-        ]
-      },
-      {
-        "name": "p3.8xlarge",
-        "gpu": "v100",
-        "vcpus": 32,
-        "ram": 244,
-        "ngpus": 4,
-        "cost": 12.24,
-        "regions": [
-          "us-east-1",
-          "us-east-2",
-          "us-west-2",
-          "ap-northeast-1",
-          "ap-northeast-2",
-          "ap-southeast-1",
-          "ap-southeast-2",
-          "ca-central-1",
-          "eu-central-1",
-          "eu-west-1",
-          "eu-west-2"
-        ]
-      },
-      {
-        "name": "p4d.24xlarge",
-        "gpu": "a100",
-        "vcpus": 96,
-        "ram": 1152,
-        "ngpus": 8,
-        "cost": 32.77
-      }
-    ]
-  },
-  {
-    "name": "azure",
-    "logo": "resources/azure.png",
-    "color": "#008AD7",
-    "pue": 1.185,
-    "regions": {
-      "South Africa North":{
-        "emissionsFactor": 0.0009006
-      },
-      "South Africa West":{
-        "emissionsFactor": 0.0009006
-      },
-      "Australia Central":{
-        "emissionsFactor": 0.00079
-      },
-      "Australia East":{
-        "emissionsFactor": 0.00079
-      },
-      "Australia Southeast":{
-        "emissionsFactor": 0.00096
-      },
-      "East Asia":{
-        "emissionsFactor": 0.00071
-      },
-      "Southeast Asia":{
-        "emissionsFactor": 0.000408
-      },
-      "Japan East":{
-        "emissionsFactor": 0.0004658
-      },
-      "Japan West":{
-        "emissionsFactor": 0.0004658
-      },
-      "Korea Central":{
-        "emissionsFactor": 0.0004156
-      },
-      "North Europe":{
-        "emissionsFactor": 0.0002786
-      },
-      "West Europe": {
-        "emissionsFactor": 0.0003284
-      },
-      "France Central": {
-        "emissionsFactor": 0.00005128
-      },
-      "Sweden Central": {
-        "emissionsFactor": 0.00000567
-      },
-      "Switzerland North": {
-        "emissionsFactor": 0.00001152
-      },
-      "Central India": {
-        "emissionsFactor": 0.0007082
-      },
-      "South India": {
-        "emissionsFactor": 0.0007082
-      },
-      "UK South": {
-        "emissionsFactor": 0.000225
-      },
-      "UK West": {
-        "emissionsFactor": 0.000225
-      },
-      "Germany West Central": {
-        "emissionsFactor": 0.00033866
-      },
-      "Norway East": {
-        "emissionsFactor": 0.00000762
-      },
-      "UAE North": {
-        "emissionsFactor": 0.0004041
-      },
-      "Canada Central": {
-        "emissionsFactor": 0.00012
-      },
-      "Canada East": {
-        "emissionsFactor": 0.00012
-      },
-      "Central US": {
-        "emissionsFactor": 0.000426254
-      },
-      "East US": {
-        "emissionsFactor": 0.000379069
-      },
-      "East US 2": {
-        "emissionsFactor": 0.000379069
-      },
-      "North Central US": {
-        "emissionsFactor": 0.000410608
-      },
-      "South Central US": {
-        "emissionsFactor": 0.000373231
-      },
-      "West Central US": {
-        "emissionsFactor": 0.000322167
-      },
-      "West US": {
-        "emissionsFactor": 0.000322167
-      },
-      "West US 2": {
-        "emissionsFactor": 0.000322167
-      },
-      "West US 3": {
-        "emissionsFactor": 0.000322167
-      },
-      "Brazil South": {
-        "emissionsFactor": 0.0000617
-      },
-      "China East": {
-        "emissionsFactor": 0.0005374
-      },
-      "China East 2": {
-        "emissionsFactor": 0.0005374
-      },
-      "China North": {
-        "emissionsFactor": 0.0005374
-      },
-      "China North 2": {
-        "emissionsFactor": 0.0005374
-      },
-      "China North 3": {
-        "emissionsFactor": 0.0005374
-      }  
-    },
-    "instances": [
-      {
-        "name": "NC24ads A100 v4",
-        "vcpus": 24,
-        "ram": 220,
-        "gpu": "a100",
-        "ngpus": 1,
-        "cost": 3.673
-      },
-      {
-        "name": "NC6s v2",
-        "vcpus": 6,
-        "ram": 112,
-        "gpu": "p100",
-        "ngpus": 1,
-        "cost": 2.07,
-        "regions": [
-          "Southeast Asia",
-          "West Europe",
-          "East US",
-          "South Central US",
-          "West US 2"
-        ]
-      },
-      {
-        "name": "NC6s v3",
-        "gpu": "v100",
-        "vcpus": 6,
-        "ram": 112,
-        "ngpus": 1,
-        "cost": 3.06,
-        "regions": [
-          "East Asia",
-          "Southeast Asia",
-          "Australia East",
-          "Canada Central",
-          "China East 2",
-          "China North 2",
-          "China North 3",
-          "North Europe",
-          "West Europe",
-          "France Central",
-          "Central India",
-          "Japan East",
-          "Korea Central",
-          "Switzerland North",
-          "UK South",
-          "Central US",
-          "East US",
-          "East US 2",
-          "South Central US",
-          "West US",
-          "West US 2",
-          "West US 3"
-        ]
-      },
-      {
-        "name": "NC4as T4 v3",
-        "gpu": "t4",
-        "vcpus": 4,
-        "ram": 28,
-        "ngpus": 1,
-        "cost": 0.526,
-        "regions": [
-          "Southeast Asia",
-          "Australia East",
-          "Brazil South",
-          "North Europe",
-          "West Europe",
-          "Germany West Central",
-          "Central India",
-          "Japan East",
-          "Korea Central",
-          "UK South",
-          "East US",
-          "East US 2",
-          "North Central US",
-          "South Central US",
-          "West US",
-          "West US 2",
-          "West US 3"
-        ]
-      },
-      {
-        "name": "NC48ads A100 v4",
-        "vcpus": 48,
-        "ram": 440,
-        "gpu": "a100",
-        "ngpus": 2,
-        "cost": 7.346
-      },
-      {
-        "name": "NC12s v2",
-        "gpu": "p100",
-        "vcpus": 12,
-        "ram": 224,
-        "ngpus": 2,
-        "cost": 4.14,
-        "regions": [
-          "Southeast Asia",
-          "West Europe",
-          "East US",
-          "South Central US",
-          "West US 2"
-        ]
-      },
-      {
-        "name": "NC12s v3",
-        "gpu": "v100",
-        "vcpus": 12,
-        "ram": 224,
-        "ngpus": 2,
-        "cost": 6.12,
-        "regions": [
-          "East Asia",
-          "Southeast Asia",
-          "Australia East",
-          "Canada Central",
-          "China East 2",
-          "China North 2",
-          "China North 3",
-          "North Europe",
-          "West Europe",
-          "France Central",
-          "Central India",
-          "Japan East",
-          "Korea Central",
-          "Switzerland North",
-          "UK South",
-          "Central US",
-          "East US",
-          "East US 2",
-          "South Central US",
-          "West US",
-          "West US 2",
-          "West US 3"
-        ]
-      },
-      {
-        "name": "NC96ads A100 v4",
-        "vcpus": 96,
-        "ram": 880,
-        "gpu": "a100",
-        "ngpus": 4,
-        "cost": 14.692
-      },
-      {
-        "name": "NC24rs v2",
-        "gpu": "p100",
-        "vcpus": 24,
-        "ram": 448,
-        "ngpus": 4,
-        "cost": 9.108,
-        "regions": [
-          "Southeast Asia",
-          "West Europe",
-          "East US",
-          "South Central US",
-          "West US 2"
-        ]
-      },
-      {
-        "name": "NC24rs v3",
-        "gpu": "v100",
-        "vcpus": 24,
-        "ram": 448,
-        "ngpus": 4,
-        "cost": 13.46,
-        "regions": [
-          "East Asia",
-          "Southeast Asia",
-          "Australia East",
-          "Canada Central",
-          "China East 2",
-          "China North 2",
-          "China North 3",
-          "North Europe",
-          "West Europe",
-          "France Central",
-          "Central India",
-          "Japan East",
-          "Korea Central",
-          "Switzerland North",
-          "UK South",
-          "Central US",
-          "East US",
-          "East US 2",
-          "South Central US",
-          "West US",
-          "West US 2",
-          "West US 3"
-        ]
-      },
-      {
-        "name": "NC64as T4 v3",
-        "gpu": "t4",
-        "vcpus": 64,
-        "ram": 440,
-        "ngpus": 4,
-        "cost": 4.352,
-        "regions": [
-          "Southeast Asia",
-          "Australia East",
-          "Brazil South",
-          "North Europe",
-          "West Europe",
-          "Germany West Central",
-          "Central India",
-          "Japan East",
-          "Korea Central",
-          "UK South",
-          "East US",
-          "East US 2",
-          "North Central US",
-          "South Central US",
-          "West US",
-          "West US 2",
-          "West US 3"
-        ]
-      },
-      {
-        "name": "ND96asr A100 v4",
-        "vcpus": 96,
-        "ram": 900,
-        "gpu": "a100",
-        "ngpus": 8,
-        "cost": 27.197
-      }
-    ]
-  }
+	{
+		"name": "gcp",
+		"logo": "resources/google.png",
+		"color": "#ea4335",
+		"pue": 1.1,
+		"regions": {
+			"us-central1": {
+				"emissionsFactor": 0.00003178
+			},
+			"us-east1": {
+				"emissionsFactor": 0.0003504
+			},
+			"us-east4": {
+				"emissionsFactor": 0.00015162
+			},
+			"us-west1": {
+				"emissionsFactor": 0.0000078
+			},
+			"us-west2": {
+				"emissionsFactor": 0.00011638
+			},
+			"us-west4": {
+				"emissionsFactor": 0.00036855
+			},
+			"asia-east1": {
+				"emissionsFactor": 0.0004428
+			},
+			"asia-east2": {
+				"emissionsFactor": 0.000453
+			},
+			"asia-northeast1": {
+				"emissionsFactor": 0.00048752
+			},
+			"asia-northeast3": {
+				"emissionsFactor": 0.00031533
+			},
+			"asia-south1": {
+				"emissionsFactor": 0.00063448
+			},
+			"asia-southeast1": {
+				"emissionsFactor": 0.00047328
+			},
+			"asia-southeast2": {
+				"emissionsFactor": 0.000647
+			},
+			"australia-southeast1": {
+				"emissionsFactor": 0.00064703
+			},
+			"europe-central2": {
+				"emissionsFactor": 0.000622
+			},
+			"europe-west1": {
+				"emissionsFactor": 0.00004452
+			},
+			"europe-west2": {
+				"emissionsFactor": 0.00009471
+			},
+			"europe-west3": {
+				"emissionsFactor": 0.00010841
+			},
+			"europe-west4": {
+				"emissionsFactor": 0.000164
+			},
+			"northamerica-northeast1": {
+				"emissionsFactor": 0.000027
+			},
+			"southamerica-east1": {
+				"emissionsFactor": 0.00001236
+			}
+		},
+		"instances": [
+			{
+				"name": "a2-highgpu-1g",
+				"gpu": "a100",
+				"vcpus": 12,
+				"ram": 85,
+				"ngpus": 1,
+				"cost": 3.67,
+				"regions": ["asia-northeast1", "asia-northeast3", "asia-southeast1", "europe-west4", "us-central1", "us-east1", "us-west1", "us-west4"]
+			},
+			{
+				"name": "n1-highmem-4",
+				"gpu": "t4",
+				"vcpus": 4,
+				"ram": 26,
+				"ngpus": 1,
+				"cost": 0.59,
+				"regions": [
+					"asia-east1",
+					"asia-east2",
+					"asia-northeast1",
+					"asia-northeast3",
+					"asia-south1",
+					"asia-southeast1",
+					"asia-southeast2",
+					"australia-southeast1",
+					"europe-central2",
+					"europe-west1",
+					"europe-west2",
+					"europe-west3",
+					"europe-west4",
+					"northamerica-northeast1",
+					"southamerica-east1",
+					"us-central1",
+					"us-east1",
+					"us-east4",
+					"us-west1",
+					"us-west2",
+					"us-west4"
+				]
+			},
+			{
+				"name": "n1-highmem-4",
+				"gpu": "v100",
+				"vcpus": 4,
+				"ram": 26,
+				"ngpus": 1,
+				"cost": 2.72,
+				"regions": ["asia-east1", "europe-west4", "us-central1", "us-east1", "us-west1"]
+			},
+			{
+				"name": "n1-highmem-4",
+				"gpu": "p100",
+				"vcpus": 4,
+				"ram": 26,
+				"ngpus": 1,
+				"cost": 1.7,
+				"regions": ["asia-east1", "australia-southeast1", "europe-west1", "europe-west4", "us-central1", "us-east1", "us-west1"]
+			},
+			{
+				"name": "a2-highgpu-2g",
+				"gpu": "a100",
+				"vcpus": 24,
+				"ram": 170,
+				"ngpus": 2,
+				"cost": 7.35,
+				"regions": ["asia-northeast1", "asia-northeast3", "asia-southeast1", "europe-west4", "us-central1", "us-east1", "us-west1", "us-west4"]
+			},
+			{
+				"name": "n1-highmem-8",
+				"gpu": "t4",
+				"vcpus": 8,
+				"ram": 52,
+				"ngpus": 2,
+				"cost": 1.17,
+				"regions": [
+					"asia-east1",
+					"asia-east2",
+					"asia-northeast1",
+					"asia-northeast3",
+					"asia-south1",
+					"asia-southeast1",
+					"asia-southeast2",
+					"australia-southeast1",
+					"europe-central2",
+					"europe-west1",
+					"europe-west2",
+					"europe-west3",
+					"europe-west4",
+					"northamerica-northeast1",
+					"southamerica-east1",
+					"us-central1",
+					"us-east1",
+					"us-east4",
+					"us-west1",
+					"us-west2",
+					"us-west4"
+				]
+			},
+			{
+				"name": "n1-highmem-8",
+				"gpu": "v100",
+				"vcpus": 8,
+				"ram": 52,
+				"ngpus": 2,
+				"cost": 5.43,
+				"regions": ["asia-east1", "europe-west4", "us-central1", "us-east1", "us-west1"]
+			},
+			{
+				"name": "n1-highmem-8",
+				"gpu": "p100",
+				"vcpus": 8,
+				"ram": 52,
+				"ngpus": 2,
+				"cost": 3.39,
+				"regions": ["asia-east1", "australia-southeast1", "europe-west1", "europe-west4", "us-central1", "us-east1", "us-west1"]
+			},
+			{
+				"name": "a2-highgpu-4g",
+				"gpu": "a100",
+				"vcpus": 48,
+				"ram": 340,
+				"ngpus": 4,
+				"cost": 14.69,
+				"regions": ["asia-northeast1", "asia-northeast3", "asia-southeast1", "europe-west4", "us-central1", "us-east1", "us-west1", "us-west4"]
+			},
+			{
+				"name": "n1-highmem-16",
+				"gpu": "t4",
+				"vcpus": 16,
+				"ram": 104,
+				"ngpus": 4,
+				"cost": 2.35,
+				"regions": [
+					"asia-east1",
+					"asia-east2",
+					"asia-northeast1",
+					"asia-northeast3",
+					"asia-south1",
+					"asia-southeast1",
+					"asia-southeast2",
+					"australia-southeast1",
+					"europe-central2",
+					"europe-west1",
+					"europe-west2",
+					"europe-west3",
+					"europe-west4",
+					"northamerica-northeast1",
+					"southamerica-east1",
+					"us-central1",
+					"us-east1",
+					"us-east4",
+					"us-west1",
+					"us-west2",
+					"us-west4"
+				]
+			},
+			{
+				"name": "n1-highmem-16",
+				"gpu": "v100",
+				"vcpus": 16,
+				"ram": 104,
+				"ngpus": 4,
+				"cost": 10.87,
+				"regions": ["asia-east1", "europe-west4", "us-central1", "us-east1", "us-west1"]
+			},
+			{
+				"name": "n1-highmem-16",
+				"gpu": "p100",
+				"vcpus": 16,
+				"ram": 104,
+				"ngpus": 4,
+				"cost": 6.79,
+				"regions": ["asia-east1", "australia-southeast1", "europe-west1", "europe-west4", "us-central1", "us-east1", "us-west1"]
+			},
+			{
+				"name": "a2-highgpu-8g",
+				"gpu": "a100",
+				"vcpus": 96,
+				"ram": 680,
+				"ngpus": 8,
+				"cost": 29.39
+			}
+		]
+	},
+	{
+		"name": "aws",
+		"logo": "resources/aws.png",
+		"color": "#ff9900",
+		"pue": 1.135,
+		"regions": {
+			"us-east-1": {
+				"emissionsFactor": 0.000379069
+			},
+			"us-east-2": {
+				"emissionsFactor": 0.000410608
+			},
+			"us-west-1": {
+				"emissionsFactor": 0.000322167
+			},
+			"us-west-2": {
+				"emissionsFactor": 0.000322167
+			},
+			"af-south-1": {
+				"emissionsFactor": 0.0009006
+			},
+			"ap-east-1": {
+				"emissionsFactor": 0.00071
+			},
+			"ap-south-1": {
+				"emissionsFactor": 0.0007082
+			},
+			"ap-northeast-3": {
+				"emissionsFactor": 0.0004658
+			},
+			"ap-northeast-2": {
+				"emissionsFactor": 0.0004156
+			},
+			"ap-southeast-1": {
+				"emissionsFactor": 0.000408
+			},
+			"ap-southeast-2": {
+				"emissionsFactor": 0.00076
+			},
+			"ap-southeast-3": {
+				"emissionsFactor": 0.0007177
+			},
+			"ap-northeast-1": {
+				"emissionsFactor": 0.0004658
+			},
+			"ca-central-1": {
+				"emissionsFactor": 0.00012
+			},
+			"cn-north-1": {
+				"emissionsFactor": 0.0005374
+			},
+			"cn-northwest-1": {
+				"emissionsFactor": 0.0005374
+			},
+			"eu-central-1": {
+				"emissionsFactor": 0.000311
+			},
+			"eu-west-1": {
+				"emissionsFactor": 0.0002786
+			},
+			"eu-west-2": {
+				"emissionsFactor": 0.000225
+			},
+			"eu-south-1": {
+				"emissionsFactor": 0.0002134
+			},
+			"eu-west-3": {
+				"emissionsFactor": 0.0000511
+			},
+			"eu-north-1": {
+				"emissionsFactor": 0.0000088
+			},
+			"me-south-1": {
+				"emissionsFactor": 0.0005059
+			},
+			"me-central-1": {
+				"emissionsFactor": 0.0004041
+			},
+			"sa-east-1": {
+				"emissionsFactor": 0.0000617
+			}
+		},
+		"instances": [
+			{
+				"name": "p3.2xlarge",
+				"vcpus": 8,
+				"ram": 61,
+				"gpu": "v100",
+				"ngpus": 1,
+				"cost": 3.06,
+				"regions": [
+					"us-east-1",
+					"us-east-2",
+					"us-west-2",
+					"ap-northeast-1",
+					"ap-northeast-2",
+					"ap-southeast-1",
+					"ap-southeast-2",
+					"ca-central-1",
+					"eu-central-1",
+					"eu-west-1",
+					"eu-west-2"
+				]
+			},
+			{
+				"name": "g4dn.xlarge",
+				"vcpus": 4,
+				"ram": 16,
+				"gpu": "t4",
+				"ngpus": 1,
+				"cost": 0.526,
+				"regions": [
+					"us-east-1",
+					"af-south-1",
+					"ap-east-1",
+					"ap-south-1",
+					"ap-northeast-3",
+					"ap-northeast-2",
+					"ap-southeast-1",
+					"ap-southeast-2",
+					"ap-northeast-1",
+					"ca-central-1",
+					"eu-central-1",
+					"eu-west-1",
+					"eu-west-2",
+					"eu-west-3",
+					"eu-north-1",
+					"eu-south-1",
+					"me-south-1",
+					"sa-east-1",
+					"us-east-2",
+					"us-west-1",
+					"us-west-2"
+				]
+			},
+			{
+				"name": "g4dn.12xlarge",
+				"vcpus": 48,
+				"ram": 192,
+				"gpu": "t4",
+				"ngpus": 4,
+				"cost": 3.912,
+				"regions": [
+					"us-east-1",
+					"af-south-1",
+					"ap-east-1",
+					"ap-south-1",
+					"ap-northeast-3",
+					"ap-northeast-2",
+					"ap-southeast-1",
+					"ap-southeast-2",
+					"ap-northeast-1",
+					"ca-central-1",
+					"eu-central-1",
+					"eu-west-1",
+					"eu-west-2",
+					"eu-west-3",
+					"eu-north-1",
+					"eu-south-1",
+					"me-south-1",
+					"sa-east-1",
+					"us-east-2",
+					"us-west-1",
+					"us-west-2"
+				]
+			},
+			{
+				"name": "p3.8xlarge",
+				"gpu": "v100",
+				"vcpus": 32,
+				"ram": 244,
+				"ngpus": 4,
+				"cost": 12.24,
+				"regions": [
+					"us-east-1",
+					"us-east-2",
+					"us-west-2",
+					"ap-northeast-1",
+					"ap-northeast-2",
+					"ap-southeast-1",
+					"ap-southeast-2",
+					"ca-central-1",
+					"eu-central-1",
+					"eu-west-1",
+					"eu-west-2"
+				]
+			},
+			{
+				"name": "p4d.24xlarge",
+				"gpu": "a100",
+				"vcpus": 96,
+				"ram": 1152,
+				"ngpus": 8,
+				"cost": 32.77
+			}
+		]
+	},
+	{
+		"name": "azure",
+		"logo": "resources/azure.png",
+		"color": "#008AD7",
+		"pue": 1.185,
+		"regions": {
+			"South Africa North": {
+				"emissionsFactor": 0.0009006
+			},
+			"South Africa West": {
+				"emissionsFactor": 0.0009006
+			},
+			"Australia Central": {
+				"emissionsFactor": 0.00079
+			},
+			"Australia East": {
+				"emissionsFactor": 0.00079
+			},
+			"Australia Southeast": {
+				"emissionsFactor": 0.00096
+			},
+			"East Asia": {
+				"emissionsFactor": 0.00071
+			},
+			"Southeast Asia": {
+				"emissionsFactor": 0.000408
+			},
+			"Japan East": {
+				"emissionsFactor": 0.0004658
+			},
+			"Japan West": {
+				"emissionsFactor": 0.0004658
+			},
+			"Korea Central": {
+				"emissionsFactor": 0.0004156
+			},
+			"North Europe": {
+				"emissionsFactor": 0.0002786
+			},
+			"West Europe": {
+				"emissionsFactor": 0.0003284
+			},
+			"France Central": {
+				"emissionsFactor": 0.00005128
+			},
+			"Sweden Central": {
+				"emissionsFactor": 0.00000567
+			},
+			"Switzerland North": {
+				"emissionsFactor": 0.00001152
+			},
+			"Central India": {
+				"emissionsFactor": 0.0007082
+			},
+			"South India": {
+				"emissionsFactor": 0.0007082
+			},
+			"UK South": {
+				"emissionsFactor": 0.000225
+			},
+			"UK West": {
+				"emissionsFactor": 0.000225
+			},
+			"Germany West Central": {
+				"emissionsFactor": 0.00033866
+			},
+			"Norway East": {
+				"emissionsFactor": 0.00000762
+			},
+			"UAE North": {
+				"emissionsFactor": 0.0004041
+			},
+			"Canada Central": {
+				"emissionsFactor": 0.00012
+			},
+			"Canada East": {
+				"emissionsFactor": 0.00012
+			},
+			"Central US": {
+				"emissionsFactor": 0.000426254
+			},
+			"East US": {
+				"emissionsFactor": 0.000379069
+			},
+			"East US 2": {
+				"emissionsFactor": 0.000379069
+			},
+			"North Central US": {
+				"emissionsFactor": 0.000410608
+			},
+			"South Central US": {
+				"emissionsFactor": 0.000373231
+			},
+			"West Central US": {
+				"emissionsFactor": 0.000322167
+			},
+			"West US": {
+				"emissionsFactor": 0.000322167
+			},
+			"West US 2": {
+				"emissionsFactor": 0.000322167
+			},
+			"West US 3": {
+				"emissionsFactor": 0.000322167
+			},
+			"Brazil South": {
+				"emissionsFactor": 0.0000617
+			},
+			"China East": {
+				"emissionsFactor": 0.0005374
+			},
+			"China East 2": {
+				"emissionsFactor": 0.0005374
+			},
+			"China North": {
+				"emissionsFactor": 0.0005374
+			},
+			"China North 2": {
+				"emissionsFactor": 0.0005374
+			},
+			"China North 3": {
+				"emissionsFactor": 0.0005374
+			}
+		},
+		"instances": [
+			{
+				"name": "NC24ads A100 v4",
+				"vcpus": 24,
+				"ram": 220,
+				"gpu": "a100",
+				"ngpus": 1,
+				"cost": 3.673
+			},
+			{
+				"name": "NC6s v2",
+				"vcpus": 6,
+				"ram": 112,
+				"gpu": "p100",
+				"ngpus": 1,
+				"cost": 2.07,
+				"regions": ["Southeast Asia", "West Europe", "East US", "South Central US", "West US 2"]
+			},
+			{
+				"name": "NC6s v3",
+				"gpu": "v100",
+				"vcpus": 6,
+				"ram": 112,
+				"ngpus": 1,
+				"cost": 3.06,
+				"regions": [
+					"East Asia",
+					"Southeast Asia",
+					"Australia East",
+					"Canada Central",
+					"China East 2",
+					"China North 2",
+					"China North 3",
+					"North Europe",
+					"West Europe",
+					"France Central",
+					"Central India",
+					"Japan East",
+					"Korea Central",
+					"Switzerland North",
+					"UK South",
+					"Central US",
+					"East US",
+					"East US 2",
+					"South Central US",
+					"West US",
+					"West US 2",
+					"West US 3"
+				]
+			},
+			{
+				"name": "NC4as T4 v3",
+				"gpu": "t4",
+				"vcpus": 4,
+				"ram": 28,
+				"ngpus": 1,
+				"cost": 0.526,
+				"regions": [
+					"Southeast Asia",
+					"Australia East",
+					"Brazil South",
+					"North Europe",
+					"West Europe",
+					"Germany West Central",
+					"Central India",
+					"Japan East",
+					"Korea Central",
+					"UK South",
+					"East US",
+					"East US 2",
+					"North Central US",
+					"South Central US",
+					"West US",
+					"West US 2",
+					"West US 3"
+				]
+			},
+			{
+				"name": "NC48ads A100 v4",
+				"vcpus": 48,
+				"ram": 440,
+				"gpu": "a100",
+				"ngpus": 2,
+				"cost": 7.346
+			},
+			{
+				"name": "NC12s v2",
+				"gpu": "p100",
+				"vcpus": 12,
+				"ram": 224,
+				"ngpus": 2,
+				"cost": 4.14,
+				"regions": ["Southeast Asia", "West Europe", "East US", "South Central US", "West US 2"]
+			},
+			{
+				"name": "NC12s v3",
+				"gpu": "v100",
+				"vcpus": 12,
+				"ram": 224,
+				"ngpus": 2,
+				"cost": 6.12,
+				"regions": [
+					"East Asia",
+					"Southeast Asia",
+					"Australia East",
+					"Canada Central",
+					"China East 2",
+					"China North 2",
+					"China North 3",
+					"North Europe",
+					"West Europe",
+					"France Central",
+					"Central India",
+					"Japan East",
+					"Korea Central",
+					"Switzerland North",
+					"UK South",
+					"Central US",
+					"East US",
+					"East US 2",
+					"South Central US",
+					"West US",
+					"West US 2",
+					"West US 3"
+				]
+			},
+			{
+				"name": "NC96ads A100 v4",
+				"vcpus": 96,
+				"ram": 880,
+				"gpu": "a100",
+				"ngpus": 4,
+				"cost": 14.692
+			},
+			{
+				"name": "NC24rs v2",
+				"gpu": "p100",
+				"vcpus": 24,
+				"ram": 448,
+				"ngpus": 4,
+				"cost": 9.108,
+				"regions": ["Southeast Asia", "West Europe", "East US", "South Central US", "West US 2"]
+			},
+			{
+				"name": "NC24rs v3",
+				"gpu": "v100",
+				"vcpus": 24,
+				"ram": 448,
+				"ngpus": 4,
+				"cost": 13.46,
+				"regions": [
+					"East Asia",
+					"Southeast Asia",
+					"Australia East",
+					"Canada Central",
+					"China East 2",
+					"China North 2",
+					"China North 3",
+					"North Europe",
+					"West Europe",
+					"France Central",
+					"Central India",
+					"Japan East",
+					"Korea Central",
+					"Switzerland North",
+					"UK South",
+					"Central US",
+					"East US",
+					"East US 2",
+					"South Central US",
+					"West US",
+					"West US 2",
+					"West US 3"
+				]
+			},
+			{
+				"name": "NC64as T4 v3",
+				"gpu": "t4",
+				"vcpus": 64,
+				"ram": 440,
+				"ngpus": 4,
+				"cost": 4.352,
+				"regions": [
+					"Southeast Asia",
+					"Australia East",
+					"Brazil South",
+					"North Europe",
+					"West Europe",
+					"Germany West Central",
+					"Central India",
+					"Japan East",
+					"Korea Central",
+					"UK South",
+					"East US",
+					"East US 2",
+					"North Central US",
+					"South Central US",
+					"West US",
+					"West US 2",
+					"West US 3"
+				]
+			},
+			{
+				"name": "ND96asr A100 v4",
+				"vcpus": 96,
+				"ram": 900,
+				"gpu": "a100",
+				"ngpus": 8,
+				"cost": 27.197
+			}
+		]
+	}
 ]
