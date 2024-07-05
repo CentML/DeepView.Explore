@@ -1,6 +1,6 @@
 import { createContext, PropsWithChildren, useEffect, useMemo, useState } from 'react';
 import { computePercentage, getTraceByLevel, getUtilizationData, getUsageData } from '@centml/deepview-ui';
-import type { NodeData, ProfilingData, TimeBreakDown } from '@centml/deepview-ui';
+import type { NodeData, ProfilingData, TimeBreakDown, UsageData } from '@centml/deepview-ui';
 import { profiling_data } from '@mocks/mock_data';
 import type { ErrorState } from '@interfaces/ErrorState';
 import { vscode } from '@utils/vscode';
@@ -28,11 +28,7 @@ interface AnalysisContext {
 	isLoading: boolean;
 	iterations: number;
 	isUsingDdp: boolean;
-	statsUsage: {
-		breakdown: number;
-		memory: [number, number, number];
-		throughput: [number, number, number];
-	};
+	statsUsage: UsageData;
 	timeBreakDown: TimeBreakDownState | null;
 	updateDdp: () => void;
 	updateTraining: (training: { epochs: number; iterations: number }) => void;
@@ -66,7 +62,7 @@ const initialState: AnalysisContext = {
 	isUsingDdp: true,
 	iterations: 2000,
 	statsUsage: {
-		breakdown: 0,
+		batchSize: 0,
 		memory: INITIAL_SLIDER_STATE,
 		throughput: INITIAL_SLIDER_STATE
 	},
@@ -90,8 +86,7 @@ export const AnalysisProvider = ({ children }: PropsWithChildren) => {
 	const [iterations, setIterations] = useState(2000);
 	const [error, setError] = useState<ErrorState | undefined>(undefined);
 	const [timeBreakDown, setTimeBreakDown] = useState<TimeBreakDownState | null>(null);
-	const [statsUsage, setStatsUsage] = useState({
-		breakdown: 0,
+	const [statsUsage, setStatsUsage] = useState<UsageData>({
 		batchSize: 0,
 		memory: INITIAL_SLIDER_STATE,
 		throughput: INITIAL_SLIDER_STATE
@@ -102,8 +97,8 @@ export const AnalysisProvider = ({ children }: PropsWithChildren) => {
 		setIsLoading(true);
 
 		if (useMockData) {
-			updateAnalysis(profiling_data);
-			setStatsUsage(getUsageData(profiling_data, 0.5, null, profiling_data.breakdown.batch_size));
+			updateAnalysis(profiling_data as unknown as ProfilingData);
+			setStatsUsage(getUsageData(profiling_data as unknown as ProfilingData, 0.5, null, profiling_data.breakdown.batch_size));
 			setIsLoading(false);
 			return;
 		} else {
@@ -118,7 +113,7 @@ export const AnalysisProvider = ({ children }: PropsWithChildren) => {
 					break;
 				case 'analysis':
 					updateAnalysis(data as ProfilingData);
-					setStatsUsage(getUsageData(data as ProfilingData, null, null, data.breakdown.batch_size));
+					setStatsUsage(getUsageData(data as ProfilingData, null, null, (data as ProfilingData).breakdown.batch_size));
 					break;
 				case 'text_change':
 					setHasTextChanged(true);
