@@ -13,16 +13,12 @@
 		"coverage": "vitest run --coverage"
 	},
 	"dependencies": {
-		"@centml/deepview-ui": "^0.0.9",
-		"@fortawesome/fontawesome-svg-core": "^6.5.2",
-		"@fortawesome/react-fontawesome": "^0.2.0",
-		"bootstrap": "^5.3.3",
 		"react": "^18.2.0",
-		"react-bootstrap": "^2.10.2",
 		"react-dom": "^18.2.0"
 	},
 	"devDependencies": {
-		"@fortawesome/free-solid-svg-icons": "^6.5.2",
+		"@centml/deepview-ui": "^0.1.1",
+		"@centml/ui": "^1.5.1",
 		"@testing-library/react": "^14.2.2",
 		"@types/node": "^20.12.2",
 		"@types/react": "^18.2.66",

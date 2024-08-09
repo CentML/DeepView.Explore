@@ -1,27 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;800&display=swap');
-@import 'bootstrap/dist/css/bootstrap.min.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 body {
 	@apply m-0 p-0;
-}
-
-.btn-primary {
-	@apply border-0 bg-primary-500 text-white hover:bg-primary-500 hover:brightness-110 active:bg-primary-500;
-}
-
-.btn:active {
-	@apply !bg-primary-700;
-}
-
-.btn:disabled {
-	@apply border-0 bg-primary-500 text-white;
-}
-
-.progress-bar.bg-success {
-	@apply !bg-primary-500;
 }
 
 input[type='range'] {
@@ -69,20 +52,4 @@ input[type='range']::-moz-range-thumb {
 
 	/*  slider progress trick  */
 	box-shadow: -407px 0 0 400px #00a87b;
-}
-
-.form-switch input:focus {
-	background-image: url('data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%27-4 -4 8 8%27><circle r=%273%27 fill=%27%2399dcca%27/></svg>') !important;
-}
-
-.form-switch input:checked {
-	background-image: url('data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%27-4 -4 8 8%27><circle r=%273%27 fill=%27%23fff%27/></svg>') !important;
-}
-
-.form-check-input:checked {
-	@apply border-primary-500 bg-primary-500;
-}
-
-.form-check-input:focus {
-	@apply shadow-none;
 }

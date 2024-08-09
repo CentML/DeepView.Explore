@@ -1,4 +1,4 @@
-import { Alert, Button, Container } from 'react-bootstrap';
+import { Alert, Button } from '@centml/ui';
 import type { ErrorState } from '@interfaces/ErrorState';
 
 interface ErrorProps {
@@ -16,18 +16,18 @@ const ErrorView = ({ error, handleConnection }: ErrorProps) => {
 		: 'An error has occurred during analysis. This could be a problem with Deepview profiler or possibly your code. For more information, refer to the detailed message below:';
 
 	return (
-		<Container fluid className="flex h-screen grow flex-col items-center justify-center">
-			<Alert variant="danger" className="max-w-[500px]">
-				<Alert.Heading>{title}</Alert.Heading>
+		<div className="flex h-screen grow flex-col items-center justify-center">
+			<Alert variant="error" size="auto">
+				<h2 className="text-lg font-semibold">{title}</h2>
 				{body && <p>{body}</p>}
 				<div className="flex flex-col items-center gap-4">
 					{message && <p className="text-error-500">{message}</p>}
-					<Button variant="primary" className="px-8" onClick={() => handleConnection(isConnectionError ? 'connect' : 'restart')}>
+					<Button variant="primary" onPress={() => handleConnection(isConnectionError ? 'connect' : 'restart')}>
 						{isConnectionError ? 'Reconnect' : 'Restart Profiling'}
 					</Button>
 				</div>
 			</Alert>
-		</Container>
+		</div>
 	);
 };
 

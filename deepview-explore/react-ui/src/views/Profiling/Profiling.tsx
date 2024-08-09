@@ -1,13 +1,13 @@
 import { ComputeUtilization, MemoryBatchSize, TimeBreakdown } from '@centml/deepview-ui';
 import { useAnalysis } from '@context/useAnalysis';
-import { TabPanel } from '@layout/Layout';
+import { TabPanel } from '@centml/ui';
 import { vscode } from '@utils/vscode';
 
 const Profiling = () => {
 	const { analysis, timeBreakDown, utilizationData } = useAnalysis();
 
 	return (
-		<TabPanel name="profiling">
+		<TabPanel id="profiling">
 			<div className="flex flex-col gap-4">
 				<div className="flex flex-col gap-4 mdplus:flex-row">
 					<div className="w-full lg:w-[35%]">

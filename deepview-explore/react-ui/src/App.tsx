@@ -1,4 +1,4 @@
-import { LoadingSpinner } from '@centml/deepview-ui';
+import { LoadingSpinner } from '@centml/ui';
 import ErrorView from '@views/Error';
 import Welcome from '@views/Welcome';
 import Layout from '@layout/Layout';

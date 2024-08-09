@@ -10,7 +10,7 @@ export default defineConfig({
 		exclude: [...defaultExclude],
 		globals: true,
 		deps: {
-			inline: ['vitest-canvas-mock']
+			inline: ['vitest-canvas-mock', /@centml\/ui.*/]
 		},
 		coverage: {
 			exclude: [...coverageConfigDefaults.exclude, '**/*/{index,global,constants,config,App,setupTests}.{ts,tsx}', '**/mocks', '*.config.{js,ts}'],

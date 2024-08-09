@@ -1,7 +1,7 @@
+import { TabPanel } from '@centml/ui';
 import { ProjectInfo, ProjectStats, ProjectTraining } from '@centml/deepview-ui';
 import type { UtilizationTableData } from '@context/AnalysisContext';
 import { useAnalysis } from '@context/useAnalysis';
-import { TabPanel } from '@layout/Layout';
 
 const Overview = () => {
 	const { analysis, encodedFiles, epochs, iterations, statsUsage, utilizationData, updateTraining } = useAnalysis();
@@ -22,7 +22,7 @@ const Overview = () => {
 	};
 
 	return (
-		<TabPanel name="overview">
+		<TabPanel id="overview">
 			<div className="flex flex-col gap-4">
 				<ProjectInfo
 					entry={analysis.project_entry_point}
