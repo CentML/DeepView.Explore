@@ -1,7 +1,5 @@
 import { useAnalysis } from '@context/useAnalysis';
-import { Alert, Button } from 'react-bootstrap';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
+import { Alert, Button, Icon } from '@centml/ui';
 import { vscode } from '@utils/vscode';
 
 function Header() {
@@ -15,15 +13,17 @@ function Header() {
 
 					<div className="flex items-center gap-2">
 						{hasTextChanged && (
-							<Alert className="mb-0 px-2 py-1 text-sm" variant="info">
-								<Icon icon={faCircleExclamation} size="1x" className="mr-1" />
+							<Alert variant="info" showIcon>
 								Change detected
 							</Alert>
 						)}
 
-						<Button onClick={() => vscode.restart()} variant="primary" className="px-8">
+						<Button onPress={() => vscode.restart()} variant="primary">
 							Restart
 						</Button>
+						<a href="https://docs.centml.ai/" rel="noreferrer" target="_blank" title="help">
+							<Icon icon="question-mark-circle" />
+						</a>
 					</div>
 				</div>
 			</div>

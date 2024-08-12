@@ -1,12 +1,12 @@
 import { DataParallelTraining, DeploymentTarget, Habitat } from '@centml/deepview-ui';
+import { TabPanel } from '@centml/ui'
 import { useAnalysis } from '@context/useAnalysis';
-import { TabPanel } from '@layout/Layout';
 
 const Deployment = () => {
 	const { analysis, epochs, isUsingDdp, iterations } = useAnalysis();
 
 	return (
-		<TabPanel name="deployment">
+		<TabPanel id="deployment">
 			<div className="flex flex-col gap-4">
 				<DeploymentTarget additionalProviders={analysis.additionalProviders} epochs={epochs} habitat={analysis.habitat} iterations={iterations} />
 
