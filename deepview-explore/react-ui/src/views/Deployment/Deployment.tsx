@@ -1,5 +1,5 @@
 import { DataParallelTraining, DeploymentTarget, Habitat } from '@centml/deepview-ui';
-import { TabPanel } from '@centml/ui'
+import { TabPanel } from '@centml/ui';
 import { useAnalysis } from '@context/useAnalysis';
 
 const Deployment = () => {

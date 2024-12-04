@@ -1,6 +1,6 @@
 import { createContext, PropsWithChildren, useEffect, useMemo, useState } from 'react';
 import { computePercentage, getTraceByLevel, getUtilizationData, getUsageData } from '@centml/deepview-ui';
-import type { NodeData, ProfilingData, TimeBreakDown, UsageData } from '@centml/deepview-ui';
+import type { NodeData, ProfilingData, TimeBreakDown, UsageData, Detail } from '@centml/deepview-ui';
 import { profiling_data } from '@mocks/mock_data';
 import type { ErrorState } from '@interfaces/ErrorState';
 import { vscode } from '@utils/vscode';
@@ -28,9 +28,11 @@ interface AnalysisContext {
 	isLoading: boolean;
 	iterations: number;
 	isUsingDdp: boolean;
+	detail: Detail;
 	statsUsage: UsageData;
 	timeBreakDown: TimeBreakDownState | null;
 	updateDdp: () => void;
+	updateDetail: (detail: Detail) => void;
 	updateTraining: (training: { epochs: number; iterations: number }) => void;
 	utilizationData: UtilizationTableData | null;
 }
@@ -61,6 +63,7 @@ const initialState: AnalysisContext = {
 	isLoading: false,
 	isUsingDdp: true,
 	iterations: 2000,
+	detail: 0.5,
 	statsUsage: {
 		batchSize: 0,
 		memory: INITIAL_SLIDER_STATE,
@@ -68,6 +71,7 @@ const initialState: AnalysisContext = {
 	},
 	timeBreakDown: null,
 	updateDdp: () => undefined,
+	updateDetail: () => undefined,
 	updateTraining: () => undefined,
 	utilizationData: {} as UtilizationTableData
 };
@@ -92,6 +96,7 @@ export const AnalysisProvider = ({ children }: PropsWithChildren) => {
 		throughput: INITIAL_SLIDER_STATE
 	});
 	const [utilizationData, setUtilizationData] = useState<UtilizationTableData | null>(null);
+	const [detail, setDetail] = useState<Detail>(0.5);
 
 	useEffect(() => {
 		setIsLoading(true);
@@ -156,7 +161,7 @@ export const AnalysisProvider = ({ children }: PropsWithChildren) => {
 		setUtilizationData(getUtilizationData(data.utilization.rootNode));
 
 		if (data.breakdown && data.breakdown.operation_tree) {
-			const { coarse, fine } = getTraceByLevel(data.breakdown.operation_tree);
+			const { coarse, fine } = getTraceByLevel(data.breakdown.operation_tree, detail);
 			const computeCoarse = computePercentage(coarse, data.breakdown.iteration_run_time_ms);
 			const computeFine = computePercentage(fine, data.breakdown.iteration_run_time_ms);
 
@@ -171,6 +176,18 @@ export const AnalysisProvider = ({ children }: PropsWithChildren) => {
 		setIterations(training.iterations);
 	};
 
+	const updateDetail = (detail: Detail) => {
+		setDetail(detail);
+
+		if (analysis.breakdown && analysis.breakdown.operation_tree) {
+			const { coarse, fine } = getTraceByLevel(analysis.breakdown.operation_tree, detail);
+			const computeCoarse = computePercentage(coarse, analysis.breakdown.iteration_run_time_ms);
+			const computeFine = computePercentage(fine, analysis.breakdown.iteration_run_time_ms);
+
+			setTimeBreakDown({ coarse: computeCoarse, fine: computeFine });
+		}
+	};
+
 	const value = useMemo(
 		() => ({
 			analysis,
@@ -182,10 +199,12 @@ export const AnalysisProvider = ({ children }: PropsWithChildren) => {
 			isLoading,
 			isUsingDdp,
 			iterations,
+			detail,
 			statsUsage,
 			timeBreakDown,
 			updateDdp,
 			updateTraining,
+			updateDetail,
 			utilizationData
 		}),
 		[
@@ -198,9 +217,11 @@ export const AnalysisProvider = ({ children }: PropsWithChildren) => {
 			isLoading,
 			isUsingDdp,
 			iterations,
+			detail,
 			statsUsage,
 			timeBreakDown,
 			updateDdp,
+			updateDetail,
 			updateTraining,
 			utilizationData
 		]
