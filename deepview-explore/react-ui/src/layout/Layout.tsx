@@ -6,7 +6,7 @@ const Layout = ({ children }: PropsWithChildren) => {
 	return (
 		<div className="flex h-screen flex-col">
 			<Header />
-			<div className="flex grow flex-col bg-gray-100 px-4">
+			<div className="flex grow flex-col bg-gray-100 px-4 dark:bg-neutral-900">
 				<TabGroup
 					items={[
 						{

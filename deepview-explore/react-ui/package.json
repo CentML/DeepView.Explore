@@ -17,7 +17,7 @@
 		"react-dom": "^18.2.0"
 	},
 	"devDependencies": {
-		"@centml/deepview-ui": "^0.1.5",
+		"@centml/deepview-ui": "^0.1.7",
 		"@centml/ui": "^1.8.9",
 		"@testing-library/react": "^14.2.2",
 		"@types/node": "^20.12.2",
