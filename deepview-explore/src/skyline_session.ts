@@ -401,12 +401,13 @@ export class SkylineSession {
         const scriptUri = this.webviewPanel.webview.asWebviewUri(scriptPathOnDisk);
         const stylePathOnDisk = vscode.Uri.file(path.join(buildPath, 'build', mainStyle));
         const styleUri = this.webviewPanel.webview.asWebviewUri(stylePathOnDisk);
+        const themeClass = vscode.window.activeColorTheme.kind === vscode.ColorThemeKind.Dark ? 'dark' : 'light';
 
 		// Use a nonce to whitelist which scripts can be run
 		const nonce = crypto.randomBytes(16).toString('base64');
 
 		return `<!DOCTYPE html>
-			<html lang="en">
+			<html lang="en" class="${themeClass}">
 			<head>
 				<meta charset="utf-8">
 				<meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
